@@ -8,8 +8,14 @@ class CityModel(models.Model):
     def __str__(self) -> str:
         return self.name
     
+class StateModel(models.Model):
+    name = models.CharField(max_length=5)
+
+    def __str__(self) -> str:
+        return self.name
+    
 class StatusModel(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=40, default='Ativo')
 
     def __str__(self) -> str:
         return self.name
@@ -24,6 +30,7 @@ class ClientModel(models.Model):
     district = models.CharField(max_length=30, verbose_name='Bairro', blank=True)
     number = models.IntegerField(verbose_name='Número', blank=True)
     city = models.ForeignKey(CityModel, on_delete=models.SET_NULL, null=True, verbose_name="Cidade", blank=True)
+    state = models.ForeignKey(StateModel, on_delete=models.SET_NULL, null=True, verbose_name="UF", blank=True)
     zipcode = models.IntegerField(verbose_name='CEP', blank=True)
     complement = models.CharField(max_length=15, verbose_name='Complemento', blank=True)
     document1 = models.IntegerField(verbose_name='CPF', blank=True)

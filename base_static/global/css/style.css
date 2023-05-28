@@ -95,6 +95,14 @@
     box-shadow: 2px 2px 5px var(--clr-dark-shadow-20);
     border-radius: var(--default-border-radius);
   }
+
+  .container{
+    width: 1000px;
+    height: 1000px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
   
   .responsive-table {
     width: 100%;

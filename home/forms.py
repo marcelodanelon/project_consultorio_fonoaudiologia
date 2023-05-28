@@ -5,8 +5,8 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = ClientModel
         fields = ('first_name', 'last_name', 'born', 'responsibleName', 'responsiblePhone',
-                  'street', 'district', 'number', 'city', 'zipcode', 'complement',
-                  'document1', 'document2', 'phone1', 'phone2','status',
+                  'street', 'district', 'number', 'city', 'state', 'zipcode', 'complement',
+                  'document1', 'document2', 'phone1', 'phone2',
                   )
         # widgets = {
         #     'first_name':forms.TextInput(
@@ -46,6 +46,9 @@ class ClientForm(forms.ModelForm):
         self.fields['city'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['state'].widget.attrs.update({
+            'class':'form-control dropdown',
+        })
         self.fields['zipcode'].widget.attrs.update({
             'class':'form-control',
         })
@@ -63,7 +66,4 @@ class ClientForm(forms.ModelForm):
         })
         self.fields['phone2'].widget.attrs.update({
             'class':'form-control',
-        })
-        self.fields['status'].widget.attrs.update({
-            'class':'form-checked',
         })
