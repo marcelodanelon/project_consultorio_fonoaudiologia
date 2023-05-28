@@ -1,0 +1,29 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+  <div style="padding:1px 16px;height:1000px;">
+    <h3>Cadastro</h3>
+    <br>
+    <form action="" method="POST" class="form-control">
+      {% csrf_token %}
+      {% for field in form %}    
+        {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'street' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  
+        <div class="row align-items-center">
+        {% endif %} 
+          <div class="col"> 
+            <label for="{{ field.id_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+          </div>  
+        {% if field.name == 'born' or field.name == 'responsiblePhone' or field.name == 'number' or field.name == 'complement' or field.name == 'document2' or field.name == 'phone2' or field.name == 'status' %}  
+        </div> <br> 
+        {% endif %}                            
+      {% endfor %}
+      <div class="form-content">        
+        <button class="btn btn-success" type="submit">Gravar</button>
+        <button class="btn btn-primary" type="reset">Limpar</button>
+      </div>
+    </form>
+  </div>
+{% endblock content %}
