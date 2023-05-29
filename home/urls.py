@@ -4,6 +4,6 @@ from home import views
 app_name = 'home'
 
 urlpatterns = [
-    path('', views.Index, name='index'),
-    path('client/create', views.Create, name='create'),
+    path('', views.index, name='index'),
+    path('createClient/', views.createClient, name='createClient'),
 ]

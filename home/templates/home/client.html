@@ -5,20 +5,19 @@
 {% block content %}
   <div class="container" style="padding:1px 16px;">
     <h3>Cadastro</h3>
-    <br>
-    <form action="" method="POST" class="form-control">
+    <form action="{% url 'home:createClient' %}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
         {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'street' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  
         <div class="row align-items-center">
         {% endif %} 
           <div class="col"> 
-            <label for="{{ field.id_label }}" class="form-label">{{ field.label }}</label>
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }} {{field.errors}}</label>
             {{ field }}
-          </div>  
-        {% if field.name == 'born' or field.name == 'responsiblePhone' or field.name == 'number' or field.name == 'complement' or field.name == 'document2' or field.name == 'phone2' or field.name == 'status' %}  
+          </div>            
+        {% if field.name == 'born' or field.name == 'responsiblePhone' or field.name == 'number' or field.name == 'complement' or field.name == 'document2' or field.name == 'phone2' or field.name == 'status' %}             
         </div> <br> 
-        {% endif %}                            
+        {% endif %}                                 
       {% endfor %}
       <div class="form-content">        
         <button class="btn btn-success" type="submit">Gravar</button>
