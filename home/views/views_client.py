@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from home.forms import ClientForm
+from home.models import ClientModel
 
 def createClient(request):
     formClient = ClientForm()
@@ -32,5 +32,19 @@ def createClient(request):
     return render(
         request,
         'home/client.html',
+        context
+    )
+
+def listClient(request):
+    clients = ClientModel.objects.all()
+
+    context = {
+            'clients': clients,
+            'title':'Pesquisa',
+    }
+
+    return render(
+        request,
+        'home/search.html',
         context
     )

@@ -107,9 +107,12 @@
   .responsive-table {
     width: 100%;
     overflow-x: auto;
+    background-color: white;
+    font-size: var(--smallest-font-size);
+    border-radius: var(--default-border-radius);
   }
   
-  .contacts-table {
+  .clients-table {
     width: 100%;
     min-width: var(--table-min-width);
     border-collapse: collapse;
@@ -136,13 +139,14 @@
   }
   
   .table-row-header {
-    background: var(--clr-light-gray);
+    background: white;
     color: var(--clr-black);
   }
   
   .table-cel,
   .table-header {
-    padding: var(--spacing);
+    padding: 8px;
+    padding-left: 50px;
   }
   
   .table-link {
@@ -346,7 +350,7 @@ body, html {
   -webkit-font-smoothing: antialiased;
 }
 
-.content{
+/* .content{
   position: relative;
   height: 100%;
   background: var(--clr-light-gray);
@@ -356,7 +360,7 @@ body, html {
   font-size: var(--small-font-size);
   color: var(--clr-black);
   -webkit-font-smoothing: antialiased;
-}
+} */
 
 .menu-list {
     list-style: none;

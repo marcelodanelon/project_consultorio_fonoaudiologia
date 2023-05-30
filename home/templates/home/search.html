@@ -1,0 +1,45 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+    <h3>Pesquisar</h3> <br>
+<div class="responsive-table">
+    <table class="clients-table">
+        <thead>
+            <tr class="table-row table-row-header">
+                <th class="table-header">ID</th>
+                <th class="table-header">Nome</th>
+                <th class="table-header">Data de Nascimento</th>
+                <th class="table-header">CPF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+                <tr class="table-row">
+                    <td class="table-cel">
+                        <a href="{% url 'home:listClient' client.id %}" class="table-link">
+                            {{ client.id }}
+                        </a>
+                    </td>
+                    <td class="table-cel">
+                            {{ client.first_name }} {{ client.last_name }}
+                    </td>
+                    <td class="table-cel">
+                            {{ client.born }}
+                    </td>
+                    <td class="table-cel">
+                        {% if client.document1 == Null %}
+                            Não Informado
+                        {% else %}
+                            {{ client.document1 }}
+                        {% endif %}                            
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock content %}

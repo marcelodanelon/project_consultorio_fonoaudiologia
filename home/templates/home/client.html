@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container" style="padding:1px 16px;">
-    <h3>Cadastro</h3>
+    <h3>Cadastrar</h3> <br>
     <form action="{% url 'home:createClient' %}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
