@@ -179,7 +179,7 @@
     display: flex;
     justify-content: center;
     padding: calc(var(--spacing) * 0.8);
-    font-size: var(--small-font-size);
+    font-size: 1.3rem;
   }
   
   .pagination .step-links {

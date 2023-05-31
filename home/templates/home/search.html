@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for client in clients %}
+            {% for client in page_obj %}
                 <tr class="table-row">
                     <td class="table-cel">
                         <a href="{% url 'home:updateClient' client.id %}" class="table-link">
@@ -44,5 +44,6 @@
         </tbody>
     </table>
 </div>
+{% include 'partials/_pagination.html' %}   
 </div>
 {% endblock content %}
