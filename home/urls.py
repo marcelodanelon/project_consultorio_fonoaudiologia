@@ -5,7 +5,9 @@ app_name = 'home'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('createClient/', views.createClient, name='createClient'),
     path('listClient/', views.listClient, name='listClient'),
+
+    path('createClient/', views.createClient, name='createClient'),
     path('searchClient/', views.searchClient, name='searchClient'),
+    path('<int:client_id>/updateClient/', views.updateClient, name='updateClient'),
 ]

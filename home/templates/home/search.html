@@ -22,9 +22,9 @@
             {% for client in clients %}
                 <tr class="table-row">
                     <td class="table-cel">
-                        {% comment %} <a href="{% url 'home:listClient' client.id %}" class="table-link"> {% endcomment %}
+                        <a href="{% url 'home:updateClient' client.id %}" class="table-link">
                             {{ client.id }}
-                        {% comment %} </a> {% endcomment %}
+                        </a>
                     </td>
                     <td class="table-cel">
                             {{ client.first_name }} {{ client.last_name }}
