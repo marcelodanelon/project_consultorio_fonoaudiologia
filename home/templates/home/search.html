@@ -6,6 +6,9 @@
 <div class="container" style="padding:1px 16px;">
     <h3>Pesquisar</h3> <br>
 <div class="responsive-table">
+    <form action="{% url 'home:searchClient' %}" method="get">
+        <input class="form-control" type="text" name="q" placeholder="Digite um nome, Data de Nascimento ou CPF">
+    </form>
     <table class="clients-table">
         <thead>
             <tr class="table-row table-row-header">
@@ -19,9 +22,9 @@
             {% for client in clients %}
                 <tr class="table-row">
                     <td class="table-cel">
-                        <a href="{% url 'home:listClient' client.id %}" class="table-link">
+                        {% comment %} <a href="{% url 'home:listClient' client.id %}" class="table-link"> {% endcomment %}
                             {{ client.id }}
-                        </a>
+                        {% comment %} </a> {% endcomment %}
                     </td>
                     <td class="table-cel">
                             {{ client.first_name }} {{ client.last_name }}
