@@ -10,8 +10,8 @@ def createClient(request):
         formClient = ClientForm(request.POST)
 
         if formClient.is_valid():
-            formClient.save()
-            return redirect('home:index')
+            form = formClient.save()
+            return redirect('home:updateClient',form.id)
 
         context = {
             'form': formClient,

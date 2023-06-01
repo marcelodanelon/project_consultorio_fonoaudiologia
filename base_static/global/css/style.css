@@ -92,8 +92,10 @@
     margin: calc(var(--spacing) * 2) auto;
     padding: var(--spacing);
     background: var(--clr-white);
-    box-shadow: 2px 2px 5px var(--clr-dark-shadow-20);
+    /* box-shadow: 2px 2px 5px var(--clr-dark-shadow-20); */
     border-radius: var(--default-border-radius);
+    position: relative;
+    height: auto;
   }
 
   .container{
