@@ -29,6 +29,7 @@ def createClient(request):
     context = {
             'form': ClientForm(),
             'title':'Cadastro',
+            'name_screen': 'Cadastro',
             'form_action': form_action,
     }
 
@@ -53,6 +54,9 @@ def updateClient(request, client_id):
             'form': formClient,
             'formErrors': formClient.errors.items(),
             'title':'Cadastro',
+            'name_screen': 'Atualizar',
+            'option_delete': 'yes',
+            'client': client,
             'form_action': form_action,
         }
 
@@ -65,6 +69,9 @@ def updateClient(request, client_id):
     context = {
             'form': ClientForm(instance=client),
             'title':'Cadastro',
+            'name_screen': 'Atualizar',
+            'option_delete': 'yes',
+            'client': client,
             'form_action': form_action,
     }
 
@@ -73,4 +80,33 @@ def updateClient(request, client_id):
         'home/client.html',
         context
     )
+
+def deleteClient(request, client_id):
+    client = get_object_or_404(ClientModel, pk=client_id)
+    form_action = reverse('home:deleteClient', args=(client_id,))
+
+    confirmation = request.POST.get('confirmation_delete', 'no')
+
+    print(confirmation)
+    if confirmation == 'yes':
+        client.delete()
+        return redirect ('home:listClient')
+
+    context = {
+        'form': ClientForm(instance=client),
+        'title':'Cadastro',
+        'name_screen': 'Atualizar',
+        'option_delete': 'yes',
+        'client': client,
+        'confirmation_delete': confirmation,
+        'form_action': form_action,
+    }
+
+    return render(
+        request,
+        'home/client.html',
+        context
+    )
+
+
 

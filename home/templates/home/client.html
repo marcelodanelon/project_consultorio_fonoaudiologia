@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container" style="padding:1px 16px;">
-    <h3>Cadastrar</h3> <br>
+    <h3>{{name_screen}}</h3> <br>
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
@@ -19,10 +19,21 @@
         </div> <br> 
         {% endif %}                                 
       {% endfor %}
-      <div class="form-content">        
-        <button class="btn btn-success" type="submit">Gravar</button>
-        <a href="{% url 'home:listClient' %}" class="btn btn-primary">Voltar</a>
-      </div>
+      <div class="form-content d-flex flex-row bd-highlight mb-3">        
+        <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
+          {% if option_delete == 'yes'%}
+          <form action="{% url 'home:deleteClient' client.id %}" method="POST">
+              {% csrf_token %}
+              {% if confirmation_delete == 'no' %}
+                <input name="confirmation_delete" type="hidden" value="yes">
+                <button class="btn btn-danger">Confirma?</button>  
+              {% else %}
+                <button class="btn btn-danger">Delete</button> 
+              {% endif %}      
+              <a href="{% url 'home:listClient' %}" class="btn btn-primary">Voltar</a>
+      </div>  
+          </form> 
+          {% endif %}  
   </div>
 {% endblock content %}

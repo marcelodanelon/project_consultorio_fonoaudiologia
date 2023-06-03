@@ -10,4 +10,5 @@ urlpatterns = [
     path('createClient/', views.createClient, name='createClient'),
     path('searchClient/', views.searchClient, name='searchClient'),
     path('<int:client_id>/updateClient/', views.updateClient, name='updateClient'),
+    path('<int:client_id>/deleteClient/', views.deleteClient, name='deleteClient'),
 ]
