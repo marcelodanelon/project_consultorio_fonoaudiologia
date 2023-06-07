@@ -1,6 +1,5 @@
 from django import forms
 from home.models import ClientModel
-from django.conf import settings
 
 class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

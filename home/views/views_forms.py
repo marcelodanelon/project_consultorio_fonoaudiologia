@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from home.forms import ClientForm
 from home.models import ClientModel
+from django.contrib import messages
 
 def createClient(request):
     form_action = reverse('home:createClient')
@@ -11,6 +12,7 @@ def createClient(request):
 
         if formClient.is_valid():
             form = formClient.save()
+            messages.success(request, 'Cliente cadastrado com sucesso!')
             return redirect('home:updateClient',form.id)
 
         context = {
@@ -48,7 +50,8 @@ def updateClient(request, client_id):
 
         if formClient.is_valid():
             formClient.save()
-            return redirect('home:index')
+            messages.success(request, 'Cliente atualizado com sucesso!')
+            return redirect('home:listClient')
 
         context = {
             'form': formClient,
@@ -90,6 +93,7 @@ def deleteClient(request, client_id):
     print(confirmation)
     if confirmation == 'yes':
         client.delete()
+        messages.success(request, 'Cliente deletado com sucesso!')
         return redirect ('home:listClient')
 
     context = {

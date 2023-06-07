@@ -40,6 +40,13 @@
           </nav>  
         </div>
         <div class="content col-10">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="message {{message.tags}}">
+                {{message}}
+              </div>
+            {% endfor %}
+          {% endif %}
           {% block content %}{% endblock content %}
         </div>    
       </div>          
