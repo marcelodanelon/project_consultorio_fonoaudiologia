@@ -14,12 +14,14 @@ class ClientForm(forms.ModelForm):
         })
         self.fields['born'].widget.attrs.update({
             'class':'form-control',
+            'placeholder': 'dd/mm/yyyy',
         })
         self.fields['responsibleName'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['responsiblePhone'].widget.attrs.update({
             'class':'form-control',
+            'placeholder': '(00)00000-0000',
         })
         self.fields['street'].widget.attrs.update({
             'class':'form-control',
@@ -50,9 +52,11 @@ class ClientForm(forms.ModelForm):
         })
         self.fields['phone1'].widget.attrs.update({
             'class':'form-control',
+            'placeholder': '(00)00000-0000',
         })
         self.fields['phone2'].widget.attrs.update({
             'class':'form-control',
+            'placeholder': '(00)00000-0000',
         })
         self.fields['status'].widget.attrs.update({
             'class':'form-control',

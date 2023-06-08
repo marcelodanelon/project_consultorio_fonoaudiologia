@@ -16,7 +16,7 @@ def createClient(request):
             return redirect('home:updateClient',form.id)
         else:
             if "born" in formClient.errors:
-                messages.error(request, 'Data de Nascimento inválida!')
+                messages.error(request, 'Data de Nascimento Inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
 
