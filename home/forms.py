@@ -1,5 +1,6 @@
 from django import forms
 from home.models import ClientModel
+from django.core.exceptions import ValidationError
 
 class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -63,3 +64,21 @@ class ClientForm(forms.ModelForm):
                 'street', 'district', 'number', 'city', 'state', 'zipcode', 'complement',
                 'document1', 'document2', 'phone1', 'phone2','status',
                 )
+        
+        # error_messages = {
+        #     'task': {
+        #         'max_length': ("Error: maximum length limit is 255 characters"),
+                
+        #     },
+        # }
+    # def clean_name(self):
+    #     cleaned_data = self.cleaned_data.get('first_name')
+
+    #     if cleaned_data == 'MARCELO':
+    #         raise ValidationError(
+    #             'Digite outro nome',
+    #             code='invalid'
+    #         )
+
+    #     return cleaned_data
+    

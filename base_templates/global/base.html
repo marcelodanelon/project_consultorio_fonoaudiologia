@@ -40,13 +40,20 @@
           </nav>  
         </div>
         <div class="content col-10">
+          {% comment %} {% for error in form.errors|slice:":1" %}
+            {% if error %}
+              <div class="message error">
+                {{error}}
+              </div>
+            {% endif %}
+          {% endfor %} {% endcomment %}
           {% if messages %}
             {% for message in messages %}
               <div class="message {{message.tags}}">
                 {{message}}
               </div>
             {% endfor %}
-          {% endif %}
+          {% endif %}          
           {% block content %}{% endblock content %}
         </div>    
       </div>          

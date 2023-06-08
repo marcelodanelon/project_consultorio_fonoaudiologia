@@ -14,10 +14,14 @@ def createClient(request):
             form = formClient.save()
             messages.success(request, 'Cliente cadastrado com sucesso!')
             return redirect('home:updateClient',form.id)
+        else:
+            if "born" in formClient.errors:
+                messages.error(request, 'Data de Nascimento inválida!')
+            if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
+                messages.error(request, 'Número de telefone inválido!')
 
         context = {
             'form': formClient,
-            'formErrors': formClient.errors.items(),
             'title':'Cadastro',
             'form_action': form_action,
         }
@@ -52,10 +56,14 @@ def updateClient(request, client_id):
             formClient.save()
             messages.success(request, 'Cliente atualizado com sucesso!')
             return redirect('home:listClient')
+        else:
+            if "born" in formClient.errors:
+                messages.error(request, 'Data de Nascimento inválida!')
+            if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
+                messages.error(request, 'Número de telefone inválido!')
 
         context = {
             'form': formClient,
-            'formErrors': formClient.errors.items(),
             'title':'Cadastro',
             'name_screen': 'Atualizar',
             'option_delete': 'yes',
@@ -90,7 +98,6 @@ def deleteClient(request, client_id):
 
     confirmation = request.POST.get('confirmation_delete', 'no')
 
-    print(confirmation)
     if confirmation == 'yes':
         client.delete()
         messages.success(request, 'Cliente deletado com sucesso!')
