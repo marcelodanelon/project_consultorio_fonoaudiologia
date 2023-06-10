@@ -1,10 +1,14 @@
 from django import forms
 from home.models import ClientModel
 from home.static.home.partials._liststates import *
+from home.static.home.partials._listcities import *
 
 class ClientForm(forms.ModelForm):
     state = forms.ChoiceField(
         choices= CHOICES_STATES,
+    )
+    city = forms.ChoiceField(
+        choices= CHOICES_CITIES,
     )
 
     def __init__(self, *args, **kwargs):
@@ -39,6 +43,7 @@ class ClientForm(forms.ModelForm):
         self.fields['city'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['city'].label = 'Cidade'
         self.fields['state'].widget.attrs.update({
             'class':'form-control dropdown',
         })
