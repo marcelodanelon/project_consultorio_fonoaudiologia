@@ -1,8 +1,12 @@
 from django import forms
 from home.models import ClientModel
-from django.core.exceptions import ValidationError
+from home.static.home.partials._liststates import *
 
 class ClientForm(forms.ModelForm):
+    state = forms.ChoiceField(
+        choices= CHOICES_STATES,
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -38,6 +42,7 @@ class ClientForm(forms.ModelForm):
         self.fields['state'].widget.attrs.update({
             'class':'form-control dropdown',
         })
+        self.fields['state'].label = 'Estado'
         self.fields['zipcode'].widget.attrs.update({
             'class':'form-control',
         })
