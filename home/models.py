@@ -1,18 +1,8 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import User
-
-class CityModel(models.Model):
-    name = models.CharField(max_length=40)
-
-    def __str__(self) -> str:
-        return self.name
-    
-class StateModel(models.Model):
-    name = models.CharField(max_length=5)
-
-    def __str__(self) -> str:
-        return self.name
+from home.static.home.partials._liststates import *
+from home.static.home.partials._listcities import *
     
 class StatusModel(models.Model):
     name = models.CharField(max_length=40)
@@ -26,12 +16,12 @@ class ClientModel(models.Model):
     born = models.DateField(verbose_name='Data de Nascimento')
     responsibleName = models.CharField(max_length=50, verbose_name='Responsável', null=True, blank=True)
     responsiblePhone = PhoneNumberField(verbose_name='Contato', null=True, blank=True)
+    zipcode = models.IntegerField(verbose_name='CEP', null=True, blank=True)
     street = models.CharField(max_length=30, verbose_name='Logradouro', null=True, blank=True)
     district = models.CharField(max_length=30, verbose_name='Bairro', null=True, blank=True)
     number = models.IntegerField(verbose_name='Número', null=True, blank=True)
-    city = models.ForeignKey(CityModel, on_delete=models.SET_NULL, verbose_name="Cidade", null=True, blank=True)
-    state = models.ForeignKey(StateModel, on_delete=models.SET_NULL, verbose_name="UF", null=True, blank=True)
-    zipcode = models.IntegerField(verbose_name='CEP', null=True, blank=True)
+    city = models.CharField(max_length=40, choices= CHOICES_CITIES, null=True, blank=True, default='NULL')
+    state = models.CharField(max_length=20, choices= CHOICES_STATES, null=True, blank=True, default='NULL')
     complement = models.CharField(max_length=15, verbose_name='Complemento', null=True, blank=True)
     document1 = models.IntegerField(verbose_name='CPF', null=True, blank=True)
     document2 = models.IntegerField(verbose_name='RG', null=True, blank=True)

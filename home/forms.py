@@ -75,7 +75,7 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = ClientModel
         fields = ('first_name', 'last_name', 'born', 'responsibleName', 'responsiblePhone',
-                'street', 'district', 'number', 'city', 'state', 'zipcode', 'complement',
+                'zipcode', 'street', 'district', 'number', 'city', 'state', 'complement',
                 'document1', 'document2', 'phone1', 'phone2','status',
                 )
         

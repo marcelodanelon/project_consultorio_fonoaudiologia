@@ -8,7 +8,7 @@
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
-        {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'street' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  
+        {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'zipcode' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  
         <div class="row align-items-center">
         {% endif %} 
           <div class="col"> 
