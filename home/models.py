@@ -33,7 +33,7 @@ class ClientModel(models.Model):
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
     
-class localModel(models.Model):
+class LocalModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nome da Unidade')
     zipcode = models.IntegerField(verbose_name='CEP', null=True, blank=True)
     street = models.CharField(max_length=30, verbose_name='Logradouro', null=True, blank=True)
@@ -42,6 +42,8 @@ class localModel(models.Model):
     city = models.CharField(max_length=40, choices= CHOICES_CITIES, null=True, blank=True, default='NULL')
     state = models.CharField(max_length=20, choices= CHOICES_STATES, null=True, blank=True, default='NULL')
     complement = models.CharField(max_length=15, verbose_name='Complemento', null=True, blank=True)
+    phone1 = PhoneNumberField(verbose_name='Telefone', null=True, blank=True)
+    phone2 = PhoneNumberField(verbose_name='Celular', null=True, blank=True)
     CNPJ = models.CharField(max_length=14, verbose_name='CNPJ', null=True, blank=True)
     status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True)
 

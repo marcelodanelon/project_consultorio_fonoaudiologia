@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from home.forms import ClientForm
-from home.models import ClientModel
+from home.forms import LocalForm
+from home.models import LocalModel
 from django.contrib import messages
 
 def createLocal(request):
     form_action = reverse('home:createLocal')
 
     if request.method == 'POST':
-        formClient = ClientForm(request.POST)
+        formClient = LocalForm(request.POST)
 
         if formClient.is_valid():
             form = formClient.save()
@@ -33,7 +33,7 @@ def createLocal(request):
         )
 
     context = {
-            'form': ClientForm(),
+            'form': LocalForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
             'form_action': form_action,
@@ -46,11 +46,11 @@ def createLocal(request):
     )
 
 def updateLocal(request, local_id):
-    local = get_object_or_404(ClientModel, pk=local_id)
+    local = get_object_or_404(LocalModel, pk=local_id)
     form_action = reverse('home:updateClient', args=(local_id,))
 
     if request.method == 'POST':
-        formClient = ClientForm(request.POST, instance=local)
+        formClient = LocalForm(request.POST, instance=local)
 
         if formClient.is_valid():
             formClient.save()
@@ -78,7 +78,7 @@ def updateLocal(request, local_id):
         )
 
     context = {
-            'form': ClientForm(instance=local),
+            'form': LocalForm(instance=local),
             'title':'Cadastro',
             'name_screen': 'Atualizar',
             'option_delete': 'yes',
@@ -93,7 +93,7 @@ def updateLocal(request, local_id):
     )
 
 def deleteLocal(request, local_id):
-    client = get_object_or_404(ClientModel, pk=local_id)
+    client = get_object_or_404(LocalModel, pk=local_id)
     form_action = reverse('home:deleteLocal', args=(local_id,))
 
     confirmation = request.POST.get('confirmation_delete', 'no')
@@ -104,7 +104,7 @@ def deleteLocal(request, local_id):
         return redirect ('home:listLocal')
 
     context = {
-        'form': ClientForm(instance=client),
+        'form': LocalForm(instance=client),
         'title':'Cadastro',
         'name_screen': 'Atualizar',
         'option_delete': 'yes',
