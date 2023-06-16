@@ -1,6 +1,5 @@
     <ul>
         <li><a href='{% url 'home:index' %}'>Início</a></li>
-        <li><a href='#'>Messages</a></li>
         <li class='sub-menu'><a href='#'>Cliente<div class='fa fa-caret-down right'></div></a>
         <ul>
             <li><a href='{% url 'home:listClient' %}'>Pesquisar</a></li>
@@ -11,12 +10,22 @@
             <li><a href='#settings'>Notification</a></li> {% endcomment %}
         </ul>
         </li>
-        <li class='sub-menu'><a href='#message'>Help<div class='fa fa-caret-down right'></div></a>
+        <li class='sub-menu'><a href='#'>Unidade de Atendimento<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href='{% url 'home:listLocal' %}'>Pesquisar</a></li>
+                <li><a href='{% url 'home:createLocal' %}'>Cadastrar</a></li>
+                {% comment %} 
+                <li><a href='#settings'>Secruity &amp; Privacy</a></li>
+                <li><a href='#settings'>Password</a></li>
+                <li><a href='#settings'>Notification</a></li> {% endcomment %}
+            </ul>
+        </li>
+        {% comment %} <li class='sub-menu'><a href='#message'>Help<div class='fa fa-caret-down right'></div></a>
         <ul>
             <li><a href='#settings'>FAQ's</a></li>
             <li><a href='#settings'>Submit a Ticket</a></li>
             <li><a href='#settings'>Network Status</a></li>
         </ul>
         </li>
-        <li><a href='#message'>Logout</a></li>
+        <li><a href='#message'>Logout</a></li> {% endcomment %}
     </ul>

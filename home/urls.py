@@ -1,14 +1,22 @@
 from django.urls import path
-from home import views
+from home.views import client
+from home.views import local
 
 app_name = 'home'
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('listClient/', views.listClient, name='listClient'),
+    path('', client.index, name='index'),
+    path('listClient/', client.listClient, name='listClient'),
 
-    path('createClient/', views.createClient, name='createClient'),
-    path('searchClient/', views.searchClient, name='searchClient'),
-    path('<int:client_id>/updateClient/', views.updateClient, name='updateClient'),
-    path('<int:client_id>/deleteClient/', views.deleteClient, name='deleteClient'),
+    path('createClient/', client.createClient, name='createClient'),
+    path('searchClient/', client.searchClient, name='searchClient'),
+    path('<int:client_id>/updateClient/', client.updateClient, name='updateClient'),
+    path('<int:client_id>/deleteClient/', client.deleteClient, name='deleteClient'),
+
+    path('listLocal/', local.listLocal, name='listLocal'),
+
+    path('createLocal/', local.createLocal, name='createLocal'),
+    path('searchLocal/', local.searchLocal, name='searchLocal'),
+    path('<int:local_id>/updateLocal/', local.updateLocal, name='updateLocal'),
+    path('<int:local_id>/deleteLocal/', local.deleteLocal, name='deleteLocal'),
 ]
