@@ -1,0 +1,49 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+  <div class="container" style="padding:1px 16px;">
+    <h3>{{name_screen}}</h3> <br>
+    <form action="{{form_action}}" method="post" class="form-control">
+      {% csrf_token %}
+      {% for field in form %}    
+        {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'zipcode' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  
+        <div class="row align-items-center">
+        {% endif %} 
+          <div class="col"> 
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {% if form.non_field_errors %}
+              <div class="form-content">
+                <div class="form-group">
+                  <div class="message error">
+                    {{ form.non_field_errors }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {{ field }}
+          </div>            
+        {% if field.name == 'born' or field.name == 'responsiblePhone' or field.name == 'number' or field.name == 'complement' or field.name == 'document2' or field.name == 'phone2' or field.name == 'status' %}             
+        </div> <br> 
+        {% endif %}                                 
+      {% endfor %}
+      <div class="form-content d-flex flex-row bd-highlight mb-3">        
+        <button class="btn btn-success me-1" type="submit">Gravar</button>
+    </form>
+          {% if option_delete == 'yes'%}
+          <form action="{% url 'home:deleteLocal' local.id %}" method="POST">
+              {% csrf_token %}
+              {% if confirmation_delete == 'no' %}
+                <input name="confirmation_delete" type="hidden" value="yes">
+                <button class="btn btn-danger">Confirma?</button>  
+              {% else %}
+                <button class="btn btn-danger">Delete</button> 
+              {% endif %}      
+              <a href="{% url 'home:listLocal' %}" class="btn btn-primary">Voltar</a>
+      </div>  
+          </form> 
+          {% endif %}  
+  </div>
+{% endblock content %}
+
