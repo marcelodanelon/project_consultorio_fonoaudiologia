@@ -12,7 +12,7 @@ def createProfessional(request):
 
         if formProfessional.is_valid():
             form = formProfessional.save()
-            messages.success(request, 'Unidade cadastrada com sucesso!')
+            messages.success(request, 'Profissional cadastrado com sucesso!')
             return redirect('home:updateProfessional',form.id)
 
         context = {
@@ -42,7 +42,7 @@ def createProfessional(request):
 
 def updateProfessional(request, professional_id):
     professional = get_object_or_404(ProfessionalModel, pk=professional_id)
-    form_action = reverse('home:updateLocal', args=(professional_id,))
+    form_action = reverse('home:updateProfessional', args=(professional_id,))
 
     if request.method == 'POST':
         formProfessional = ProfessionalForm(request.POST, instance=professional)
@@ -50,7 +50,7 @@ def updateProfessional(request, professional_id):
         if formProfessional.is_valid():
             formProfessional.save()
             messages.success(request, 'Profissional atualizado com sucesso!')
-            return redirect('home:listLocal')
+            return redirect('home:listProfessional')
 
         context = {
             'form': formProfessional,
@@ -91,7 +91,7 @@ def deleteProfessional(request, professional_id):
     if confirmation == 'yes':
         professional.delete()
         messages.success(request, 'Profissional deletado com sucesso!')
-        return redirect ('home:listLocal')
+        return redirect ('home:listProfessional')
 
     context = {
         'form': ProfessionalForm(instance=professional),

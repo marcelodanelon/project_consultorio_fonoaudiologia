@@ -6,7 +6,7 @@
 <div class="container" style="padding:1px 16px;">
     <h3>Pesquisar</h3> <br>
 <div class="responsive-table">
-    <form action="{% url 'home:searchLocal' %}" method="get">
+    <form action="{% url 'home:searchProfessional' %}" method="get">
         <input class="form-control" type="text" name="q" placeholder="Digite um nome">
     </form>
     <table class="clients-table">
@@ -14,22 +14,22 @@
             <tr class="table-row table-row-header">
                 <th class="table-header">ID</th>
                 <th class="table-header">Nome</th>
-                <th class="table-header">Município</th>
+                <th class="table-header">Especialidade</th>
             </tr>
         </thead>
         <tbody>
-            {% for local in page_obj %}
+            {% for professional in page_obj %}
                 <tr class="table-row">
                     <td class="table-cel">
-                        <a href="{% url 'home:updateLocal' local.id %}" class="table-link">
-                            {{ local.id }}
+                        <a href="{% url 'home:updateProfessional' professional.id %}" class="table-link">
+                            {{ professional.id }}
                         </a>
                     </td>
                     <td class="table-cel">
-                            {{ local.name }}
+                            {{ professional.first_name }} {{ professional.last_name }}
                     </td>    
                     <td class="table-cel">
-                        {{ local.city }}
+                            {{ professional.specialty }}
                     </td>                  
                 </tr>
             {% endfor %}

@@ -23,6 +23,6 @@ urlpatterns = [
     path('listProfessional/', professional.listProfessional, name='listProfessional'),
     path('createProfessional/', professional.createProfessional, name='createProfessional'),
     path('searchProfessional/', professional.searchProfessional, name='searchProfessional'),
-    path('<int:Professional_id>/updateProfessional/', professional.updateProfessional, name='updateProfessional'),
-    path('<int:Professional_id>/deleteProfessional/', professional.deleteProfessional, name='deleteProfessional'),
+    path('<int:professional_id>/updateProfessional/', professional.updateProfessional, name='updateProfessional'),
+    path('<int:professional_id>/deleteProfessional/', professional.deleteProfessional, name='deleteProfessional'),
 ]

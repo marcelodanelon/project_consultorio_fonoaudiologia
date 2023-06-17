@@ -52,6 +52,9 @@ class LocalModel(models.Model):
     
 class SpecialtyModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Especialidade')
+
+    def __str__(self) -> str:
+        return self.name
     
 class ProfessionalModel(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Primeiro Nome')
@@ -70,7 +73,7 @@ class ProfessionalModel(models.Model):
     document2 = models.IntegerField(verbose_name='RG', null=True, blank=True)
     phone1 = PhoneNumberField(verbose_name='Telefone', null=True, blank=True)
     phone2 = PhoneNumberField(verbose_name='Celular', null=True, blank=True)
-    specialty = models.ForeignKey(SpecialtyModel, on_delete=models.SET_NULL, verbose_name="Especialidade", null=True, blank=True)
+    specialty = models.ForeignKey(SpecialtyModel, on_delete=models.SET_NULL, verbose_name="Especialidade", null=True)
     status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True)
 
     def __str__(self) -> str:

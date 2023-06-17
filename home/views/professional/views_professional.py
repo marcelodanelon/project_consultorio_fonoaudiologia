@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from home.models import LocalModel
+from home.models import ProfessionalModel
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -12,9 +12,9 @@ def isDate(var):
         return False
 
 def listProfessional(request):
-    locais = LocalModel.objects.all().order_by('id')
+    profissionais = ProfessionalModel.objects.all().order_by('id')
 
-    paginator = Paginator(locais, 14)
+    paginator = Paginator(profissionais, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -25,24 +25,24 @@ def listProfessional(request):
 
     return render(
         request,
-        'home/local/search.html',
+        'home/professional/search.html',
         context
     )
 
 def searchProfessional(request):
-    search_local = request.GET.get('q','').strip()
+    search_profissional = request.GET.get('q','').strip()
 
-    if search_local == "":
-        return redirect('home:listLocal')
+    if search_profissional == "":
+        return redirect('home:listProfessional')
 
-    if search_local.isdigit():
-        locais = LocalModel.objects.filter(document1=int(search_local)).order_by('id')
+    if search_profissional.isdigit():
+        profissionais = ProfessionalModel.objects.filter(document1=int(search_profissional)).order_by('id')
     else:        
-        locais = LocalModel.objects.filter(
-            Q(name=search_local)
+        profissionais = ProfessionalModel.objects.filter(
+            Q(name=search_profissional)
         ).order_by('id')
 
-    paginator = Paginator(locais, 14)
+    paginator = Paginator(profissionais, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -53,6 +53,6 @@ def searchProfessional(request):
 
     return render(
         request,
-        'home/local/search.html',
+        'home/professional/search.html',
         context
     )

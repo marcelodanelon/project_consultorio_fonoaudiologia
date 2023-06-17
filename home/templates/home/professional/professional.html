@@ -32,7 +32,7 @@
         <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
           {% if option_delete == 'yes'%}
-          <form action="{% url 'home:deleteLocal' local.id %}" method="POST">
+          <form action="{% url 'home:deleteProfessional' professional.id %}" method="POST">
               {% csrf_token %}
               {% if confirmation_delete == 'no' %}
                 <input name="confirmation_delete" type="hidden" value="yes">
@@ -40,7 +40,7 @@
               {% else %}
                 <button class="btn btn-danger">Delete</button> 
               {% endif %}      
-              <a href="{% url 'home:listLocal' %}" class="btn btn-primary">Voltar</a>
+              <a href="{% url 'home:listProfessional' %}" class="btn btn-primary">Voltar</a>
       </div>  
           </form> 
           {% endif %}  
