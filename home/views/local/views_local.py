@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from home.models import ClientModel
+from home.models import LocalModel
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -12,7 +12,7 @@ def isDate(var):
         return False
 
 def listLocal(request):
-    locais = ClientModel.objects.all().order_by('id')
+    locais = LocalModel.objects.all().order_by('id')
 
     paginator = Paginator(locais, 14)
     page_number = request.GET.get("page")
@@ -33,16 +33,13 @@ def searchLocal(request):
     search_local = request.GET.get('q','').strip()
 
     if search_local == "":
-        return redirect('home:listClient')
+        return redirect('home:listLocal')
 
     if search_local.isdigit():
-        locais = ClientModel.objects.filter(document1=int(search_local)).order_by('id')
-    elif isDate(search_local):
-        locais = ClientModel.objects.filter(born=datetime.strptime(search_local, '%d/%m/%Y').date()).order_by('id')
+        locais = LocalModel.objects.filter(document1=int(search_local)).order_by('id')
     else:        
-        locais = ClientModel.objects.filter(
-            Q(first_name=search_local) | 
-            Q(last_name=search_local)
+        locais = LocalModel.objects.filter(
+            Q(name=search_local)
         ).order_by('id')
 
     paginator = Paginator(locais, 14)

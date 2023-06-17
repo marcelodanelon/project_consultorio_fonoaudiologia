@@ -8,20 +8,15 @@ def createLocal(request):
     form_action = reverse('home:createLocal')
 
     if request.method == 'POST':
-        formClient = LocalForm(request.POST)
+        formLocal = LocalForm(request.POST)
 
-        if formClient.is_valid():
-            form = formClient.save()
-            messages.success(request, 'Cliente cadastrado com sucesso!')
-            return redirect('home:updateClient',form.id)
-        else:
-            if "born" in formClient.errors:
-                messages.error(request, 'Data de Nascimento Inválida!')
-            if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
-                messages.error(request, 'Número de telefone inválido!')
+        if formLocal.is_valid():
+            form = formLocal.save()
+            messages.success(request, 'Unidade cadastrada com sucesso!')
+            return redirect('home:updateLocal',form.id)
 
         context = {
-            'form': formClient,
+            'form': formLocal,
             'title':'Cadastro',
             'form_action': form_action,
         }
@@ -47,23 +42,18 @@ def createLocal(request):
 
 def updateLocal(request, local_id):
     local = get_object_or_404(LocalModel, pk=local_id)
-    form_action = reverse('home:updateClient', args=(local_id,))
+    form_action = reverse('home:updateLocal', args=(local_id,))
 
     if request.method == 'POST':
-        formClient = LocalForm(request.POST, instance=local)
+        formLocal = LocalForm(request.POST, instance=local)
 
-        if formClient.is_valid():
-            formClient.save()
-            messages.success(request, 'Cliente atualizado com sucesso!')
+        if formLocal.is_valid():
+            formLocal.save()
+            messages.success(request, 'Local atualizado com sucesso!')
             return redirect('home:listLocal')
-        else:
-            if "born" in formClient.errors:
-                messages.error(request, 'Data de Nascimento inválida!')
-            if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
-                messages.error(request, 'Número de telefone inválido!')
 
         context = {
-            'form': formClient,
+            'form': formLocal,
             'title':'Cadastro',
             'name_screen': 'Atualizar',
             'option_delete': 'yes',
@@ -93,22 +83,22 @@ def updateLocal(request, local_id):
     )
 
 def deleteLocal(request, local_id):
-    client = get_object_or_404(LocalModel, pk=local_id)
+    local = get_object_or_404(LocalModel, pk=local_id)
     form_action = reverse('home:deleteLocal', args=(local_id,))
 
     confirmation = request.POST.get('confirmation_delete', 'no')
 
     if confirmation == 'yes':
-        client.delete()
-        messages.success(request, 'Cliente deletado com sucesso!')
+        local.delete()
+        messages.success(request, 'Local deletado com sucesso!')
         return redirect ('home:listLocal')
 
     context = {
-        'form': LocalForm(instance=client),
+        'form': LocalForm(instance=local),
         'title':'Cadastro',
         'name_screen': 'Atualizar',
         'option_delete': 'yes',
-        'client': client,
+        'local': local,
         'confirmation_delete': confirmation,
         'form_action': form_action,
     }
