@@ -13,9 +13,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
       <div class="collapse nav_barhorizontal" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
-          <a href="#">Home</a>
+          <a href="{% url 'home:index' %}">Home</a>
           <a href="#">Atendimento</a>
-          <a href="#">Estoque</a>
+          <a href="{% url 'storage:index' %}">Estoque</a>
           <a href="#">Relatórios</a>
         </div>
       </div>

@@ -1,22 +1,9 @@
     <ul>
         <li><a href='{% url 'home:index' %}'>Início</a></li>
-        <li class='sub-menu'><a href='#'>Cliente<div class='fa fa-caret-down right'></div></a>
+        <li class='sub-menu'><a href='#'>Cadastros<div class='fa fa-caret-down right'></div></a>
         <ul>
-            <li><a href='{% url 'home:listClient' %}'>Pesquisar</a></li>
-            <li><a href='{% url 'home:createClient' %}'>Cadastrar</a></li>
+            <li><a href='{% url 'home:listClient' %}'>Clientes</a></li>
+            <li><a href='{% url 'home:listLocal' %}'>Unidades de Atendimento</a></li>
+            <li><a href='{% url 'home:listProfessional' %}'>Profissionais</a></li>
         </ul>
-        </li>
-        <li class='sub-menu'><a href='#'>Unidade de Atendimento<div class='fa fa-caret-down right'></div></a>
-            <ul>
-                <li><a href='{% url 'home:listLocal' %}'>Pesquisar</a></li>
-                <li><a href='{% url 'home:createLocal' %}'>Cadastrar</a></li>
-            </ul>
-        </li>
-        </li>
-        <li class='sub-menu'><a href='#'>Profissionais<div class='fa fa-caret-down right'></div></a>
-            <ul>
-                <li><a href='{% url 'home:listProfessional' %}'>Pesquisar</a></li>
-                <li><a href='{% url 'home:createProfessional' %}'>Cadastrar</a></li>
-            </ul>
-        </li>
     </ul>

@@ -1,0 +1,14 @@
+    <ul>
+        <li><a href='{% url 'storage:index' %}'>Início</a></li>
+        <li class='sub-menu'><a href='#'>Cadastros<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href='{% url 'home:listLocal' %}'>Insumos</a></li>
+            </ul>
+        </li>
+        <li class='sub-menu'><a href='#'>Movimentação<div class='fa fa-caret-down right'></div></a>
+        <ul>
+            <li><a href='{% url 'home:listClient' %}'>Entrada de Insumos</a></li>
+            <li><a href='{% url 'home:createClient' %}'>Saída de Insumos</a></li>
+        </ul>
+        </li>
+    </ul>
