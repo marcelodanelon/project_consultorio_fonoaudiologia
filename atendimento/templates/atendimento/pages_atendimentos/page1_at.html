@@ -1,0 +1,27 @@
+<div id="page1">
+    
+    {% for field in form %} 
+        {% if field.name == 'client' or field.name == 'conheceu' or field.name == 'question2' or field.name == 'question4' or field.name == 'question6a' or field.name == 'question6j' or field.name == 'question7a' %}  
+            <div class="row align-items-center">
+            {% endif %} 
+            {% if field.name == 'client' or field.name == 'data' or field.name == 'conheceu' or field.name == 'question1' or field.name == 'question2' or field.name == 'question3' or field.name == 'question4' or field.name == 'question5' or field.name == 'question6a' or field.name == 'question6b' or field.name == 'question6c' or field.name == 'question6d' or field.name == 'question6e' or field.name == 'question6f' or field.name == 'question6g' or field.name == 'question6h' or field.name == 'question6i' or field.name == 'question6j' or field.name == 'question7a' or field.name == 'question7b' or field.name == 'question7c' or field.name == 'question7d' or field.name == 'question7e' or field.name == 'question7f' or field.name == 'question7g' or field.name == 'question7h' %}
+                <div class="col"> 
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
+                {% if form.non_field_errors %}
+                    <div class="form-content">
+                    <div class="form-group">
+                        <div class="message error">
+                        {{ form.non_field_errors }}
+                        </div>
+                    </div>
+                    </div>
+                {% endif %}
+                {{ field }}
+                {{ field.errors }}
+                </div>  
+            {% endif %}        
+            {% if field.name == 'data' or field.name == 'question1' or field.name == 'question3' or field.name == 'question5' or field.name == 'question6j' or field.name == 'question7h' %}    
+            </div> <br> 
+        {% endif %}
+    {% endfor %}
+</div>

@@ -27,6 +27,7 @@ class ClientModel(models.Model):
     document2 = models.IntegerField(verbose_name='RG', null=True, blank=True)
     phone1 = PhoneNumberField(verbose_name='Telefone', null=True, blank=True)
     phone2 = PhoneNumberField(verbose_name='Celular', null=True, blank=True)
+    profissao = models.CharField(max_length=50, verbose_name='Profissão', null=True, blank=True)
     status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True)
     # owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
