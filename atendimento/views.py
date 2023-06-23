@@ -7,6 +7,7 @@ def index(request):
 
     context = {
         'form': form,
+        'name_screen': 'Atendimento'
     }
 
     return render(

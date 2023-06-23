@@ -2,7 +2,7 @@
     {% load custom_template_tag %}
     {% setvar "yes" as action %}
     {% for field in form %} 
-        {% if field.name == 'client' or field.name == 'conheceu' or field.name == 'question2' or field.name == 'question4' or field.name == 'question6a' or field.name == 'question6j' or field.name == 'question7a' %}  
+        {% if field.name == 'client' or field.name == 'conheceu' or field.name == 'question2' or field.name == 'question4' %}  
             <div class="row align-items-center">
         {% endif %} 
         {% if field.name == "question6a" %}
@@ -24,9 +24,8 @@
                 {{ field.errors }}
             </div>  
         {% endif %}        
-        {% if field.name == 'data' or field.name == 'question1' or field.name == 'question3' or field.name == 'question5' or field.name == 'question6j' or field.name == 'question7h' %}    
+        {% if field.name == 'data' or field.name == 'question1' or field.name == 'question3' or field.name == 'question5' %}    
             </div> <br> 
         {% endif %}
     {% endfor %}
-    </div>
 </div>

@@ -75,6 +75,38 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['question6j'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['question7a'].label = 'Zumbido'
+        self.fields['question7a'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7b'].label = 'Coceira'
+        self.fields['question7b'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7c'].label = 'Otite'
+        self.fields['question7c'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7d'].label = 'Dor'
+        self.fields['question7d'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7e'].label = 'Cirurgia nos ouvidos'
+        self.fields['question7e'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7f'].label = 'Tímpano perfurado'
+        self.fields['question7f'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7g'].label = 'Sensação de ouvido tampado'
+        self.fields['question7g'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['question7h'].label = 'Outros'
+        self.fields['question7h'].widget.attrs.update({
+            'class':'form-control',
+        })
 
     class Meta:
         model = AtendimentoModel
