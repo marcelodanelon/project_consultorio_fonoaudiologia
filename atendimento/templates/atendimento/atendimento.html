@@ -3,12 +3,19 @@
 {% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
 
 {% block content %}
+  <script>
+  $(document).ready(function(){
+      $("#id_client").change(function(){
+          var client = $(this).children("option:selected").val();
+          window.location.replace("{% url 'atendimento:dadosClient' %}?searchClient=" + client);
+      });
+  });
+  </script>
   <div class="container" style="padding:1px 16px;">
     <h3>{{name_screen}}</h3> <br>
     <a class="btn btn-primary" id="addItem1">Page 1</a>  
     <a class="btn btn-primary" id="addItem2">Page 2</a>  
     <a class="btn btn-primary" id="addItem3">Page 3</a> 
-    {% include 'partials/_card_client.html' %}
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %} 
           {% include 'atendimento/pages_atendimentos/page1_at.html' %}
@@ -31,12 +38,5 @@
           </form> 
           {% endif %}  
   </div>
-  <script>
-    function preencheCampo(el){
-      let value = $(el).val();
-
-      $('input[name="searchClient"]').val(value);
-    }
-  </script>
 {% endblock content %}
 
