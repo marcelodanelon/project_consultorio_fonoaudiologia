@@ -5,4 +5,5 @@ app_name = 'atendimento'
 
 urlpatterns = [
     path('atendimento/', views.index ,name='index'),
+    path('atendimento/dados/', views.dadosClient ,name='dadosClient'),
 ]

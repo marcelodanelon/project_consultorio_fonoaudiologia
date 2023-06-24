@@ -1,0 +1,7 @@
+{% for field in form %}
+    {% if field.name == 'client' %}
+    <form action="{% url 'atendimento:dadosClient' %}" method="get">
+        <input class="form-control" type="text" name="searchClient">
+    </form>
+    {% endif %}
+{% endfor %}

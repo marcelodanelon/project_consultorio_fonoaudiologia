@@ -7,6 +7,7 @@ class AtendimentoForm(forms.ModelForm):
 
         self.fields['client'].widget.attrs.update({
             'class':'form-control',
+            'onchange':'preencheCampo(this);',
         })
         self.fields['data'].widget.attrs.update({
             'class':'form-control',
