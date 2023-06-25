@@ -2,7 +2,25 @@
     {% load custom_template_tag %}
     {% setvar "yes" as action %}
     {% for fieldClient in client %}
-        {{fieldClient}}
+        <div class="card_client">
+            <div class="row">
+                <div class="col">
+                    Nome: {{fieldClient.first_name}} {{fieldClient.last_name}}
+                </div>
+                <div class="col">
+                    {% if fieldClient.street == None or fieldClient.number == None or fieldClient.district == None %}
+                        Endereço: Incompleto
+                    {% else %}
+                        Endereço: {{fieldClient.street}}, {{fieldClient.number}} - {{fieldClient.district}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Data de Nascimento: {{fieldClient.born}}
+                </div>
+            </div>
+        </div>
     {% endfor %}
     {% for field in form %} 
         {% if field.name == 'client' or field.name == 'conheceu' or field.name == 'question2' or field.name == 'question4' %}  

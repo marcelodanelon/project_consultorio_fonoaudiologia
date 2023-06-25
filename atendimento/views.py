@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from atendimento.forms import AtendimentoForm
 from home.models import ClientModel
+from atendimento.models import AtendimentoModel
 
 # Create your views here.
 def index(request):

@@ -5,9 +5,19 @@
 {% block content %}
   <script>
   $(document).ready(function(){
+      // buscar dados do client, chamando a view
       $("#id_client").change(function(){
           var client = $(this).children("option:selected").val();
           window.location.replace("{% url 'atendimento:dadosClient' %}?searchClient=" + client);
+      });
+      //obter valor parametro searchClient (control select)
+      var url_string = window.location.href; 
+      var url = new URL(url_string);
+      var paramValue = url.searchParams.get("searchClient");
+      $('#id_client option').each(function() {
+        if($(this).val() == paramValue) {
+          $(this).attr('selected', true);
+        }
       });
   });
   </script>
