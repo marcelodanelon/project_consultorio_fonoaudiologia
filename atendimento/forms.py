@@ -5,113 +5,120 @@ class AtendimentoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['client'].widget.attrs.update({
+        self.fields['aClient'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['data'].widget.attrs.update({
+        self.fields['aProfessional'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['conheceu'].label = 'Onde conheceu a MARKI?'
-        self.fields['conheceu'].widget.attrs.update({
+        self.fields['aLocal'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question1'].label = 'Tem dificuldade para escutar? Há quanto tempo? Sabe a causa?'
-        self.fields['question1'].widget.attrs.update({
+        self.fields['aDataOOO'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question2'].label = 'Sua dificuldade está piorando?'
-        self.fields['question2'].widget.attrs.update({
+        self.fields['aConhece'].label = 'Onde conheceu a MARKI?'
+        self.fields['aConhece'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question3'].label = 'Tem algum ouvido que escuta melhor?'
-        self.fields['question3'].widget.attrs.update({
+        self.fields['aDifiEsc'].label = 'Tem dificuldade para escutar? Há quanto tempo? Sabe a causa?'
+        self.fields['aDifiEsc'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aDifiPio'].label = 'Sua dificuldade está piorando?'
+        self.fields['aDifiPio'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aOuviMel'].label = 'Tem algum ouvido que escuta melhor?'
+        self.fields['aOuviMel'].widget.attrs.update({
             'class':'form-control dropdown',
         })
-        self.fields['question4'].label = 'Há pessoas na família com perda de audição?'
-        self.fields['question4'].widget.attrs.update({
+        self.fields['aPessFam'].label = 'Há pessoas na família com perda de audição?'
+        self.fields['aPessFam'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question5'].label = 'Já trabalhou em ambiente ruidoso? Por quanto tempo?'
-        self.fields['question5'].widget.attrs.update({
+        self.fields['aTrabRui'].label = 'Já trabalhou em ambiente ruidoso? Por quanto tempo?'
+        self.fields['aTrabRui'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question6a'].label = 'Televisão'
-        self.fields['question6a'].widget.attrs.update({
+        self.fields['aTelevis'].label = 'Televisão'
+        self.fields['aTelevis'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6b'].label = 'Telefone fixo'
-        self.fields['question6b'].widget.attrs.update({
+        self.fields['aTeleFix'].label = 'Telefone fixo'
+        self.fields['aTeleFix'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6c'].label = 'Celular'
-        self.fields['question6c'].widget.attrs.update({
+        self.fields['aTeleCel'].label = 'Celular'
+        self.fields['aTeleCel'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6d'].label = 'Conversa com grupo de pessoas'
-        self.fields['question6d'].widget.attrs.update({
+        self.fields['aConvGru'].label = 'Conversa com grupo de pessoas'
+        self.fields['aConvGru'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6e'].label = 'Conversa em ambiente ruidoso'
-        self.fields['question6e'].widget.attrs.update({
+        self.fields['aConvRui'].label = 'Conversa em ambiente ruidoso'
+        self.fields['aConvRui'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6f'].label = 'Fala muito baixa'
-        self.fields['question6f'].widget.attrs.update({
+        self.fields['aFalaBai'].label = 'Fala muito baixa'
+        self.fields['aFalaBai'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6g'].label = 'Fala a distância'
-        self.fields['question6g'].widget.attrs.update({
+        self.fields['aFaladis'].label = 'Fala a distância'
+        self.fields['aFaladis'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6h'].label = 'Cinema/teatro'
-        self.fields['question6h'].widget.attrs.update({
+        self.fields['aCineTea'].label = 'Cinema/teatro'
+        self.fields['aCineTea'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6i'].label = 'Palestra/sala de aula'
-        self.fields['question6i'].widget.attrs.update({
+        self.fields['aPaleSal'].label = 'Palestra/sala de aula'
+        self.fields['aPaleSal'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question6j'].label = 'Outros'
-        self.fields['question6j'].widget.attrs.update({
+        self.fields['aOutrDif'].label = 'Outros'
+        self.fields['aOutrDif'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['question7a'].label = 'Zumbido'
-        self.fields['question7a'].widget.attrs.update({
+        self.fields['aZumbido'].label = 'Zumbido'
+        self.fields['aZumbido'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7b'].label = 'Coceira'
-        self.fields['question7b'].widget.attrs.update({
+        self.fields['aCoceira'].label = 'Coceira'
+        self.fields['aCoceira'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7c'].label = 'Otite'
-        self.fields['question7c'].widget.attrs.update({
+        self.fields['aOtiteOO'].label = 'Otite'
+        self.fields['aOtiteOO'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7d'].label = 'Dor'
-        self.fields['question7d'].widget.attrs.update({
+        self.fields['aDorOOOO'].label = 'Dor'
+        self.fields['aDorOOOO'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7e'].label = 'Cirurgia nos ouvidos'
-        self.fields['question7e'].widget.attrs.update({
+        self.fields['aCiruOuv'].label = 'Cirurgia nos ouvidos'
+        self.fields['aCiruOuv'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7f'].label = 'Tímpano perfurado'
-        self.fields['question7f'].widget.attrs.update({
+        self.fields['aTimpPer'].label = 'Tímpano perfurado'
+        self.fields['aTimpPer'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7g'].label = 'Sensação de ouvido tampado'
-        self.fields['question7g'].widget.attrs.update({
+        self.fields['aSensTam'].label = 'Sensação de ouvido tampado'
+        self.fields['aSensTam'].widget.attrs.update({
             'class':'form-check-label',
         })
-        self.fields['question7h'].label = 'Outros'
-        self.fields['question7h'].widget.attrs.update({
+        self.fields['aOutrOuv'].label = 'Outros'
+        self.fields['aOutrOuv'].widget.attrs.update({
             'class':'form-control',
         })
 
     class Meta:
         model = AtendimentoModel
-        fields = ('client', 'data', 'conheceu', 'question1', 'question2', 'question3',
-                 'question4', 'question5', 'question6a', 'question6b', 'question6c',
-                 'question6d', 'question6e', 'question6f', 'question6g', 'question6h',
-                 'question6i', 'question6j', 'question7a', 'question7b', 'question7c',
-                 'question7d', 'question7e', 'question7f', 'question7g', 'question7h')
+        fields = ('aClient', 'aProfessional', 'aLocal','aDataOOO', 'aConhece', 
+                  'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 
+                  'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
+                  'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',
+                  'aZumbido', 'aCoceira', 'aOtiteOO','aDorOOOO', 'aCiruOuv', 
+                  'aTimpPer', 'aSensTam', 'aOutrOuv')

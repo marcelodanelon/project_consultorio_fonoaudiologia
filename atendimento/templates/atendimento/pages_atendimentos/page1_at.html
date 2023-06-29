@@ -23,10 +23,10 @@
         </div>
     {% endfor %}
     {% for field in form %} 
-        {% if field.name == 'client' or field.name == 'conheceu' or field.name == 'question2' or field.name == 'question4' %}  
+        {% if field.name == 'aClient' or field.name == 'aConhece' or field.name == 'aDifiPio' or field.name == 'aPessFam' %}  
             <div class="row align-items-center">
         {% endif %} 
-        {% if field.name == "question6a" %}
+        {% if field.name == "aTelevis" %}
             {% setvar "no" as action %}
         {% endif %}
         {% if action == "yes" %}
@@ -45,7 +45,7 @@
                 {{ field.errors }}
             </div>  
         {% endif %}        
-        {% if field.name == 'data' or field.name == 'question1' or field.name == 'question3' or field.name == 'question5' %}    
+        {% if field.name == 'aDataOOO' or field.name == 'aDifiEsc' or field.name == 'aOuviMel' or field.name == 'aTrabRui' %}    
             </div> <br> 
         {% endif %}
     {% endfor %}
