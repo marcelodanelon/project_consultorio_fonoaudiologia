@@ -113,6 +113,99 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['aOutrOuv'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['aCardiop'].label = 'Cardiopatia(problema de coração)'
+        self.fields['aCardiop'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aPresAlt'].label = 'Pressão Alta'
+        self.fields['aPresAlt'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aProbRin'].label = 'Problemas nos rins'
+        self.fields['aProbRin'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aTontura'].label = 'Tontura'
+        self.fields['aTontura'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aDiabete'].label = 'Diabetes'
+        self.fields['aDiabete'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aProbTir'].label = 'Problema na tireoide'
+        self.fields['aProbTir'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aUsoOtot'].label = 'Uso de ototóxico(antibiótico forte)'
+        self.fields['aUsoOtot'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aColeAlt'].label = 'Colesterol alto'
+        self.fields['aColeAlt'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aLabirin'].label = 'Labirintite'
+        self.fields['aLabirin'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aCancerO'].label = 'Câncer'
+        self.fields['aCancerO'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aOutrDoe'].label = 'Outros'
+        self.fields['aOutrDoe'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+        self.fields['aJaUsoAp'].label = 'Já usou aparelho auditivo anteriormente?'
+        self.fields['aJaUsoAp'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aMarcaOO'].label = 'Marca'
+        self.fields['aMarcaOO'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aTempoOO'].label = 'Quanto Tempo?'
+        self.fields['aTempoOO'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aJaTesAp'].label = 'Já testou o aparelho?'
+        self.fields['aJaTesAp'].widget.attrs.update({
+            'class':'form-check-label',
+        })
+        self.fields['aQualApa'].label = 'Qual?'
+        self.fields['aQualApa'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aApaIndi'].label = 'Aparelho Indicado'
+        self.fields['aApaIndi'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aValApar'].label = 'Valor'
+        self.fields['aValApar'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aLadoInd'].label = 'Lado Indicado'
+        self.fields['aLadoInd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aFormPag'].label = 'Forma PGTO'
+        self.fields['aFormPag'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aSaiTest'].label = 'Data de Saída para teste'
+        self.fields['aSaiTest'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aRetTest'].label = 'Data de retorno de teste'
+        self.fields['aRetTest'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aSituaca'].label = 'Situação'
+        self.fields['aSituaca'].widget.attrs.update({
+            'class':'form-control',
+        })
 
     class Meta:
         model = AtendimentoModel
@@ -121,4 +214,9 @@ class AtendimentoForm(forms.ModelForm):
                   'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
                   'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',
                   'aZumbido', 'aCoceira', 'aOtiteOO','aDorOOOO', 'aCiruOuv', 
-                  'aTimpPer', 'aSensTam', 'aOutrOuv')
+                  'aTimpPer', 'aSensTam', 'aOutrOuv', 'aCardiop', 'aPresAlt',
+                  'aProbRin', 'aTontura', 'aDiabete', 'aProbTir', 'aUsoOtot',
+                  'aColeAlt', 'aLabirin', 'aCancerO', 'aOutrDoe', 'aJaUsoAp',
+                  'aMarcaOO', 'aTempoOO', 'aJaTesAp', 'aQualApa', 'aApaIndi',
+                  'aValApar', 'aLadoInd', 'aFormPag', 'aSaiTest', 'aRetTest',
+                  'aSituaca')

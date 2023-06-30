@@ -41,7 +41,7 @@ class AtendimentoModel(models.Model):
     aProbRin = models.BooleanField(blank=True, default=False)
     aTontura = models.BooleanField(blank=True, default=False)
     aDiabete = models.BooleanField(blank=True, default=False)
-    aProbTir = models.BooleanField(blank=True, null=True)
+    aProbTir = models.BooleanField(blank=True, default=False)
     aUsoOtot = models.BooleanField(blank=True, default=False)
     aColeAlt = models.BooleanField(blank=True, default=False)
     aLabirin = models.BooleanField(blank=True, default=False)

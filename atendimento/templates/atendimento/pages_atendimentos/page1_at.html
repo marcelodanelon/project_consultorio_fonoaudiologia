@@ -1,6 +1,5 @@
 <div id="page1">
     {% load custom_template_tag %}
-    {% setvar "yes" as action %}
     {% for fieldClient in client %}
         <div class="card_client">
             <div class="row">
@@ -25,6 +24,7 @@
     {% for field in form %} 
         {% if field.name == 'aClient' or field.name == 'aConhece' or field.name == 'aDifiPio' or field.name == 'aPessFam' %}  
             <div class="row align-items-center">
+            {% setvar "yes" as action %}
         {% endif %} 
         {% if field.name == "aTelevis" %}
             {% setvar "no" as action %}
@@ -32,21 +32,11 @@
         {% if action == "yes" %}
             <div class="col"> 
                 <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
-                {% if form.non_field_errors %}
-                    <div class="form-content">
-                    <div class="form-group">
-                        <div class="message error">
-                        {{ form.non_field_errors }}
-                        </div>
-                    </div>
-                    </div>
-                {% endif %}
                 {{ field }}
-                {{ field.errors }}
             </div>  
         {% endif %}        
         {% if field.name == 'aDataOOO' or field.name == 'aDifiEsc' or field.name == 'aOuviMel' or field.name == 'aTrabRui' %}    
-            </div> <br> 
+            </div> <br>
         {% endif %}
     {% endfor %}
 </div>

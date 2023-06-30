@@ -6,15 +6,17 @@
   <script>
   $(document).ready(function(){
       // buscar dados do client, chamando a view
-      $("#id_client").change(function(){
+      $("#id_aClient").change(function(){
           var client = $(this).children("option:selected").val();
-          window.location.replace("{% url 'atendimento:dadosClient' %}?searchClient=" + client);
+          if(client!=''){
+            window.location.replace("{% url 'atendimento:dadosClient' %}?searchClient=" + client);
+          }
       });
       //obter valor parametro searchClient (control select)
       var url_string = window.location.href; 
       var url = new URL(url_string);
       var paramValue = url.searchParams.get("searchClient");
-      $('#id_client option').each(function() {
+      $('#id_aClient option').each(function() {
         if($(this).val() == paramValue) {
           $(this).attr('selected', true);
         }
@@ -30,7 +32,7 @@
       {% csrf_token %} 
           {% include 'atendimento/pages_atendimentos/page1_at.html' %}
           {% include 'atendimento/pages_atendimentos/page2_at.html' %} 
-          {% include 'atendimento/pages_atendimentos/page3_at.html' %}                                    
+          {% include 'atendimento/pages_atendimentos/page3_at.html' %}                                 
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
