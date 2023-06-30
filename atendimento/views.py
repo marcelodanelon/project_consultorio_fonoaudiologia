@@ -8,7 +8,8 @@ def index(request):
 
     context = {
         'form': form,
-        'name_screen': 'Atendimento'
+        'name_screen': 'Atendimento',
+        'title': 'Atendimento',
     }
 
     return render(
@@ -26,7 +27,8 @@ def dadosClient(request):
     context = {
         'client': client,
         'form': form,
-        'name_screen': 'Atendimento'
+        'name_screen': 'Atendimento',
+        'title': 'Atendimento',
     }
 
     return render(

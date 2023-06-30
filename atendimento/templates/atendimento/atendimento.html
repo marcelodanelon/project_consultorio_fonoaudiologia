@@ -24,15 +24,28 @@
   });
   </script>
   <div class="container" style="padding:1px 16px;">
-    <h3>{{name_screen}}</h3> <br>
-    <a class="btn btn-primary" id="addItem1">Page 1</a>  
-    <a class="btn btn-primary" id="addItem2">Page 2</a>  
-    <a class="btn btn-primary" id="addItem3">Page 3</a> 
+    <h3>{{name_screen}}</h3>
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'first')" id="defaultOpen">Primeira</button>
+      <button class="tablinks" onclick="openTab(event, 'second')">Segunda</button>
+      <button class="tablinks" onclick="openTab(event, 'third')">Terceira</button>
+    </div>
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %} 
-          {% include 'atendimento/pages_atendimentos/page1_at.html' %}
-          {% include 'atendimento/pages_atendimentos/page2_at.html' %} 
-          {% include 'atendimento/pages_atendimentos/page3_at.html' %}                                 
+
+      <!-- Conteúdo da Primeira Aba -->
+      <div id="first" class="tabcontent">
+        {% include 'atendimento/pages_atendimentos/page1_at.html' %}
+      </div>
+      <!-- Conteúdo da Segunda Aba -->
+      <div id="second" class="tabcontent">
+        {% include 'atendimento/pages_atendimentos/page2_at.html' %} 
+      </div>
+      <!-- Conteúdo da Terceira Aba -->
+      <div id="third" class="tabcontent">
+        {% include 'atendimento/pages_atendimentos/page3_at.html' %}
+      </div>    
+
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
@@ -50,5 +63,21 @@
           </form> 
           {% endif %}  
   </div>
+  <script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+  </script>
 {% endblock content %}
 

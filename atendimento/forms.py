@@ -160,7 +160,7 @@ class AtendimentoForm(forms.ModelForm):
 
         self.fields['aJaUsoAp'].label = 'Já usou aparelho auditivo anteriormente?'
         self.fields['aJaUsoAp'].widget.attrs.update({
-            'class':'form-check-label',
+            'class':'form-control',
         })
         self.fields['aMarcaOO'].label = 'Marca'
         self.fields['aMarcaOO'].widget.attrs.update({
@@ -172,7 +172,7 @@ class AtendimentoForm(forms.ModelForm):
         })
         self.fields['aJaTesAp'].label = 'Já testou o aparelho?'
         self.fields['aJaTesAp'].widget.attrs.update({
-            'class':'form-check-label',
+            'class':'form-control',
         })
         self.fields['aQualApa'].label = 'Qual?'
         self.fields['aQualApa'].widget.attrs.update({

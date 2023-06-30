@@ -1,42 +1,40 @@
-<div id="page1">
-    {% load custom_template_tag %}
-    {% for fieldClient in client %}
-        <div class="card_client">
-            <div class="row">
-                <div class="col">
-                    Nome: {{fieldClient.first_name}} {{fieldClient.last_name}}
-                </div>
-                <div class="col">
-                    {% if fieldClient.street == None or fieldClient.number == None or fieldClient.district == None %}
-                        Endereço: Incompleto
-                    {% else %}
-                        Endereço: {{fieldClient.street}}, {{fieldClient.number}} - {{fieldClient.district}}
-                    {% endif %}
-                </div>
+{% load custom_template_tag %}
+{% for fieldClient in client %}
+    <div class="card_client">
+        <div class="row">
+            <div class="col">
+                Nome: {{fieldClient.first_name}} {{fieldClient.last_name}}
             </div>
-            <div class="row">
-                <div class="col">
-                    Data de Nascimento: {{fieldClient.born}}
-                </div>
+            <div class="col">
+                {% if fieldClient.street == None or fieldClient.number == None or fieldClient.district == None %}
+                    Endereço: Incompleto
+                {% else %}
+                    Endereço: {{fieldClient.street}}, {{fieldClient.number}} - {{fieldClient.district}}
+                {% endif %}
             </div>
         </div>
-    {% endfor %}
-    {% for field in form %} 
-        {% if field.name == 'aClient' or field.name == 'aConhece' or field.name == 'aDifiPio' or field.name == 'aPessFam' %}  
-            <div class="row align-items-center">
-            {% setvar "yes" as action %}
-        {% endif %} 
-        {% if field.name == "aTelevis" %}
-            {% setvar "no" as action %}
-        {% endif %}
-        {% if action == "yes" %}
-            <div class="col"> 
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
-                {{ field }}
-            </div>  
-        {% endif %}        
-        {% if field.name == 'aDataOOO' or field.name == 'aDifiEsc' or field.name == 'aOuviMel' or field.name == 'aTrabRui' %}    
-            </div> <br>
-        {% endif %}
-    {% endfor %}
-</div>
+        <div class="row">
+            <div class="col">
+                Data de Nascimento: {{fieldClient.born}}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% for field in form %} 
+    {% if field.name == 'aClient' or field.name == 'aConhece' or field.name == 'aDifiPio' or field.name == 'aPessFam' %}  
+        <div class="row align-items-center">
+        {% setvar "yes" as action %}
+    {% endif %} 
+    {% if field.name == "aTelevis" %}
+        {% setvar "no" as action %}
+    {% endif %}
+    {% if action == "yes" %}
+        <div class="col"> 
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
+            {{ field }}
+        </div>  
+    {% endif %}        
+    {% if field.name == 'aDataOOO' or field.name == 'aDifiEsc' or field.name == 'aOuviMel' or field.name == 'aTrabRui' %}    
+        </div> <br>
+    {% endif %}
+{% endfor %}

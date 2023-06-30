@@ -1,18 +1,16 @@
-<div id="page3">
-        {% load custom_template_tag %}
-        {% for field in form %} 
-            {% if field.name == 'aJaUsoAp' or field.name == 'aJaTesAp' or field.name == 'aApaIndi' or field.name == 'aLadoInd' or field.name == 'aSaiTest' or field.name == 'aSituaca'%}  
-                <div class="row align-items-center">
-                {% setvar "yes" as action %}
-            {% endif %} 
-            {% if action == "yes" %}
-                <div class="col">                  
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                    {{ field }}<br>
-                </div>  
-            {% endif %}        
-            {% if field.name == 'aTempoOO' or field.name == 'aQualApa' or field.name == 'aValApar' or field.name == 'aFormPag' or field.name == 'aRetTest' or field.name == 'aSituaca'%}    
-                </div> 
-            {% endif %}
-        {% endfor %}
-</div>
+{% load custom_template_tag %}
+{% for field in form %} 
+    {% if field.name == 'aJaUsoAp' or field.name == 'aJaTesAp' or field.name == 'aApaIndi' or field.name == 'aLadoInd' or field.name == 'aSaiTest' or field.name == 'aSituaca'%}  
+        <div class="row align-items-center">
+        {% setvar "yes" as action %}
+    {% endif %} 
+    {% if action == "yes" %}
+        <div class="col">                  
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}<br>
+        </div>  
+    {% endif %}        
+    {% if field.name == 'aTempoOO' or field.name == 'aQualApa' or field.name == 'aValApar' or field.name == 'aFormPag' or field.name == 'aRetTest' or field.name == 'aSituaca'%}    
+        </div> 
+    {% endif %}
+{% endfor %}

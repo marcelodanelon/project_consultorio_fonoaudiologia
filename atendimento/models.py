@@ -47,10 +47,10 @@ class AtendimentoModel(models.Model):
     aLabirin = models.BooleanField(blank=True, default=False)
     aCancerO = models.BooleanField(blank=True, default=False)
     aOutrDoe = models.CharField(max_length=50, null=True, blank=True)
-    aJaUsoAp = models.BooleanField(blank=True)
+    aJaUsoAp = models.CharField(max_length=5, choices=[('sim', 'Sim'), ('não', 'Não')], null=True, blank=True)
     aMarcaOO = models.CharField(max_length=50, null=True, blank=True)
     aTempoOO = models.CharField(max_length=50, null=True, blank=True)
-    aJaTesAp = models.BooleanField(blank=True)
+    aJaTesAp = models.CharField(max_length=5, choices=[('sim', 'Sim'), ('não', 'Não')], null=True, blank=True)
     aQualApa = models.CharField(max_length=50, null=True, blank=True)
     aApaIndi = models.CharField(max_length=50, null=True, blank=True)
     aValApar = models.CharField(max_length=50, null=True, blank=True)
@@ -58,7 +58,7 @@ class AtendimentoModel(models.Model):
     aFormPag = models.CharField(max_length=50, null=True, blank=True)
     aSaiTest = models.DateField(blank=True, null=True)
     aRetTest = models.DateField(blank=True, null=True)
-    aSituaca = models.CharField(max_length=50, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], null=True, blank=True)
+    aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.data} {self.client}'

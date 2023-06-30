@@ -61,35 +61,13 @@
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
           <script>
-          $('.sub-menu ul').hide();
-    $(".sub-menu a").click(function () {
-      $(this).parent(".sub-menu").children("ul").slideToggle("100");
-      $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
-    });
-    </script>
+            $('.sub-menu ul').hide();
+            $(".sub-menu a").click(function () {
+            $(this).parent(".sub-menu").children("ul").slideToggle("100");
+            $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
+          });
+          </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>       
-        $(document).ready(function(){
-          $("#page1").show();
-          $("#page2").hide();
-          $("#page3").hide();
-        });      
-        $("#addItem1").click(function () {    
-            $("#page1").show();
-            $("#page2").hide();
-            $("#page3").hide();
-        });
-        $("#addItem2").click(function () {    
-            $("#page1").hide();
-            $("#page2").show();
-            $("#page3").hide();
-        });
-        $("#addItem3").click(function () {    
-            $("#page1").hide();
-            $("#page2").hide();
-            $("#page3").show();
-        });
-    </script>
     {% include 'partials/_consultaCEP.html' %}
   </body>
 </html>
