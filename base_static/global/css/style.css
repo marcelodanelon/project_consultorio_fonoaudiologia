@@ -108,9 +108,10 @@
 
   .container-all{
     width: auto;
-    height: 80%;
+    height: 78%;
     padding: 1%;
     background-color: white;
+    border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   }
   
@@ -237,6 +238,7 @@
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    border-radius: 5px;
   }
   
   /* Style dos botões dentro da aba */
