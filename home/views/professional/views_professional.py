@@ -20,6 +20,7 @@ def listProfessional(request):
 
     context = {
             'title':'Pesquisa',
+            'name_module': 'Home',
             'page_obj': page_obj,
     }
 
@@ -48,6 +49,7 @@ def searchProfessional(request):
 
     context = {
             'title':'Pesquisa',
+            'name_module': 'Home',
             'page_obj': page_obj,
     }
 

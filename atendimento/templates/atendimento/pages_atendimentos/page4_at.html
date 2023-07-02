@@ -1,0 +1,34 @@
+{% load custom_template_tag %}
+<div>
+    {% for field in formAnam %} 
+        {% if field.name == 'aDataAna' or field.name == 'aAObserv'%}  
+            <div class="row align-items-center">
+            {% setvar "yes" as action %}
+        {% endif %} 
+        {% if action == "yes" %}
+            <div class="col">                  
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+            </div>  
+        {% endif %}        
+        {% if field.name == 'aAjustOE' or field.name == 'aAObserv'%}    
+            </div> 
+        {% endif %}
+    {% endfor %}
+</div>
+<br>
+{% for field in form %} 
+    {% if field.name == 'aSituaca'%}  
+        <div class="row align-items-center">
+        {% setvar "yes" as action %}
+    {% endif %} 
+    {% if action == "yes" %}
+        <div class="col">                  
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}<br>
+        </div>  
+    {% endif %}        
+    {% if field.name == 'aSituaca'%}    
+        </div> 
+    {% endif %}
+{% endfor %}

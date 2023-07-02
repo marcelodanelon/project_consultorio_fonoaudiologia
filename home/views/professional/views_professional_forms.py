@@ -18,6 +18,7 @@ def createProfessional(request):
         context = {
             'form': formProfessional,
             'title':'Cadastro',
+            'name_module': 'Home',
             'form_action': form_action,
         }
 
@@ -31,6 +32,7 @@ def createProfessional(request):
             'form': ProfessionalForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
+            'name_module': 'Home',
             'form_action': form_action,
     }
 
@@ -56,6 +58,7 @@ def updateProfessional(request, professional_id):
             'form': formProfessional,
             'title':'Cadastro',
             'name_screen': 'Atualizar',
+            'name_module': 'Home',
             'option_delete': 'yes',
             'professional': professional,
             'form_action': form_action,
@@ -71,6 +74,7 @@ def updateProfessional(request, professional_id):
             'form': ProfessionalForm(instance=professional),
             'title':'Cadastro',
             'name_screen': 'Atualizar',
+            'name_module': 'Home',
             'option_delete': 'yes',
             'professional': professional,
             'form_action': form_action,
@@ -97,6 +101,7 @@ def deleteProfessional(request, professional_id):
         'form': ProfessionalForm(instance=professional),
         'title':'Cadastro',
         'name_screen': 'Atualizar',
+        'name_module': 'Home',
         'option_delete': 'yes',
         'professional': professional,
         'confirmation_delete': confirmation,

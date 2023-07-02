@@ -1,4 +1,4 @@
-from atendimento.models import AtendimentoModel
+from atendimento.models import AtendimentoModel, AnamneseModel
 from django import forms
 
 class AtendimentoForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['aLocal'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['aDataOOO'].widget.attrs.update({
+        self.fields['aDataPri'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['aConhece'].label = 'Onde conheceu a MARKI?'
@@ -202,6 +202,38 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['aRetTest'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['aComClik'].label = 'c/click'
+        self.fields['aComClik'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aSemClik'].label = 's/click'
+        self.fields['aSemClik'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aClikOOD'].label = 'OD'
+        self.fields['aClikOOD'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aClikOOE'].label = 'OE'
+        self.fields['aClikOOE'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aTuboOOD'].label = 'OD'
+        self.fields['aTuboOOD'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aTuboOOE'].label = 'OE'
+        self.fields['aTuboOOE'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aReceOOD'].label = 'OD'
+        self.fields['aReceOOD'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aReceOOE'].label = 'OE'
+        self.fields['aReceOOE'].widget.attrs.update({
+            'class':'form-control',
+        })
         self.fields['aSituaca'].label = 'Situação'
         self.fields['aSituaca'].widget.attrs.update({
             'class':'form-control',
@@ -209,7 +241,7 @@ class AtendimentoForm(forms.ModelForm):
 
     class Meta:
         model = AtendimentoModel
-        fields = ('aClient', 'aProfessional', 'aLocal','aDataOOO', 'aConhece', 
+        fields = ('aClient', 'aProfessional', 'aLocal','aDataPri', 'aConhece', 
                   'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 
                   'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
                   'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',
@@ -219,4 +251,30 @@ class AtendimentoForm(forms.ModelForm):
                   'aColeAlt', 'aLabirin', 'aCancerO', 'aOutrDoe', 'aJaUsoAp',
                   'aMarcaOO', 'aTempoOO', 'aJaTesAp', 'aQualApa', 'aApaIndi',
                   'aValApar', 'aLadoInd', 'aFormPag', 'aSaiTest', 'aRetTest',
-                  'aSituaca')
+                  'aComClik', 'aSemClik', 'aClikOOD', 'aClikOOE', 'aTuboOOD', 
+                  'aTuboOOE', 'aReceOOD', 'aReceOOE', 'aSituaca')
+        
+class AnamneseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['aDataAna'].label = 'Data'
+        self.fields['aDataAna'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aAjustOD'].label = 'Ajuste OD'
+        self.fields['aAjustOD'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aAjustOE'].label = 'Ajuste OE'
+        self.fields['aAjustOE'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aAObserv'].label = 'Observações'
+        self.fields['aAObserv'].widget.attrs.update({
+            'class':'form-control',
+        })
+    
+    class Meta:
+        model = AnamneseModel
+        fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')

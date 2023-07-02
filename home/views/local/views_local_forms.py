@@ -18,6 +18,7 @@ def createLocal(request):
         context = {
             'form': formLocal,
             'title':'Cadastro',
+            'name_module': 'Home',
             'form_action': form_action,
         }
 
@@ -31,6 +32,7 @@ def createLocal(request):
             'form': LocalForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
+            'name_module': 'Home',
             'form_action': form_action,
     }
 
@@ -56,6 +58,7 @@ def updateLocal(request, local_id):
             'form': formLocal,
             'title':'Cadastro',
             'name_screen': 'Atualizar',
+            'name_module': 'Home',
             'option_delete': 'yes',
             'local': local,
             'form_action': form_action,
@@ -71,6 +74,7 @@ def updateLocal(request, local_id):
             'form': LocalForm(instance=local),
             'title':'Cadastro',
             'name_screen': 'Atualizar',
+            'name_module': 'Home',
             'option_delete': 'yes',
             'local': local,
             'form_action': form_action,
@@ -97,6 +101,7 @@ def deleteLocal(request, local_id):
         'form': LocalForm(instance=local),
         'title':'Cadastro',
         'name_screen': 'Atualizar',
+        'name_module': 'Home',
         'option_delete': 'yes',
         'local': local,
         'confirmation_delete': confirmation,

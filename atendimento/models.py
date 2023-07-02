@@ -1,5 +1,6 @@
 from django.db import models
 from home.models import ClientModel, ProfessionalModel, LocalModel
+from datetime import date
 
 CHOICES_OUVIDO = [
     ("OE" ,"Ouvido Esquerdo"),
@@ -11,7 +12,7 @@ class AtendimentoModel(models.Model):
     aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.SET_NULL, null=True)
     aProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
     aLocal = models.ForeignKey(LocalModel, verbose_name="Unidade de Atendimento", on_delete=models.SET_NULL, null=True)
-    aDataOOO = models.DateField(verbose_name="Data")
+    aDataPri = models.DateField(verbose_name="Data 1ª consulta", null=True)
     aConhece = models.CharField(max_length=50, null=True, blank=True)
     aDifiEsc = models.CharField(max_length=50, null=True, blank=True)
     aDifiPio = models.CharField(max_length=50, null=True, blank=True)
@@ -58,7 +59,22 @@ class AtendimentoModel(models.Model):
     aFormPag = models.CharField(max_length=50, null=True, blank=True)
     aSaiTest = models.DateField(blank=True, null=True)
     aRetTest = models.DateField(blank=True, null=True)
+    aComClik = models.CharField(max_length=5, choices=[('sim', 'Sim'), ('não', 'Não')], null=True, blank=True)
+    aSemClik = models.CharField(max_length=5, choices=[('sim', 'Sim'), ('não', 'Não')], null=True, blank=True)
+    aClikOOD = models.CharField(max_length=50, null=True, blank=True)
+    aClikOOE = models.CharField(max_length=50, null=True, blank=True)
+    aTuboOOD = models.CharField(max_length=50, null=True, blank=True)
+    aTuboOOE = models.CharField(max_length=50, null=True, blank=True)
+    aReceOOD = models.CharField(max_length=50, null=True, blank=True)
+    aReceOOE = models.CharField(max_length=50, null=True, blank=True)
     aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.data} {self.client}'
+    
+class AnamneseModel(models.Model):
+    aIDAtend = models.IntegerField()
+    aDataAna = models.DateField(default=date.today)
+    aAjustOD = models.CharField(max_length=50, null=True, blank=True)
+    aAjustOE = models.CharField(max_length=50, null=True, blank=True)
+    aAObserv = models.CharField(max_length=50, null=True, blank=True)

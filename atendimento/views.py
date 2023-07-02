@@ -1,14 +1,15 @@
 from django.shortcuts import render, get_object_or_404
-from atendimento.forms import AtendimentoForm
+from atendimento.forms import AtendimentoForm, AnamneseForm
 from home.models import ClientModel
-from atendimento.models import AtendimentoModel
 
-def index(request):
+def atendimento(request):
     form = AtendimentoForm()
+    formAnam = AnamneseForm()
 
     context = {
         'form': form,
-        'name_screen': 'Atendimento',
+        'formAnam': formAnam,
+        'name_module': 'Atendimento',
         'title': 'Atendimento',
     }
 
@@ -23,11 +24,13 @@ def dadosClient(request):
     client = ClientModel.objects.filter(pk=search)
 
     form = AtendimentoForm()
+    formAnam = AnamneseForm()
 
     context = {
         'client': client,
         'form': form,
-        'name_screen': 'Atendimento',
+        'formAnam': formAnam,
+        'name_module': 'Atendimento',
         'title': 'Atendimento',
     }
 

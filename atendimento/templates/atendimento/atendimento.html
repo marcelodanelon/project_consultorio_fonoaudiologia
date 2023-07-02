@@ -24,13 +24,13 @@
   });
   </script>
   <div class="container" style="padding:1px 16px;">
-    <h3>{{name_screen}}</h3>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'first')" id="defaultOpen">Primeira</button>
       <button class="tablinks" onclick="openTab(event, 'second')">Segunda</button>
       <button class="tablinks" onclick="openTab(event, 'third')">Terceira</button>
+      <button class="tablinks" onclick="openTab(event, 'fourth')">Quarta</button>
     </div>
-    <form action="{{form_action}}" method="post" class="form-control">
+    <form action="{{form_action}}" method="post" class="container-all">
       {% csrf_token %} 
 
       <!-- Conteúdo da Primeira Aba -->
@@ -44,7 +44,11 @@
       <!-- Conteúdo da Terceira Aba -->
       <div id="third" class="tabcontent">
         {% include 'atendimento/pages_atendimentos/page3_at.html' %}
-      </div>    
+      </div>   
+      <!-- Conteúdo da Quarta Aba -->
+      <div id="fourth" class="tabcontent">
+        {% include 'atendimento/pages_atendimentos/page4_at.html' %}
+      </div>   
 
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>

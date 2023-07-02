@@ -18,6 +18,7 @@ def createInsumo(request):
         context = {
             'form': formInsumo,
             'title':'Cadastro',
+            'name_module': 'Estoque',
             'form_action': form_action,
         }
 
@@ -31,6 +32,7 @@ def createInsumo(request):
             'form': InsumoForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
+            'name_module': 'Estoque',
             'form_action': form_action,
     }
 
@@ -50,6 +52,7 @@ def updateInsumo(request, insumo_id):
         'insumo': insumo,
         'title':'Cadastro',
         'name_screen': 'Atualizar',
+        'name_module': 'Estoque',
         'option_delete': 'yes',
     }
 

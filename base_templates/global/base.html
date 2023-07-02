@@ -14,12 +14,12 @@
       <div class="collapse nav_barhorizontal" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
           <a href="{% url 'home:index' %}">Home</a>
-          <a href="#">Atendimento</a>
+          <a href="{% url 'atendimento:atendimento' %}">Atendimento</a>
           <a href="{% url 'storage:index' %}">Estoque</a>
           <a href="#">Relatórios</a>
         </div>
       </div>
-      <nav class=" navbar navbar-dark bg-dark">
+      <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
           <div class="row">
             <div class="col">
@@ -27,9 +27,12 @@
                 <span class="navbar-toggler-icon"></span>
               </button>
             </div>
-            <div class="col mt-1">
-                <h4 style="text-align:left;color:white;">MDNIL.sys</h4>
-            </div>
+            <div class="col mt-1" style="color: white;">
+              <h4>{{name_module}}</h4>
+            </div>            
+          </div>
+          <div class="pe-4 pt-1">
+            <h4 style="text-align:left;color:white;">MDNIL.sys</h4>
           </div>
         </div>
       </nav>

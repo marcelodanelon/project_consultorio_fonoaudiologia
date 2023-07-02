@@ -36,6 +36,7 @@ def createClient(request):
             'form': ClientForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
+            'name_module': 'Home',
             'form_action': form_action,
     }
 

@@ -14,6 +14,7 @@ def isDate(var):
 def index(request):
     context = {
         'title': 'Home',
+        'name_module': 'Home',
     }
 
     return render(
@@ -31,6 +32,7 @@ def listClient(request):
 
     context = {
             'title':'Pesquisa',
+            'name_module': 'Home',
             'page_obj': page_obj,
     }
 
@@ -62,6 +64,7 @@ def searchClient(request):
 
     context = {
             'title':'Pesquisa',
+            'name_module': 'Home',
             'page_obj': page_obj,
     }
 
