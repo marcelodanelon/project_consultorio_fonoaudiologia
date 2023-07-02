@@ -1,7 +1,10 @@
 from django.contrib import admin
-from atendimento.models import AtendimentoModel
+from atendimento.models import AtendimentoModel, AnamneseModel
 
-# Register your models here.
 @admin.register(AtendimentoModel)
-class ClientAdmin(admin.ModelAdmin):
+class AtendimentoAdmin(admin.ModelAdmin):
+    ...
+
+@admin.register(AnamneseModel)
+class AnamneseAdmin(admin.ModelAdmin):
     ...

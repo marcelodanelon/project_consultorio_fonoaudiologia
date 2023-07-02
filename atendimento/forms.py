@@ -277,4 +277,4 @@ class AnamneseForm(forms.ModelForm):
     
     class Meta:
         model = AnamneseModel
-        fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
+        fields = ('aIDAtend', 'aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')

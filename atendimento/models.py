@@ -70,11 +70,14 @@ class AtendimentoModel(models.Model):
     aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.data} {self.client}'
+        return f'{self.aDataPri} {self.aClient}'
     
 class AnamneseModel(models.Model):
-    aIDAtend = models.IntegerField()
+    aIDAtend = models.IntegerField(null=True, blank=True)
     aDataAna = models.DateField(default=date.today)
     aAjustOD = models.CharField(max_length=50, null=True, blank=True)
     aAjustOE = models.CharField(max_length=50, null=True, blank=True)
     aAObserv = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.aDataAna} {self.aAObserv}'
