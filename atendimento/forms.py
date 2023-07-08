@@ -1,3 +1,4 @@
+from django.forms import formset_factory
 from atendimento.models import AtendimentoModel, AnamneseModel
 from django import forms
 
@@ -253,28 +254,34 @@ class AtendimentoForm(forms.ModelForm):
                   'aValApar', 'aLadoInd', 'aFormPag', 'aSaiTest', 'aRetTest',
                   'aComClik', 'aSemClik', 'aClikOOD', 'aClikOOE', 'aTuboOOD', 
                   'aTuboOOE', 'aReceOOD', 'aReceOOE', 'aSituaca')
-        
+
 class AnamneseForm(forms.ModelForm):
+    aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}))
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['aDataAna'].label = 'Data'
+        self.fields['aDataAna'].label = 'Data:'
         self.fields['aDataAna'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['aAjustOD'].label = 'Ajuste OD'
+        self.fields['aAjustOD'].label = 'Ajuste OD:'
         self.fields['aAjustOD'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['aAjustOE'].label = 'Ajuste OE'
+        self.fields['aAjustOE'].label = 'Ajuste OE:'
         self.fields['aAjustOE'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['aAObserv'].label = 'Observações'
+        self.fields['aAObserv'].label = 'Observações:'
         self.fields['aAObserv'].widget.attrs.update({
             'class':'form-control',
         })
     
     class Meta:
         model = AnamneseModel
-        fields = ('aIDAtend', 'aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
+        fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
+
+AnamneseFormSet = formset_factory(
+    AnamneseForm, extra=1
+)
