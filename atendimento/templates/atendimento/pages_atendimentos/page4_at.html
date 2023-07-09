@@ -1,49 +1,53 @@
 {% load custom_template_tag %}
 {% csrf_token %}
-{{formAnamSet.management_form}}
-{% for form in formAnamSet %} 
-    <div class="form-row">
-        <div class="row">
-            <div class="input-group-text d-flex align-items-start">
-                <div class="col-2 ms-1"> 
-                    <label for="{{ form.aDataAna.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aDataAna.label }}</label>
-                    {{form.aDataAna}} 
-                </div> 
-                <div class="col-2 ms-1">    
-                    <label for="{{ form.aAjustOD.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOD.label }}</label>
-                    {{form.aAjustOD}}  
-                </div> 
-                <div class="col-2 ms-1"> 
-                    <label for="{{ form.aAjustOE.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOE.label }}</label>
-                    {{form.aAjustOE}} 
-                </div> 
-                <div class="col-5 ms-1">    
-                    <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAObserv.label }}</label>
-                    {{form.aAObserv}}  
-                </div> 
-                <div class="col-1 mt-5"> 
-                    <button class="btn btn-success add-form-row">+</button> 
-                </div>   
-            </div>                      
+<div style="width: 100%;height: 600px;overflow-y: auto;">
+    {{formAnamSet.management_form}}
+    {% for form in formAnamSet %} 
+        <div class="form-row ps-3 pe-3 pt-2">
+            <div class="row">
+                <div class="input-group-text d-flex align-items-start">
+                    <div class="col-2 ms-1"> 
+                        <label for="{{ form.aDataAna.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aDataAna.label }}</label>
+                        {{form.aDataAna}} 
+                    </div> 
+                    <div class="col-2 ms-1">    
+                        <label for="{{ form.aAjustOD.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOD.label }}</label>
+                        {{form.aAjustOD}}  
+                    </div> 
+                    <div class="col-2 ms-1"> 
+                        <label for="{{ form.aAjustOE.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOE.label }}</label>
+                        {{form.aAjustOE}} 
+                    </div> 
+                    <div class="col-5 ms-1">    
+                        <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAObserv.label }}</label>
+                        {{form.aAObserv}}  
+                    </div> 
+                    <div class="col-1 mt-5"> 
+                        <button class="btn btn-success add-form-row">+</button> 
+                    </div>   
+                </div>                      
+            </div>
         </div>
-    </div>
-{% endfor %}
-<br>
-{% for field in form %} 
-    {% if field.name == 'aSituaca'%}  
-        <div class="row align-items-center">
-        {% setvar "yes" as action %}
-    {% endif %} 
-    {% if action == "yes" %}
-        <div class="col">                  
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field }}<br>
-        </div>  
-    {% endif %}        
-    {% if field.name == 'aSituaca'%}    
-        </div> 
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+</div>
+<div>
+    <br>
+    {% for field in form %} 
+        {% if field.name == 'aSituaca'%}  
+            <div class="row align-items-center">
+            {% setvar "yes" as action %}
+        {% endif %} 
+        {% if action == "yes" %}
+            <div class="col">                  
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}<br>
+            </div>  
+        {% endif %}        
+        {% if field.name == 'aSituaca'%}    
+            </div> 
+        {% endif %}
+    {% endfor %}
+</div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -74,8 +78,8 @@ function cloneMore(selector, prefix) {
     });
     total++;
     $('#id_' + prefix + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
-    var conditionRow = $('.form-row:not(:last)');
+    $(selector).before(newElement);
+    var conditionRow = $('.form-row:not(:first)');
     conditionRow.find('.btn.add-form-row')
     .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row').addClass('remove-form-row')
@@ -98,7 +102,7 @@ function deleteForm(prefix, btn) {
 }
 $(document).on('click', '.add-form-row', function(e){
     e.preventDefault();
-    cloneMore('.form-row:last', 'form');
+    cloneMore('.form-row:first', 'form');
     return false;
 });
 $(document).on('click', '.remove-form-row', function(e){
