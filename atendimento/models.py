@@ -67,7 +67,7 @@ class AtendimentoModel(models.Model):
     aTuboOOE = models.CharField(max_length=50, null=True, blank=True)
     aReceOOD = models.CharField(max_length=50, null=True, blank=True)
     aReceOOE = models.CharField(max_length=50, null=True, blank=True)
-    aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], null=True, blank=True)
+    aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], default='Em Andamento')
 
     def __str__(self) -> str:
         return f'{self.aDataPri} {self.aClient}'

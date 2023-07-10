@@ -9,14 +9,12 @@ def atendimento(request):
     formAnamSet = AnamneseFormSet(request.GET or None)
 
     if request.method == 'POST':
-        updateAtend = request.POST.get('updateAtendimento')
-        if updateAtend == 0:
-            form = AtendimentoForm(request.POST)
-            formAnamSet = AnamneseFormSet(request.POST)
-        else:
-            #verificar
-            search = request.GET.get('searchClient')
-            atendimento = AtendimentoModel.objects.get(aClient=search)
+        updateAtend = int(request.POST.get('updateAtendimento'))
+        form = AtendimentoForm(request.POST)
+        formAnamSet = AnamneseFormSet(request.POST)
+        if updateAtend == 1:
+            search = request.POST.get('clientId')
+            atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
             form = AtendimentoForm(request.POST, instance=atendimento)
 
         if form.is_valid():
@@ -49,7 +47,8 @@ def dadosClient(request):
     search = request.GET.get('searchClient')
     client = ClientModel.objects.filter(pk=search)
     try:
-        atendimento = AtendimentoModel.objects.get(aClient=search)
+        atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
+        print(atendimento)
         if atendimento.aSituaca != 'Concluído':
             updateAtend = 1
             form = AtendimentoForm(instance=atendimento)

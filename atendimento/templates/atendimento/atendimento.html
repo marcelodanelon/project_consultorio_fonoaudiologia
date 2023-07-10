@@ -33,6 +33,9 @@
     <form action="{{form_action}}" method="post" class="container-all form-horizontal">
       {% csrf_token %} 
       <input name="updateAtendimento" hidden value="{{updateAtend}}">
+      {% for i in client %}
+        <input name="clientId" hidden value="{{i.id}}">
+      {% endfor %}
       <!-- Conteúdo da Primeira Aba -->
       <div id="first" class="tabcontent">
         {% include 'atendimento/pages_atendimentos/page1_at.html' %}
