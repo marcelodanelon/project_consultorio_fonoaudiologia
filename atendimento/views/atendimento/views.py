@@ -9,13 +9,13 @@ def atendimento(request):
     formAnamSet = AnamneseFormSet(request.GET or None)
 
     if request.method == 'POST':
-        updateAtend = request.POST.get('updateAtendimento', 0)
+        updateAtend = request.POST.get('updateAtendimento')
         if updateAtend == 0:
             form = AtendimentoForm(request.POST)
             formAnamSet = AnamneseFormSet(request.POST)
         else:
             #verificar
-            search = request.POST.get('searchClient')
+            search = request.GET.get('searchClient')
             atendimento = AtendimentoModel.objects.get(aClient=search)
             form = AtendimentoForm(request.POST, instance=atendimento)
 
