@@ -70,7 +70,7 @@ class AtendimentoModel(models.Model):
     aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], default='Em Andamento')
 
     def __str__(self) -> str:
-        return f'{self.aDataPri} {self.aClient}'
+        return f'{self.pk} - {self.aDataPri} {self.aClient}'
     
 class AnamneseModel(models.Model):
     aIDAtend = models.IntegerField(null=True, blank=True)
@@ -80,4 +80,4 @@ class AnamneseModel(models.Model):
     aAObserv = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.aDataAna} {self.aAObserv}'
+        return f'{self.aDataAna} {self.aAObserv} - {self.aIDAtend}'

@@ -256,7 +256,7 @@ class AtendimentoForm(forms.ModelForm):
                   'aTuboOOE', 'aReceOOD', 'aReceOOE', 'aSituaca')
 
 class AnamneseForm(forms.ModelForm):
-    aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}))
+    aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

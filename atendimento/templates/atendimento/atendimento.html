@@ -21,6 +21,11 @@
           $(this).attr('selected', true);
         }
       });
+      var conditionRow = $('.form-row:not(:first)');
+      conditionRow.find('.btn.add-form-row')
+      .removeClass('btn-success').addClass('btn-danger')
+      .removeClass('add-form-row').addClass('remove-form-row')
+      .html('-');
   });
   </script>
   <div class="container" style="padding:1px 16px;">

@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.forms import modelformset_factory
 from django.urls import reverse
-from atendimento.forms import AtendimentoForm, AnamneseFormSet
+from atendimento.forms import AtendimentoForm, AnamneseForm, AnamneseFormSet
 from home.models import ClientModel
-from atendimento.models import AtendimentoModel
+from atendimento.models import AtendimentoModel, AnamneseModel
 
 def atendimento(request):
     form_action = reverse('atendimento:atendimento')
@@ -21,9 +22,11 @@ def atendimento(request):
             obj1 = form.save()
             if formAnamSet.is_valid():
                 for formA in formAnamSet:
-                    obj2 = formA.save(commit=False)
-                    obj2.aIDAtend = obj1.id
-                    formA.save() 
+                    cd = formA.cleaned_data
+                    if cd.get('aAjustOD') != None or cd.get('aAjustOE') != None or cd.get('aAObserv') != None:
+                        obj2 = formA.save(commit=False)
+                        obj2.aIDAtend = obj1.id
+                        formA.save() 
 
                 return redirect('home:index')
 
@@ -48,21 +51,26 @@ def dadosClient(request):
     client = ClientModel.objects.filter(pk=search)
     try:
         atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
-        print(atendimento)
+        # print(atendimento)
         if atendimento.aSituaca != 'Concluído':
             updateAtend = 1
             form = AtendimentoForm(instance=atendimento)
+            SectionFormSet = modelformset_factory(AnamneseModel, form=AnamneseForm, can_delete=True)
+            sections = AnamneseModel.objects.filter(aIDAtend=atendimento.pk)
+            FormSetAna = SectionFormSet(request.POST or None, queryset=sections)
         else:
             form = AtendimentoForm()
             updateAtend = 0
+            FormSetAna = AnamneseFormSet
     except AtendimentoModel.DoesNotExist:
         form = AtendimentoForm()
         updateAtend = 0
+        FormSetAna = AnamneseFormSet
 
     context = {
         'client': client,
         'form': form,
-        'formAnamSet': AnamneseFormSet,
+        'formAnamSet': FormSetAna,
         'name_module': 'Atendimento',
         'form_action': form_action,
         'title': 'Atendimento',
