@@ -57,6 +57,8 @@ def dadosClient(request):
             form = AtendimentoForm(instance=atendimento)
             SectionFormSet = modelformset_factory(AnamneseModel, form=AnamneseForm, can_delete=True)
             sections = AnamneseModel.objects.filter(aIDAtend=atendimento.pk)
+            if list(sections):
+                SectionFormSet = modelformset_factory(AnamneseModel, form=AnamneseForm, can_delete=True, extra=0)
             FormSetAna = SectionFormSet(request.POST or None, queryset=sections)
         else:
             form = AtendimentoForm()
