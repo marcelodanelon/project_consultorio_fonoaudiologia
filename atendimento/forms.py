@@ -1,4 +1,4 @@
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from atendimento.models import AtendimentoModel, AnamneseModel
 from django import forms
 
@@ -282,6 +282,9 @@ class AnamneseForm(forms.ModelForm):
         model = AnamneseModel
         fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
 
-AnamneseFormSet = formset_factory(
-    AnamneseForm, extra=1
-)
+# AnamneseFormSet = formset_factory(
+#     AnamneseForm, extra=1
+# )
+# AnamneseFormSet = inlineformset_factory(
+#     AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=1, can_delete=True, can_delete_extra=True
+# )

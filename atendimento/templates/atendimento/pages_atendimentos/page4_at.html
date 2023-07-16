@@ -8,6 +8,7 @@
                 <div class="input-group-text d-flex align-items-start">
                     <div class="col-2 ms-1"> 
                         {{form.errors}}
+                        <td class="hidden">{{ form.id }}</td>
                         <label for="{{ form.aDataAna.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aDataAna.label }}</label>
                         {{form.aDataAna}} 
                     </div> 
@@ -61,7 +62,7 @@ function updateElementIndex(el, prefix, ndx) {
 }
 function cloneMore(selector, prefix) {
     var newElement = $(selector).clone(true);
-    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    var total = $('#id_' + prefix + '_set-TOTAL_FORMS').val();
     newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
         var name = $(this).attr('name')
         if(name) {
@@ -78,7 +79,7 @@ function cloneMore(selector, prefix) {
         }
     });
     total++;
-    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
     $(selector).before(newElement);
     var conditionRow = $('.form-row:not(:first)');
     conditionRow.find('.btn.add-form-row')
@@ -88,11 +89,11 @@ function cloneMore(selector, prefix) {
     return false;
 }
 function deleteForm(prefix, btn) {
-    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    var total = parseInt($('#id_' + prefix + '_set-TOTAL_FORMS').val());
     if (total > 1){
         btn.closest('.form-row').remove();
         var forms = $('.form-row');
-        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        $('#id_' + prefix + '_set-TOTAL_FORMS').val(forms.length);
         for (var i=0, formCount=forms.length; i<formCount; i++) {
             $(forms.get(i)).find(':input').each(function() {
                 updateElementIndex(this, prefix, i);
@@ -103,12 +104,12 @@ function deleteForm(prefix, btn) {
 }
 $(document).on('click', '.add-form-row', function(e){
     e.preventDefault();
-    cloneMore('.form-row:first', 'form');
+    cloneMore('.form-row:first', 'anamnesemodel');
     return false;
 });
 $(document).on('click', '.remove-form-row', function(e){
     e.preventDefault();
-    deleteForm('form', $(this));
+    deleteForm('anamnesemodel', $(this));
     return false;
 });
 

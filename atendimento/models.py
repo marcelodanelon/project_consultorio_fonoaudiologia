@@ -73,11 +73,12 @@ class AtendimentoModel(models.Model):
         return f'{self.pk} - {self.aDataPri} {self.aClient}'
     
 class AnamneseModel(models.Model):
-    aIDAtend = models.IntegerField(null=True, blank=True)
+    # atendimentoid = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
     aDataAna = models.DateField(default=date.today)
     aAjustOD = models.CharField(max_length=50, null=True, blank=True)
     aAjustOE = models.CharField(max_length=50, null=True, blank=True)
     aAObserv = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.aDataAna} {self.aAObserv} - {self.aIDAtend}'
+        return f'ID: {self.pk} - Data: {self.aDataAna} - IDAtend: {self.aIDAtend}'

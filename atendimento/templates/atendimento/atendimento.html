@@ -9,7 +9,7 @@
       $("#id_aClient").change(function(){
           var client = $(this).children("option:selected").val();
           if(client!=''){
-            window.location.replace("{% url 'atendimento:dadosClient' %}?searchClient=" + client);
+            window.location.replace("{% url 'atendimento:atendimento' %}?searchClient=" + client);
           }
       });
       //obter valor parametro searchClient (control select)
