@@ -73,7 +73,6 @@ class AtendimentoModel(models.Model):
         return f'{self.pk} - {self.aDataPri} {self.aClient}'
     
 class AnamneseModel(models.Model):
-    # atendimentoid = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
     aDataAna = models.DateField(default=date.today)
     aAjustOD = models.CharField(max_length=50, null=True, blank=True)

@@ -80,7 +80,7 @@ function cloneMore(selector, prefix) {
     });
     total++;
     $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
-    $(selector).before(newElement);
+    $(selector).after(newElement);
     var conditionRow = $('.form-row:not(:first)');
     conditionRow.find('.btn.add-form-row')
     .removeClass('btn-success').addClass('btn-danger')
@@ -104,7 +104,7 @@ function deleteForm(prefix, btn) {
 }
 $(document).on('click', '.add-form-row', function(e){
     e.preventDefault();
-    cloneMore('.form-row:first', 'anamnesemodel');
+    cloneMore('.form-row:last', 'anamnesemodel');
     return false;
 });
 $(document).on('click', '.remove-form-row', function(e){

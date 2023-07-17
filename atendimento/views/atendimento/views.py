@@ -26,16 +26,16 @@ def atendimento(request):
             atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
             forms = AtendimentoForm(request.POST, instance=atendimento)
 
-            anams = AnamneseModel.objects.filter(aIDAtend=atendimento)
-            for a in anams:
-                ana = AnamneseModel.objects.filter(pk=a.pk).get()
-                formset = item_order_formset(request.POST, instance=atendimento)
-                
-                if formset.is_valid():
-                    formset.save()
+            formset = item_order_formset(request.POST, instance=atendimento)
 
-        if forms.is_valid():
-            forms = forms.save()      
+            if forms.is_valid() and formset.is_valid():
+                forms = forms.save()    
+                formset.save()  
+                return redirect('home:index') 
+            
+        if forms.is_valid() and formset.is_valid():
+            forms = forms.save()    
+            formset.save()  
             return redirect('home:index')
     else:
         forms = AtendimentoForm(instance=order_forms)
@@ -73,72 +73,4 @@ def atendimento(request):
     }
 
     return render(request, 'atendimento/atendimento.html', context)
-
-# def atendimento(request):
-#     form_action = reverse('atendimento:atendimento')
-#     formAnamSet = AnamneseFormSet(request.GET or None)
-
-#     item_order_formset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=1, can_delete=False, min_num=1, validate_min=True)
-
-#     if request.method == 'POST':
-#         updateAtend = int(request.POST.get('updateAtendimento'))
-#         form = AtendimentoForm(request.POST)     
-#         formAnamSet = item_order_formset(request.POST)
-
-#         if updateAtend == 1:
-#             search = request.POST.get('clientId')
-#             atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
-#             form = AtendimentoForm(request.POST, instance=atendimento)
-#         print(formAnamSet.is_valid())
-#         if form.is_valid() and formAnamSet.is_valid():
-#             form = form.save(commit=False)
-#             form.save()
-#             formAnamSet.save()
-#             return redirect('home:index')
-
-#     context = {
-#         'form': AtendimentoForm(),
-#         'formAnamSet': formAnamSet,
-#         'name_module': 'Atendimento',
-#         'form_action': form_action,
-#         'title': 'Atendimento',
-#     }
-
-#     return render(
-#         request,
-#         'atendimento/atendimento.html',
-#         context
-#     )
-
-# def dadosClient(request):
-#     form_action = reverse('atendimento:atendimento')
-#     search = request.GET.get('searchClient')
-#     client = ClientModel.objects.filter(pk=search)
-#     try:
-#         atendimento = AtendimentoModel.objects.filter(aClient=search).filter(aSituaca='Em Andamento').get()
-#         if atendimento.aSituaca != 'Concluído':
-#             updateAtend = 1
-#             form = AtendimentoForm(instance=atendimento)
-#         else:
-#             form = AtendimentoForm()
-#             updateAtend = 0
-#     except AtendimentoModel.DoesNotExist:
-#         form = AtendimentoForm()
-#         updateAtend = 0
-
-#     context = {
-#         'client': client,
-#         'form': form,
-#         'formAnamSet': FormSetAna,
-#         'name_module': 'Atendimento',
-#         'form_action': form_action,
-#         'title': 'Atendimento',
-#         'updateAtend': updateAtend,
-#     }
-
-#     return render(
-#         request,
-#         'atendimento/atendimento.html',
-#         context
-#     )
 
