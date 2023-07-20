@@ -8,7 +8,7 @@ from atendimento.models import AtendimentoModel, AnamneseModel
 def atendimento(request):
     form_action = reverse('atendimento:atendimento')
     order_forms = AtendimentoModel()
-    item_order_formset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=0, can_delete=False, min_num=1)
+    item_order_formset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=0, can_delete=True, min_num=1)
 
     if request.method == 'POST':
         try:
@@ -29,6 +29,9 @@ def atendimento(request):
             formset = item_order_formset(request.POST, instance=atendimento)
 
             if forms.is_valid() and formset.is_valid():
+                for delete_value in formset.deleted_forms:
+                    if delete_value.instance.pk:
+                        delete_value.instance.delete()
                 forms = forms.save()    
                 formset.save()  
                 return redirect('home:index') 
