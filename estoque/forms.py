@@ -1,5 +1,5 @@
 from django import forms
-from storage.models import InsumoModel
+from estoque.models import InsumoModel
 
 class InsumoForm(forms.ModelForm):
     valor = forms.FloatField(disabled = True, required=False)

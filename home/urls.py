@@ -2,6 +2,7 @@ from django.urls import path
 from home.views import client
 from home.views import local
 from home.views import professional
+from home.views import user
 
 app_name = 'home'
 
@@ -25,4 +26,8 @@ urlpatterns = [
     path('searchProfessional/', professional.searchProfessional, name='searchProfessional'),
     path('<int:professional_id>/updateProfessional/', professional.updateProfessional, name='updateProfessional'),
     path('<int:professional_id>/deleteProfessional/', professional.deleteProfessional, name='deleteProfessional'),
+
+    path('user/create/', user.register, name='registerUser'),
+    path('user/login/', user.login_view, name='loginUser'),
+    path('user/logout/', user.logout_view, name='logoutUser'),
 ]

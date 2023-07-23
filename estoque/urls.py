@@ -1,5 +1,5 @@
 from django.urls import path
-from storage.views import entrada, insumo
+from estoque.views import entrada, insumo
 
 app_name = 'storage'
 

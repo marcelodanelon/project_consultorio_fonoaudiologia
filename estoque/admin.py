@@ -1,5 +1,5 @@
 from django.contrib import admin
-from storage.models import InsumoModel, ItensInsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel
 
 @admin.register(InsumoModel)
 class InsumoAdmin(admin.ModelAdmin):

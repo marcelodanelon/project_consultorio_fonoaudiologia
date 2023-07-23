@@ -5,5 +5,10 @@
             <li><a href='{% url 'home:listClient' %}'>Clientes</a></li>
             <li><a href='{% url 'home:listLocal' %}'>Unidades de Atendimento</a></li>
             <li><a href='{% url 'home:listProfessional' %}'>Profissionais</a></li>
+            {% if user.is_authenticated %}
+                {% if request.user.username in 'marcelo.danelon' %}
+                    <li><a href='{% url 'home:registerUser' %}'>Operadores</a></li>
+                {% endif %}
+            {% endif %}
         </ul>
     </ul>

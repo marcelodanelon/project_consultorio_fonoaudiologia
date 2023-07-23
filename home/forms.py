@@ -1,5 +1,8 @@
 from django import forms
 from home.models import ClientModel, LocalModel, ProfessionalModel
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from home.static.home.partials._liststates import *
 from home.static.home.partials._listcities import *
 
@@ -215,21 +218,61 @@ class ClientForm(forms.ModelForm):
                 'zipcode', 'street', 'district', 'number', 'city', 'state', 'complement',
                 'document1', 'document2', 'phone1', 'phone2','status',
                 )
-        
-        # error_messages = {
-        #     'task': {
-        #         'max_length': ("Error: maximum length limit is 255 characters"),
-                
-        #     },
+
+class RegisterForm(UserCreationForm):
+    first_name = forms.CharField(
+        required=True,
+        min_length=1,
+        label='Primeiro nome'
+        # error_messages={
+        #     'required': 'Campo de preenchimento obrigatório'
         # }
-    # def clean_name(self):
-    #     cleaned_data = self.cleaned_data.get('first_name')
+    )
+    last_name = forms.CharField(
+        required=True,
+        min_length=1,
+        label='Sobrenome'
+    )
+    email = forms.EmailField(
+        required=True,
+    )
 
-    #     if cleaned_data == 'MARCELO':
-    #         raise ValidationError(
-    #             'Digite outro nome',
-    #             code='invalid'
-    #         )
+    class Meta:
+        model = User
+        fields = (
+            'first_name', 'last_name', 'email',
+            'username', 'password1', 'password2'
+        )
 
-    #     return cleaned_data
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['first_name'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['email'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['username'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['password1'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class':'form-control',
+        })
     
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        if User.objects.filter(email=email).exists():
+            self.add_error(
+                'email',
+                ValidationError('Um usuário com este email já existe.', code='invalid')
+            )
+        
+        return email

@@ -1,0 +1,34 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
+
+{% load custom_tag %}
+
+{% block content %}
+  <div class="container" style="padding:1px 16px;">
+    <h3>{{name_screen}}</h3> <br>
+    <form action="{% url 'home:registerUser' %}" method="post" class="form-control">
+      {% csrf_token %}
+      {% for field in form %}   
+          {{field.label}} 
+          {{field}}
+          {% if field.help_text %}
+            {{field.help_text}}  
+            <br>
+          {% endif %}
+          {% if field.errors %}
+            <div style="color:red;">
+              {% changeToString field.errors.as_text %}
+            </div>
+          {% endif %}
+          <br>
+      {% endfor %}
+      {% if form.non_field_errors %}
+        {{ form.non_field_errors }}
+      {% endif %}
+      <br>
+      <button class="btn btn-primary" type="submit">Gravar</button>
+    </form>  
+  </div>
+{% endblock content %}
+

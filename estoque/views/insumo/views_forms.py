@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
-from storage.forms import InsumoForm
-from storage.models import InsumoModel
+from estoque.forms import InsumoForm
+from estoque.models import InsumoModel
 
 def createInsumo(request):
-    form_action = reverse('storage:createInsumo')
+    form_action = reverse('estoque:createInsumo')
 
     if request.method == 'POST':
         formInsumo = InsumoForm(request.POST)
@@ -13,7 +13,7 @@ def createInsumo(request):
         if formInsumo.is_valid():
             form = formInsumo.save()
             messages.success(request, 'Insumo cadastrado com sucesso!')
-            return redirect('storage:updateInsumo',form.id)
+            return redirect('estoque:updateInsumo',form.id)
 
         context = {
             'form': formInsumo,
@@ -24,7 +24,7 @@ def createInsumo(request):
 
         return render(
             request,
-            'storage/insumo/insumo.html',
+            'estoque/insumo/insumo.html',
             context
         )
 
@@ -38,13 +38,13 @@ def createInsumo(request):
 
     return render(
         request,
-        'storage/insumo/insumo.html',
+        'estoque/insumo/insumo.html',
         context
     )
 
 def updateInsumo(request, insumo_id):
     insumo = get_object_or_404(InsumoModel, pk=insumo_id)
-    form_action = reverse('storage:updateInsumo', args=(insumo_id,))
+    form_action = reverse('estoque:updateInsumo', args=(insumo_id,))
 
     context = {
         'form' : InsumoForm(instance=insumo),
@@ -58,6 +58,6 @@ def updateInsumo(request, insumo_id):
 
     return render(
         request,
-        'storage/insumo/insumo.html',
+        'estoque/insumo/insumo.html',
         context
     )
