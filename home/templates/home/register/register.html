@@ -7,7 +7,7 @@
 {% block content %}
   <div class="container" style="padding:1px 16px;">
     <h3>{{name_screen}}</h3> <br>
-    <form action="{% url 'home:registerUser' %}" method="post" class="form-control">
+    <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}   
           {{field.label}} 

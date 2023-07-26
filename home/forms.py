@@ -1,5 +1,6 @@
 from django import forms
 from home.models import ClientModel, LocalModel, ProfessionalModel
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -265,14 +266,53 @@ class RegisterForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({
             'class':'form-control',
         })
+
+    def clean(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+
+        if password1 or password2:
+            if password1 != password2:
+                self.add_error(
+                    'password2',
+                    ValidationError('Senhas não conferem!')
+                )
+
+        return super().clean()
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        current_email = self.instance.email
 
-        if User.objects.filter(email=email).exists():
-            self.add_error(
-                'email',
-                ValidationError('Um usuário com este email já existe.', code='invalid')
-            )
+        if current_email != email:
+            if User.objects.filter(email=email).exists():
+                self.add_error(
+                    'email',
+                    ValidationError('Um usuário com este email já existe.', code='invalid')
+                )
         
         return email
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        current_username = self.instance.username
+
+        if current_username != username:
+            if User.objects.filter(email=username).exists():
+                self.add_error(
+                    'username',
+                    ValidationError('Um usuário com este Usuário já existe.', code='invalid')
+                )
+        
+        return username
+    
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+
+        if password1:
+            try:
+                password_validation.validate_password(password1)
+            except ValidationError as errors:
+                self.add_error('password1', ValidationError(errors))
+
+        return password1

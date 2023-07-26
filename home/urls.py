@@ -27,7 +27,10 @@ urlpatterns = [
     path('<int:professional_id>/updateProfessional/', professional.updateProfessional, name='updateProfessional'),
     path('<int:professional_id>/deleteProfessional/', professional.deleteProfessional, name='deleteProfessional'),
 
+    path('user/list/', user.listUser, name='listUser'),
+    path('user/search/', user.searchUser, name='searchUser'),
     path('user/create/', user.register, name='registerUser'),
+    path('<int:user_id>/user/update/', user.updateUser, name='updateUser'),
     path('user/login/', user.login_view, name='loginUser'),
     path('user/logout/', user.logout_view, name='logoutUser'),
 ]

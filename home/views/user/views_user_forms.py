@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from  django.urls import reverse
 from home.forms import RegisterForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages, auth
+from django.contrib.auth.models import User
+from django.http import Http404
 
 def register(request):
+    form_action = reverse('home:registerUser')
     form = RegisterForm()
 
     if request.method == 'POST':
@@ -13,7 +17,7 @@ def register(request):
             form.save()
             messages.success(request, 'Operador criado com sucesso!')
 
-            return redirect('home:index')
+            return redirect('home:listUser')
 
     context = {
         'form': form,
@@ -21,6 +25,7 @@ def register(request):
         'name_module': 'Home',
         'name_screen': 'Operador',
         'title': 'Operador',
+        'form_action': form_action,
     }
 
     return render(
@@ -56,3 +61,53 @@ def login_view(request):
 def logout_view(request):
     auth.logout(request)
     return redirect('home:loginUser')
+
+def updateUser(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    form_action = reverse('home:updateUser', args=(user_id,))
+
+    if user_id==1:
+        raise Http404
+    
+    if request.method == 'POST':
+        formUser = RegisterForm(request.POST, instance=user)
+
+        if formUser.is_valid():
+            formUser.save()
+            messages.success(request, 'Operador atualizado com sucesso!')
+            return redirect('home:listUser')
+        # else:
+        #     if "born" in formClient.errors:
+        #         messages.error(request, 'Data de Nascimento inválida!')
+        #     if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
+        #         messages.error(request, 'Número de telefone inválido!')
+
+        context = {
+            'form': formUser,
+            'title':'Cadastro',
+            'name_screen': 'Atualizar',
+            'option_delete': 'yes',
+            'client': user,
+            'form_action': form_action,
+        }
+
+        return render(
+            request,
+            'home/register/register.html',
+            context
+        )
+
+    context = {
+            'form': RegisterForm(instance=user),
+            'title':'Cadastro',
+            'name_screen': 'Atualizar',
+            'option_delete': 'yes',
+            'client': user,
+            'form_action': form_action,
+    }
+
+    return render(
+        request,
+        'home/register/register.html',
+        context
+    )
