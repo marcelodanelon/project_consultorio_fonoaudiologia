@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from  django.urls import reverse
-from home.forms import RegisterForm
+from home.forms import RegisterForm, RegisterUpdateForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
@@ -70,7 +70,7 @@ def updateUser(request, user_id):
         raise Http404
     
     if request.method == 'POST':
-        formUser = RegisterForm(request.POST, instance=user)
+        formUser = RegisterUpdateForm(request.POST, instance=user)
 
         if formUser.is_valid():
             formUser.save()
@@ -98,7 +98,7 @@ def updateUser(request, user_id):
         )
 
     context = {
-            'form': RegisterForm(instance=user),
+            'form': RegisterUpdateForm(instance=user),
             'title':'Cadastro',
             'name_screen': 'Atualizar',
             'option_delete': 'yes',
