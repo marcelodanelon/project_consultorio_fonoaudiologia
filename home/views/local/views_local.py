@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from home.models import LocalModel
 from django.db.models import Q
 from datetime import datetime
@@ -11,6 +12,7 @@ def isDate(var):
     except:
         return False
 
+@login_required(login_url='home:loginUser')
 def listLocal(request):
     locais = LocalModel.objects.all().order_by('id')
 
@@ -30,6 +32,7 @@ def listLocal(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def searchLocal(request):
     search_local = request.GET.get('q','').strip()
 

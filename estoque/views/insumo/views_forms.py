@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from estoque.forms import InsumoForm
 from estoque.models import InsumoModel
 
+@login_required(login_url='home:loginUser')
 def createInsumo(request):
     form_action = reverse('estoque:createInsumo')
 
@@ -42,6 +44,7 @@ def createInsumo(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def updateInsumo(request, insumo_id):
     insumo = get_object_or_404(InsumoModel, pk=insumo_id)
     form_action = reverse('estoque:updateInsumo', args=(insumo_id,))

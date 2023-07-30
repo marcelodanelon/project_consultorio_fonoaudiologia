@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from home.forms import ProfessionalForm
 from home.models import ProfessionalModel
 from django.contrib import messages
 
+@login_required(login_url='home:loginUser')
 def createProfessional(request):
     form_action = reverse('home:createProfessional')
 
@@ -42,6 +44,7 @@ def createProfessional(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def updateProfessional(request, professional_id):
     professional = get_object_or_404(ProfessionalModel, pk=professional_id)
     form_action = reverse('home:updateProfessional', args=(professional_id,))
@@ -86,6 +89,7 @@ def updateProfessional(request, professional_id):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def deleteProfessional(request, professional_id):
     professional = get_object_or_404(ProfessionalModel, pk=professional_id)
     form_action = reverse('home:deleteLocal', args=(professional_id,))

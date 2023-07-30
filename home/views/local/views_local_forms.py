@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from home.forms import LocalForm
 from home.models import LocalModel
 from django.contrib import messages
 
+@login_required(login_url='home:loginUser')
 def createLocal(request):
     form_action = reverse('home:createLocal')
 
@@ -42,6 +44,7 @@ def createLocal(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def updateLocal(request, local_id):
     local = get_object_or_404(LocalModel, pk=local_id)
     form_action = reverse('home:updateLocal', args=(local_id,))
@@ -86,6 +89,7 @@ def updateLocal(request, local_id):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def deleteLocal(request, local_id):
     local = get_object_or_404(LocalModel, pk=local_id)
     form_action = reverse('home:deleteLocal', args=(local_id,))

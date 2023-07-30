@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from home.models import ClientModel
 from django.db.models import Q
 from datetime import datetime
@@ -11,6 +12,7 @@ def isDate(var):
     except:
         return False
 
+@login_required(login_url='home:loginUser')
 def index(request):
     context = {
         'title': 'Home',
@@ -23,6 +25,7 @@ def index(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def listClient(request):
     clients = ClientModel.objects.all().order_by('id')
 
@@ -42,6 +45,7 @@ def listClient(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def searchClient(request):
     search_client = request.GET.get('q','').strip()
 

@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from  django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from home.forms import RegisterForm, RegisterUpdateForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 from django.http import Http404
 
+@login_required(login_url='home:loginUser')
 def register(request):
     form_action = reverse('home:registerUser')
     form = RegisterForm()
@@ -58,10 +60,12 @@ def login_view(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def logout_view(request):
     auth.logout(request)
     return redirect('home:loginUser')
 
+@login_required(login_url='home:loginUser')
 def updateUser(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     form_action = reverse('home:updateUser', args=(user_id,))

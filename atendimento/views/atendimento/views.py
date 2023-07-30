@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.urls import reverse
 from atendimento.forms import AtendimentoForm, AnamneseForm
 from home.models import ClientModel
 from atendimento.models import AtendimentoModel, AnamneseModel
 
+@login_required(login_url='home:loginUser')
 def atendimento(request):
     form_action = reverse('atendimento:atendimento')
     order_forms = AtendimentoModel()

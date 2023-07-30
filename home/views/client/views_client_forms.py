@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from home.forms import ClientForm
 from home.models import ClientModel
 from django.contrib import messages
 
+@login_required(login_url='home:loginUser')
 def createClient(request):
     form_action = reverse('home:createClient')
 
@@ -46,6 +48,7 @@ def createClient(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def updateClient(request, client_id):
     client = get_object_or_404(ClientModel, pk=client_id)
     form_action = reverse('home:updateClient', args=(client_id,))
@@ -93,6 +96,7 @@ def updateClient(request, client_id):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def deleteClient(request, client_id):
     client = get_object_or_404(ClientModel, pk=client_id)
     form_action = reverse('home:deleteClient', args=(client_id,))

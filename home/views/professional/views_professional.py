@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from home.models import ProfessionalModel
 from django.db.models import Q
 from datetime import datetime
@@ -11,6 +12,7 @@ def isDate(var):
     except:
         return False
 
+@login_required(login_url='home:loginUser')
 def listProfessional(request):
     profissionais = ProfessionalModel.objects.all().order_by('id')
 
@@ -30,6 +32,7 @@ def listProfessional(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def searchProfessional(request):
     search_profissional = request.GET.get('q','').strip()
 
