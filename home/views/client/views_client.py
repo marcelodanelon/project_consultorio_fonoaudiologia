@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from home.models import ClientModel
+from atendimento.models import AtendimentoModel, ProfessionalModel
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -14,9 +15,27 @@ def isDate(var):
 
 @login_required(login_url='home:loginUser')
 def index(request):
+    data_points = [
+        { "label": "apple",  "y": 10  },
+        { "label": "orange", "y": 75  },
+        { "label": "banana", "y": 25  },
+        { "label": "mango",  "y": 30  },
+        { "label": "grape",  "y": 28  }
+    ]
+
+    count = int(ProfessionalModel.objects.all().count())
+    professionals = list(ProfessionalModel.objects.all())
+    data_points = []
+    for i in range(count):
+        professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
+        print(professional.first().aProfessional)
+        data_points.append({'label': str(professional.first().aProfessional), "y": professional.count()})
+    print(data_points)
+
     context = {
         'title': 'Home',
         'name_module': 'Home',
+        "data_points" : data_points,
     }
 
     return render(

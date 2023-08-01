@@ -3,18 +3,80 @@
 {% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
 
 {% block content %}
-  <div style="margin-left:25%;padding:1px 16px;height:1000px;">
-    <h2>Fixed Full-height Side Nav</h2>
-    <h3>Try to scroll this area, and see how the sidenav sticks to the page</h3>
-    <p>Notice that this div element has a left margin of 25%. This is because the side navigation is set to 25% width. If you remove the margin, the sidenav will overlay/sit on top of this div.</p>
-    <p>Also notice that we have set overflow:auto to sidenav. This will add a scrollbar when the sidenav is too long (for example if it has over 50 links inside of it).</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
-    <p>Some text..</p>
+{% load static %}
+<script src="{% static 'global/partials/canvasjs.min.js' %}"></script>
+<script>
+    window.onload = function () {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            theme: "light2", // "light2", "dark1", "dark2"
+            animationEnabled: true, // change to true		
+            title:{
+                text: "Basic Column Chart"
+            },
+            data: [
+            {
+                // Change type to "bar", "area", "spline", "pie",etc.
+                type: "column",
+                dataPoints: {{ data_points | safe }}
+            }
+            ]
+        });
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Basic Column Chart"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "bar",
+              dataPoints: {{ data_points | safe }}
+          }
+          ]
+        });
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Basic Column Chart"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "pie",
+              dataPoints: {{ data_points | safe }}
+          }
+          ]
+        });
+        var chart4 = new CanvasJS.Chart("chartContainer4", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Basic Column Chart"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "area",
+              dataPoints: {{ data_points | safe }}
+          }
+          ]
+        });
+        chart1.render();
+        chart2.render();
+        chart3.render();
+        chart4.render();
+    }
+  </script>
+  <div class="row">
+    <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+    <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
+  </div>
+  <br><br>
+  <div class="row">
+    <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+    <div id="chartContainer4" style="width: 45%; height: 360px;"></div>
   </div>
 {% endblock content %}
 
