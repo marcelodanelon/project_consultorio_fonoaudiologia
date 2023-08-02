@@ -1,6 +1,6 @@
 {% extends 'global/base.html' %}
 
-{% block nav_lateral %}{% include 'partials/_nav_storage.html' %}{% endblock nav_lateral %}
+{% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
 
 {% block content %}
   <div class="container" style="padding:1px 16px;">
@@ -33,7 +33,7 @@
         <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
           {% if option_delete == 'yes'%}
-          <form action="{% url 'storage:deleteInsumo' insumo.id %}" method="POST">
+          <form action="{% url 'estoque:deleteInsumo' insumo.id %}" method="POST">
               {% csrf_token %}
               {% if confirmation_delete == 'no' %}
                 <input name="confirmation_delete" type="hidden" value="yes">
@@ -41,7 +41,7 @@
               {% else %}
                 <button class="btn btn-danger">Delete</button> 
               {% endif %}      
-              <a href="{% url 'storage:listInsumo' %}" class="btn btn-primary">Voltar</a>
+              <a href="{% url 'estoque:listInsumo' %}" class="btn btn-primary">Voltar</a>
       </div>  
           </form> 
           {% endif %}  

@@ -64,3 +64,31 @@ def updateInsumo(request, insumo_id):
         'estoque/insumo/insumo.html',
         context
     )
+
+@login_required(login_url='home:loginUser')
+def deleteInsumo(request, insumo_id):
+    insumo = get_object_or_404(InsumoModel, pk=insumo_id)
+    form_action = reverse('estoque:deleteInsumo', args=(insumo_id,))
+
+    confirmation = request.POST.get('confirmation_delete', 'no')
+
+    if confirmation == 'yes':
+        insumo.delete()
+        messages.success(request, 'Cliente deletado com sucesso!')
+        return redirect ('estoque:listInsumo')
+
+    context = {
+        'form': InsumoForm(instance=insumo),
+        'title':'Cadastro',
+        'name_screen': 'Atualizar',
+        'option_delete': 'yes',
+        'client': insumo,
+        'confirmation_delete': confirmation,
+        'form_action': form_action,
+    }
+
+    return render(
+        request,
+        'estoque/insumo/insumo.html',
+        context
+    )
