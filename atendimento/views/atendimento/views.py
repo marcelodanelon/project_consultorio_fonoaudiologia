@@ -79,3 +79,31 @@ def atendimento(request):
 
     return render(request, 'atendimento/atendimento.html', context)
 
+def historicoAtendimento(request):
+    form_atendimento = AtendimentoForm()
+
+    try:
+        search = int(request.GET.get('searchClient'))
+        client = ClientModel.objects.filter(pk=search).get()
+        print(client)
+               
+    except:
+        print('sem atendimentos')
+        search = None
+        client = None
+
+    client_atendimentos = AtendimentoModel.objects.filter(aClient=client)
+
+    context = {
+        'form_atendimento': form_atendimento,
+        'atendimentos': client_atendimentos,
+        'name_module': 'Histórico de Atendimentos',
+        'title': 'Atendimento',
+    }
+
+    return render(
+        request,
+        'atendimento/historicoAtendimento.html',
+        context
+    )
+

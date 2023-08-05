@@ -1,0 +1,255 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+    {% block head_base %}
+        <script>
+        $(document).ready(function(){
+            // buscar dados do client, chamando a view
+            $("#id_aClient").change(function(){
+                var client = $(this).children("option:selected").val();
+                if(client!=''){
+                window.location.replace("{% url 'atendimento:historicoAtendimento' %}?searchClient=" + client);
+                }
+            });
+            //obter valor parametro searchClient (control select)
+            var url_string = window.location.href; 
+            var url = new URL(url_string);
+            var paramValue = url.searchParams.get("searchClient");
+            $('#id_aClient option').each(function() {
+            if($(this).val() == paramValue) {
+                $(this).attr('selected', true);
+            }
+            });
+        });
+        </script>
+        <style>
+            .grid-container {
+              display: grid;
+              gap: 50px 50px;
+              grid-template-columns: auto auto auto;
+              padding: 10px;
+            }
+            
+            .grid-item {
+              border: 1px solid rgba(0, 0, 0, 0.8);
+              padding: 3px;
+              font-size: 14px;
+              text-align: center;
+            }
+
+            .item1 {
+                grid-column-start: 1;
+                grid-column-end: 4;
+            }
+        </style>
+    {% endblock head_base %}
+    <div class="container">
+        <div>
+            {{form_atendimento.aClient}}
+        </div>
+
+        <div class="grid-container">
+            <div class="grid-item d-flex flex-column bd-highlight item1">
+                <b>Primeiros Contatos</b>
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
+                            <th class="table-header">Onde conheceu a MARKI?</th>
+                            <th class="table-header">Tem dificuldade para escutar? Há quanto tempo? Sabe a causa?</th>
+                            <th class="table-header">Sua dificuldade está piorando?</th>
+                            <th class="table-header">Tem algum ouvido que escuta melhor?</th>
+                            <th class="table-header">Há pessoas na família com perda de audição?</th>
+                            <th class="table-header">Já trabalhou em ambiente ruidoso? Por quanto tempo?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {% if field.aDataPri is not None %}
+                                        {{ field.aDataPri }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aProfessional is not None %}
+                                        {{ field.aProfessional }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aLocal is not None %}
+                                        {{ field.aLocal }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aConhece is not None %}
+                                        {{ field.aConhece }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aDifiEsc is not None %}
+                                        {{ field.aDifiEsc }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aDifiPio is not None %}
+                                        {{ field.aDifiPio }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aOuviMel is not None %}
+                                        {{ field.aOuviMel }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aPessFam is not None %}
+                                        {{ field.aPessFam }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aTrabRui is not None %}
+                                        {{ field.aTrabRui }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

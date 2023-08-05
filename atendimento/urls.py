@@ -5,4 +5,5 @@ app_name = 'atendimento'
 
 urlpatterns = [
     path('atendimento/', views.atendimento ,name='atendimento'),
+    path('atendimento/historico/', views.historicoAtendimento ,name='historicoAtendimento'),
 ]

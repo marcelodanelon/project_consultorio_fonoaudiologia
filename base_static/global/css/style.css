@@ -222,7 +222,7 @@
   .search-input:focus {
     box-shadow: 0 0 15px var(--link-light-color);
   }
-  
+
   .message {
     max-width: 600px;
     margin: var(--spacing) auto;
