@@ -129,26 +129,30 @@
                 {% endif %}
             </div>
             <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
+                {% if anamneses %}
                 <table>
                     <thead>
                         <tr class="table-row table-row-header">
-                            <th class="table-header">Data 1º Consulta</th>
-                            <th class="table-header">Profissional</th>
-                            <th class="table-header">Unidade</th>
+                            <th class="table-header">Data</th>
+                            <th class="table-header">Ajuste Ouvido Direito</th>
+                            <th class="table-header">Ajuste Ouvido Esquerdo</th>
+                            <th class="table-header">Observações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for field in atendimentos %}            
+                        {% for field in anamneses %}            
                             <tr class="table-row">
                                 <td class="table-cel">
-                                    {{ field.aDataPri }}
+                                    {{ field.aDataAna }}
                                 </td>
                                 <td class="table-cel">
-                                    {{ field.aProfessional }}
+                                    {{ field.aAjustOD }}
                                 </td>
                                 <td class="table-cel">
-                                    {{ field.aLocal }}
+                                    {{ field.aAjustOE }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aAObserv }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -196,6 +200,36 @@
                             <th class="table-header">Data 1º Consulta</th>
                             <th class="table-header">Profissional</th>
                             <th class="table-header">Unidades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in atendimentos %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aDataPri }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aProfessional }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aLocal }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
+                {% endif %}
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                {% if atendimentos %}
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Profissional</th>
+                            <th class="table-header">Unidade</th>
                         </tr>
                     </thead>
                     <tbody>
