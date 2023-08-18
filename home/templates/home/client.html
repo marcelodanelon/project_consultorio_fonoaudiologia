@@ -2,10 +2,36 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
 
+{% block head_base %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+        field.mask(SPMaskBehavior.apply({}, arguments), options);
+      }
+  };
+  $(document).ready(function($){
+    $('.mask-telefone').mask(SPMaskBehavior, spOptions); 
+    $('.mask-date').mask('00/00/0000');  
+    $('.mask-cep').mask('00000-000');
+    $('.mask-rg').mask('00.000.000-00', {reverse: true});
+    $('.mask-cpf').mask('000.000.000-00', {reverse: true});
+    $('#client_form').submit(function(){
+      $('#client_form').find(":input[class*='mask-cpf']").unmask();
+      $('#client_form').find(":input[class*='mask-rg']").unmask();
+    })
+  })
+</script>
+{% endblock head_base %}
+
 {% block content %}
   <div class="container" style="padding:1px 16px;">
     <h3>{{name_screen}}</h3> <br>
-    <form action="{{form_action}}" method="post" class="form-control">
+    <form action="{{form_action}}" method="post" class="form-control" id='client_form'>
       {% csrf_token %}
       {% for field in form %}    
         {% if field.name == 'first_name' or field.name == 'responsibleName' or field.name == 'zipcode' or field.name == 'city' or field.name == 'document1' or field.name == 'phone1' or field.name == 'status' %}  

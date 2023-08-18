@@ -11,7 +11,7 @@ def createClient(request):
 
     if request.method == 'POST':
         formClient = ClientForm(request.POST)
-
+        print(formClient['responsiblePhone'])
         if formClient.is_valid():
             form = formClient.save()
             messages.success(request, 'Cliente cadastrado com sucesso!')
@@ -21,7 +21,7 @@ def createClient(request):
                 messages.error(request, 'Data de Nascimento Inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
-
+        print(formClient.errors)
         context = {
             'form': formClient,
             'title':'Cadastro',
@@ -65,7 +65,7 @@ def updateClient(request, client_id):
                 messages.error(request, 'Data de Nascimento inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
-
+        print(formClient.errors)
         context = {
             'form': formClient,
             'title':'Cadastro',

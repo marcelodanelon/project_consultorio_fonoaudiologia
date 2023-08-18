@@ -22,6 +22,7 @@
                 $("#id_state").val(resposta.uf);
                 //Vamos incluir para que o Número seja focado automaticamente
                 //melhorando a experiência do usuário
+                $('.mask-cep').mask('00000-000');
                 $("#id_number").focus();
             }
         });

@@ -1,5 +1,5 @@
 from django import forms
-from estoque.models import InsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel, MovimentacaoInsumoModel
 
 class InsumoForm(forms.ModelForm):
     valor = forms.FloatField(disabled = True, required=False)
@@ -17,8 +17,43 @@ class InsumoForm(forms.ModelForm):
         self.fields['quantidade'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['marca'].widget.attrs.update({
+            'class':'form-control dropdown',
+        })
+        self.fields['situacao'].widget.attrs.update({
+            'class':'form-check-label',
+        })
 
     class Meta:
         model = InsumoModel
-        fields = ('descricao', 'valor', 'quantidade')
+        fields = '__all__'
 
+class ItemInsumoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['insumo'].widget.attrs.update({
+            'class': 'form-control',
+        })
+
+    class Meta:
+        model = ItensInsumoModel
+        fields = '__all__'
+
+class MovimentacaoInsumoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['data'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['unidade'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['operacao'].widget.attrs.update({
+            'class': 'form-control',
+        })
+
+    class Meta:
+        model = MovimentacaoInsumoModel
+        fields = '__all__'

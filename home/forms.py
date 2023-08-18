@@ -163,14 +163,14 @@ class ClientForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['born'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-date',
             'placeholder': 'dd/mm/yyyy',
         })
         self.fields['responsibleName'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['responsiblePhone'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-telefone',
             'placeholder': '(00)00000-0000',
         })
         self.fields['street'].widget.attrs.update({
@@ -182,32 +182,32 @@ class ClientForm(forms.ModelForm):
         self.fields['number'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['city'].label = 'Cidade'
         self.fields['city'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['city'].label = 'Cidade'
+        self.fields['state'].label = 'Estado'
         self.fields['state'].widget.attrs.update({
             'class':'form-control dropdown',
         })
-        self.fields['state'].label = 'Estado'
         self.fields['zipcode'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-cep',
         })
         self.fields['complement'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['document1'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-cpf',
         })
         self.fields['document2'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-rg',
         })
         self.fields['phone1'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-telefone',
             'placeholder': '(00)00000-0000',
         })
         self.fields['phone2'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-telefone',
             'placeholder': '(00)00000-0000',
         })
         self.fields['status'].widget.attrs.update({

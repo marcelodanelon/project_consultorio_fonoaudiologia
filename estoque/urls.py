@@ -1,5 +1,5 @@
 from django.urls import path
-from estoque.views import entrada, insumo
+from estoque.views import movimentacao, insumo
 
 app_name = 'estoque'
 
@@ -11,4 +11,6 @@ urlpatterns = [
     path('searchInsumo/', insumo.searchInsumo, name='searchInsumo'),
     path('<int:insumo_id>/updateInsumo/', insumo.updateInsumo, name='updateInsumo'),
     path('<int:insumo_id>/deleteInsumo/', insumo.deleteInsumo, name='deleteInsumo'),
+
+    path('MovimentacaoInsumo/', movimentacao.MovimentacaoInsumoCreate, name='movimentacaoInsumoCreate'),
 ]

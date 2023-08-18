@@ -8,7 +8,7 @@
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
-        {% if field.name == 'descricao' or field.name == 'valor' %}  
+        {% if field.name == 'descricao' or field.name == 'valor' or field.name == 'marca' or field.name == 'situacao' %}  
         <div class="row align-items-center">
         {% endif %} 
           <div class="col"> 
@@ -25,10 +25,32 @@
             {{ field }}
             {{ field.errors }}
           </div>            
-        {% if field.name == 'descricao' or field.name == 'quantidade' %}    
+        {% if field.name == 'descricao' or field.name == 'quantidade' or field.name == 'marca' or field.name == 'situacao' %}    
         </div> <br> 
         {% endif %}                                 
       {% endfor %}
+      <div style="height:350px;border: 1px solid #ccc;background-color: #faf5f5;border-radius: 5px;overflow-x: auto;">
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+        teste <br>
+      </div>
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
