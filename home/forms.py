@@ -191,16 +191,16 @@ class ClientForm(forms.ModelForm):
             'class':'form-control dropdown',
         })
         self.fields['zipcode'].widget.attrs.update({
-            'class':'form-control mask-cep',
+            'class':'form-control maskfm-cep',
         })
         self.fields['complement'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['document1'].widget.attrs.update({
-            'class':'form-control mask-cpf',
+            'class':'form-control maskfm-cpf',
         })
         self.fields['document2'].widget.attrs.update({
-            'class':'form-control mask-rg',
+            'class':'form-control maskfm-rg',
         })
         self.fields['phone1'].widget.attrs.update({
             'class':'form-control mask-telefone',

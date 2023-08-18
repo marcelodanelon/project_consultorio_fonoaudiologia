@@ -17,12 +17,11 @@
   $(document).ready(function($){
     $('.mask-telefone').mask(SPMaskBehavior, spOptions); 
     $('.mask-date').mask('00/00/0000');  
-    $('.mask-cep').mask('00000-000');
-    $('.mask-rg').mask('00.000.000-00', {reverse: true});
-    $('.mask-cpf').mask('000.000.000-00', {reverse: true});
+    $('.maskfm-cep').mask('00000-000');
+    $('.maskfm-rg').mask('00.000.000-00', {reverse: true});
+    $('.maskfm-cpf').mask('000.000.000-00', {reverse: true});
     $('#client_form').submit(function(){
-      $('#client_form').find(":input[class*='mask-cpf']").unmask();
-      $('#client_form').find(":input[class*='mask-rg']").unmask();
+      $('#client_form').find(":input[class*='maskfm']").unmask();
     })
   })
 </script>
