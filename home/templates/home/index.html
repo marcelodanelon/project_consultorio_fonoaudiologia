@@ -79,14 +79,6 @@
         field.mask(SPMaskBehavior.apply({}, arguments), options);
       }
   };
-  $(document).ready(function($){
-    var phoneRegEX = /([01]?[- .]?[\(\. ]?[2-9]\d{2}[\)\. ]?[- .]?\d{3}[- .]\d{4})/;
-
-    $("#mask-telefone[text]").html(function(i, text) {
-      text = text.replace(phoneRegEX, "<a href='tel://$1'>$1</a>");
-      return text;
-    });
-  })
 </script>
 {% endblock head_base %}
 
@@ -99,7 +91,7 @@
   <div class="row">
     <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
     {% comment %} <div id="chartContainer4" style="width: 45%; height: 360px;"></div> {% endcomment %}
-    <div style="width: 46%; height: 100%">
+    <div style="width:46%; height:350px; overflow-x: auto;">
       <table style="width: 100%;">
         <div style="text-align: center; background: white; font-size: 30px"><b>Aniversários do Dia</b></div>
         <thead>
@@ -127,7 +119,7 @@
                     <td class="table-cel">
                       {{ field.age }} Anos
                     </td>
-                    <td class="table-cel" id="mask-telefone">
+                    <td class="table-cel">
                       {% if field.phone1 != None %}
                         {{field.phone1}}
                       {% endif %}
