@@ -5,6 +5,7 @@ from atendimento.models import AtendimentoModel, ProfessionalModel
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator
+from datetime import date
 
 def isDate(var):
     try:
@@ -15,27 +16,34 @@ def isDate(var):
 
 @login_required(login_url='home:loginUser')
 def index(request):
-    data_points = [
-        { "label": "apple",  "y": 10  },
-        { "label": "orange", "y": 75  },
-        { "label": "banana", "y": 25  },
-        { "label": "mango",  "y": 30  },
-        { "label": "grape",  "y": 28  }
-    ]
+    # data_points = [
+    #     { "label": "apple",  "y": 10  },
+    #     { "label": "orange", "y": 75  },
+    #     { "label": "banana", "y": 25  },
+    #     { "label": "mango",  "y": 30  },
+    #     { "label": "grape",  "y": 28  }
+    # ]
 
     count = int(ProfessionalModel.objects.all().count())
     professionals = list(ProfessionalModel.objects.all())
     data_points = []
     for i in range(count):
         professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
-        print(professional.first().aProfessional)
         data_points.append({'label': str(professional.first().aProfessional), "y": professional.count()})
-    print(data_points)
+
+    # Busca de aniversariantes do dia e idade
+    mes_atual=date.today().month
+    data_atual=date.today().day
+    aniversarios=ClientModel.objects.filter(born__day=data_atual).filter(born__month=mes_atual)
+    for a in aniversarios:
+        today = date.today()
+        a.age = today.year - a.born.year - ((today.month, today.day) < (a.born.month, a.born.day))
 
     context = {
         'title': 'Home',
         'name_module': 'Home',
-        "data_points" : data_points,
+        'data_points' : data_points,
+        'aniversarios': aniversarios,
     }
 
     return render(

@@ -2,7 +2,7 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
 
-{% block content %}
+{% block head_base %}
 {% load static %}
 <script src="{% static 'global/partials/canvasjs.min.js' %}"></script>
 <script>
@@ -49,26 +49,48 @@
           }
           ]
         });
-        var chart4 = new CanvasJS.Chart("chartContainer4", {
-          theme: "light2", // "light2", "dark1", "dark2"
-          animationEnabled: true, // change to true		
-          title:{
-              text: "Basic Column Chart"
-          },
-          data: [
-          {
-              // Change type to "bar", "area", "spline", "pie",etc.
-              type: "area",
-              dataPoints: {{ data_points | safe }}
-          }
-          ]
-        });
+        //var chart4 = new CanvasJS.Chart("chartContainer4", {
+        //  theme: "light2", // "light2", "dark1", "dark2"
+        //  animationEnabled: true, // change to true		
+        //  title:{
+        //      text: "Basic Column Chart"
+        //  },
+        //  data: [
+        //  {
+        //      // Change type to "bar", "area", "spline", "pie",etc.
+        //      type: "area",
+        //      dataPoints: {{ data_points | safe }}
+        //  }
+        //  ]
+        //});
         chart1.render();
         chart2.render();
         chart3.render();
-        chart4.render();
+        //chart4.render();
     }
-  </script>
+</script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+        field.mask(SPMaskBehavior.apply({}, arguments), options);
+      }
+  };
+  $(document).ready(function($){
+    var phoneRegEX = /([01]?[- .]?[\(\. ]?[2-9]\d{2}[\)\. ]?[- .]?\d{3}[- .]\d{4})/;
+
+    $("#mask-telefone[text]").html(function(i, text) {
+      text = text.replace(phoneRegEX, "<a href='tel://$1'>$1</a>");
+      return text;
+    });
+  })
+</script>
+{% endblock head_base %}
+
+{% block content %}
   <div class="row">
     <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
     <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
@@ -76,7 +98,50 @@
   <br><br>
   <div class="row">
     <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
-    <div id="chartContainer4" style="width: 45%; height: 360px;"></div>
+    {% comment %} <div id="chartContainer4" style="width: 45%; height: 360px;"></div> {% endcomment %}
+    <div style="width: 46%; height: 100%">
+      <table style="width: 100%;">
+        <div style="text-align: center; background: white; font-size: 30px"><b>Aniversários do Dia</b></div>
+        <thead>
+            <tr class="table-row table-row-header">
+                <th class="table-header"></th>
+                <th class="table-header">Nome</th>
+                <th class="table-header">Data de Nascimento</th>
+                <th class="table-header">Idade</th>
+                <th class="table-header">Telefone</th>
+                <th class="table-header">Celular</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for field in aniversarios %}
+                <tr class="table-row">
+                    <td class="table-cel" id="icon_birthday">
+                      🥳
+                    </td>
+                    <td class="table-cel">
+                      {{ field.first_name }} {{ field.last_name }}
+                    </td>
+                    <td class="table-cel">
+                      {{ field.born }}
+                    </td>
+                    <td class="table-cel">
+                      {{ field.age }} Anos
+                    </td>
+                    <td class="table-cel" id="mask-telefone">
+                      {% if field.phone1 != None %}
+                        {{field.phone1}}
+                      {% endif %}
+                    </td>
+                    <td class="table-cel">
+                      {% if field.phone2 != None %}
+                         {{field.phone2}}
+                      {% endif %}             
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endblock content %}
 
