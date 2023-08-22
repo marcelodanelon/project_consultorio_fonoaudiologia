@@ -35,6 +35,21 @@ class ItemInsumoForm(forms.ModelForm):
         self.fields['insumo'].widget.attrs.update({
             'class': 'form-control',
         })
+        self.fields['valorUnitario'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['valorTotal'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['quantidade'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['dataValidade'].widget.attrs.update({
+            'class': 'form-control',
+        })
+        self.fields['serie'].widget.attrs.update({
+            'class': 'form-control',
+        })
 
     class Meta:
         model = ItensInsumoModel
@@ -56,4 +71,4 @@ class MovimentacaoInsumoForm(forms.ModelForm):
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = '__all__'
+        fields = ('unidade','data','operacao')
