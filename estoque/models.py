@@ -25,7 +25,7 @@ class InsumoModel(models.Model):
     
 class MovimentacaoInsumoModel(models.Model):
     operacao = models.CharField(max_length=10, choices=CHOICES_OPERACAO, default='Entrada', verbose_name='Operação')
-    unidade = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
+    local = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
     data = models.DateField(default=date.today)
 
 class ItensInsumoModel(models.Model):
@@ -37,9 +37,9 @@ class ItensInsumoModel(models.Model):
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
     serie = models.CharField(max_length=20, blank=True, null=True, verbose_name='Serie')
-    local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True)
+    local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True, default='UNIDADE')
 
     def __str__(self) -> str:
-        return f'{self.insumo} - {self.marca}'
+        return f'{self.insumo}'
     
 

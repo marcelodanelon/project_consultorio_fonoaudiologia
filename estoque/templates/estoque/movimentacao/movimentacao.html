@@ -9,6 +9,7 @@
 <div class="container" style="padding:1px 16px;">
     <h3>{{name_screen}}</h3>
     <form action="{{form_action}}" method="post" class="container-all form-horizontal">
+        {% csrf_token %}
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
         <div class="row align-items-center">
             {% for field in formMov %}
@@ -36,6 +37,14 @@
                             <div class="col-1 ms-2">    
                                 <label for="{{ form.quantidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.quantidade.label }}</label>
                                 {{form.quantidade}}  
+                            </div> 
+                            <div hidden class="col-1 ms-2">    
+                                <label for="{{ form.dataEntrada.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataEntrada.label }}</label>
+                                {{form.dataEntrada}}  
+                            </div> 
+                            <div hidden class="col-1 ms-2">    
+                                <label for="{{ form.local.id_for_label }}" class="form-label d-flex align-items-start">{{ form.local.label }}</label>
+                                {{form.local}}  
                             </div> 
                             <div class="col-1 ms-2"> 
                                 <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
@@ -66,10 +75,10 @@
                 </div>
             {% endfor %}
         </div>
+        <div style="position: absolute; bottom: 22%; margin-left: 1em;">        
+            <button class="btn btn-success" type="submit">Gravar</button>
+        </div>
     </form>
-    <div style="position: absolute; bottom: 22%; margin-left: 1em;">        
-        <button class="btn btn-success" type="submit">Gravar</button>
-    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -82,7 +91,7 @@
         if (el.name) el.name = el.name.replace(id_regex, replacement);
     }
     function cloneMore(selector, prefix) {
-        var newElement = $(selector).clone(true);
+        var newElement = $(selector).clone(true, true);
         var total = $('#id_' + prefix + '_set-TOTAL_FORMS').val();
         newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
             var name = $(this).attr('name')
@@ -92,6 +101,7 @@
                 $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
             }
         });
+        //var newElement = $('input:text').clone();
         newElement.find('label').each(function() {
             var forValue = $(this).attr('for');
             if (forValue) {
@@ -99,6 +109,19 @@
             $(this).attr({'for': forValue});
             }
         });
+        //$('[name$=-dataValidade]').val('01/01/2000')
+        newElement.find('[name$=-dataEntrada]').each(function() {
+            $(this).val('01/01/2000')
+        });
+        newElement.find('[name$=-local]').each(function() {
+            $(this).prop("selectedIndex", 0).val();
+        });
+        //newElement.text($(selector).val())
+        //alert($(selector).val())
+        //newElement.find('input:text').each(function() {
+        //    $(this).attr('value', 'text');
+        //});
+        //$('#id_itensinsumomodel_set-3-dataValidade').val('text')
         total++;
         $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
         $(selector).before(newElement);

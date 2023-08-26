@@ -1,5 +1,6 @@
 from django import forms
 from estoque.models import InsumoModel, ItensInsumoModel, MovimentacaoInsumoModel
+from datetime import date
 
 class InsumoForm(forms.ModelForm):
     valor = forms.FloatField(disabled = True, required=False)
@@ -62,7 +63,7 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         self.fields['data'].widget.attrs.update({
             'class': 'form-control',
         })
-        self.fields['unidade'].widget.attrs.update({
+        self.fields['local'].widget.attrs.update({
             'class': 'form-control',
         })
         self.fields['operacao'].widget.attrs.update({
@@ -71,4 +72,4 @@ class MovimentacaoInsumoForm(forms.ModelForm):
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = ('unidade','data','operacao')
+        fields = ('local','data','operacao')
