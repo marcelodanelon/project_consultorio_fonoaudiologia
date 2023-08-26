@@ -15,8 +15,8 @@ class MarcaModel(models.Model):
 
 class InsumoModel(models.Model):
     descricao = models.CharField(max_length=50, verbose_name='Descrição')
-    valor = models.FloatField(verbose_name='Valor', null=True, blank=True)
-    quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
+    valor = models.FloatField(verbose_name='Valor', null=True, blank=True, default=0.0)
+    quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True, default=0)
     marca = models.ForeignKey(MarcaModel, verbose_name='Marca', on_delete=models.SET_NULL, null=True)
     situacao = models.BooleanField(default=True, verbose_name='Situação')
 
