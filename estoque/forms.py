@@ -44,6 +44,7 @@ class ItemInsumoForm(forms.ModelForm):
         })
         self.fields['quantidade'].widget.attrs.update({
             'class': 'form-control',
+            'required': True,
         })
         self.fields['dataValidade'].widget.attrs.update({
             'class': 'form-control',
