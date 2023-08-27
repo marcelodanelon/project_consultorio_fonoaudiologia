@@ -44,12 +44,13 @@ class ItemInsumoForm(forms.ModelForm):
         })
         self.fields['valorTotal'].widget.attrs.update({
             'class': 'form-control',
-            'disabled': True,
+            'readonly': True,
             'value': '0,00'
         })
         self.fields['quantidade'].widget.attrs.update({
             'class': 'form-control',
             'required': True,
+            'oninput': 'this.value = Math.round(this.value);',
         })
         self.fields['dataValidade'].widget.attrs.update({
             'class': 'form-control mask-date',

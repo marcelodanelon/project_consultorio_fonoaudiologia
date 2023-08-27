@@ -39,6 +39,7 @@ def MovimentacaoInsumoCreate(request):
                     insumo = InsumoModel.objects.filter(pk=item.insumo.pk).get()
                     if model.operacao=='Entrada':                    
                         totalQuantidade = insumo.quantidade + item.quantidade
+                        print(item.valorTotal)
                         totalValor = insumo.valor + float(item.valorTotal)
                         InsumoModel.objects.filter(pk=item.insumo.pk).update(quantidade=totalQuantidade)
                         InsumoModel.objects.filter(pk=item.insumo.pk).update(valor=totalValor)

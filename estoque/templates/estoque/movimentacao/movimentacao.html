@@ -9,6 +9,13 @@
     $(document).ready(function($){
         $('.mask-date').mask('00/00/0000');  
         $('.mask-money').mask("#.##0,00", {reverse: true});
+        $('.mask-int').mask('0#');
+        $(document).on("focus", ".mask-date", function() {
+            $(this).mask('00/00/0000');
+        });
+        $(document).on("focus", ".mask-money", function() {
+            $(this).mask("#.##0,00", {reverse: true});
+        });
     })
     function parsePotentiallyGroupedFloat(stringValue) {
         stringValue = stringValue.trim();
@@ -21,17 +28,17 @@
     $(document).on('change', '[id$=-valorUnitario]', function(e){
         valor = $(this).val()
         valorConvertido = parsePotentiallyGroupedFloat(valor)
-        quantidade = $('input').closest('[id$=-quantidade]').val()
+        quantidade = $(this).parent().parent().find('[id$=-quantidade]').val()
         calculo = valorConvertido * quantidade
-        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo)
+        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo.toFixed(2))
     });
     $(document).on('change', '[id$=-quantidade]', function(e){
         valor = $(this).parent().parent().find('[id$=-valorUnitario]').val()
         valorConvertido = parsePotentiallyGroupedFloat(valor)
         quantidade = $(this).val()
         calculo = valorConvertido * quantidade
-        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo)
-    });
+        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo.toFixed(2))
+    });    
 </script>
 {% endblock head_base %}
 
@@ -163,8 +170,9 @@
         newElement.find('[name$=-local]').each(function() {
             $(this).prop("selectedIndex", 0).val();
         });
+        //newElement.find('[id$=-dataValidade]')each(function(e){
         //$(selector).on("click", function(){
-            //$('.mask-date').mask('00/00/0000');  
+        //    $('.mask-date').mask('00/00/0000');  
             //$('.mask-money').mask("#.##0,00", {reverse: true});
         //}) 
         //$(function($){
