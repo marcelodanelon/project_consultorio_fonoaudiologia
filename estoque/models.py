@@ -31,8 +31,8 @@ class MovimentacaoInsumoModel(models.Model):
 class ItensInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True, blank=True)
     insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
-    valorUnitario = models.FloatField(verbose_name='Valor Unitario', null=True, blank=True)
-    valorTotal = models.FloatField(verbose_name='Valor Total', null=True, blank=True)
+    valorUnitario = models.CharField(max_length=10, verbose_name='Valor Unitario', null=True, blank=True)
+    valorTotal = models.CharField(max_length=10, verbose_name='Valor Total', null=True, blank=True)
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)

@@ -35,19 +35,22 @@ class ItemInsumoForm(forms.ModelForm):
 
         self.fields['insumo'].widget.attrs.update({
             'class': 'form-control',
+            'required': True,
         })
         self.fields['valorUnitario'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'form-control mask-money',
+            'required': True,
         })
         self.fields['valorTotal'].widget.attrs.update({
             'class': 'form-control',
+            'disabled': True,
         })
         self.fields['quantidade'].widget.attrs.update({
             'class': 'form-control',
             'required': True,
         })
         self.fields['dataValidade'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'form-control mask-date',
         })
         self.fields['serie'].widget.attrs.update({
             'class': 'form-control',
@@ -62,7 +65,7 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['data'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'form-control mask-date',
         })
         self.fields['local'].widget.attrs.update({
             'class': 'form-control',

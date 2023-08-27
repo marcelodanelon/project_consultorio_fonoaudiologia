@@ -2,7 +2,16 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
 
-{% block head_base %}{% endblock head_base %}
+{% block head_base %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function($){
+        $('.mask-date').mask('00/00/0000');  
+        $('.mask-money').mask("#.##0,00", {reverse: true});
+    })
+</script>
+{% endblock head_base %}
 
 {% block content %}
 
@@ -101,7 +110,6 @@
                 $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
             }
         });
-        //var newElement = $('input:text').clone();
         newElement.find('label').each(function() {
             var forValue = $(this).attr('for');
             if (forValue) {
@@ -109,19 +117,24 @@
             $(this).attr({'for': forValue});
             }
         });
-        //$('[name$=-dataValidade]').val('01/01/2000')
+        function GetTodayDate() {
+            var tdate = new Date();
+            var dd = tdate.getDate(); //yields day
+            var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); //yields month
+            var yyyy = tdate.getFullYear(); //yields year
+            var currentDate= dd + "/" + MM + "/" + yyyy;
+         
+            return currentDate;
+        }
+        newElement.find('[name$=-dataValidade]').each(function() {
+            $(this).val(GetTodayDate())
+        });
         newElement.find('[name$=-dataEntrada]').each(function() {
             $(this).val('01/01/2000')
         });
         newElement.find('[name$=-local]').each(function() {
             $(this).prop("selectedIndex", 0).val();
         });
-        //newElement.text($(selector).val())
-        //alert($(selector).val())
-        //newElement.find('input:text').each(function() {
-        //    $(this).attr('value', 'text');
-        //});
-        //$('#id_itensinsumomodel_set-3-dataValidade').val('text')
         total++;
         $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
         $(selector).before(newElement);
