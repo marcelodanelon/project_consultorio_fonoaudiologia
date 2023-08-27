@@ -10,6 +10,28 @@
         $('.mask-date').mask('00/00/0000');  
         $('.mask-money').mask("#.##0,00", {reverse: true});
     })
+    function parsePotentiallyGroupedFloat(stringValue) {
+        stringValue = stringValue.trim();
+        var result = stringValue.replace(/[^0-9]/g, '');
+        if (/[,\.]\d{2}$/.test(stringValue)) {
+            result = result.replace(/(\d{2})$/, '.$1');
+        }
+        return parseFloat(result);
+    }
+    $(document).on('change', '[id$=-valorUnitario]', function(e){
+        valor = $(this).val()
+        valorConvertido = parsePotentiallyGroupedFloat(valor)
+        quantidade = $('input').closest('[id$=-quantidade]').val()
+        calculo = valorConvertido * quantidade
+        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo)
+    });
+    $(document).on('change', '[id$=-quantidade]', function(e){
+        valor = $(this).parent().parent().find('[id$=-valorUnitario]').val()
+        valorConvertido = parsePotentiallyGroupedFloat(valor)
+        quantidade = $(this).val()
+        calculo = valorConvertido * quantidade
+        $(this).parent().parent().find('[id$=-valorTotal]').val(calculo)
+    });
 </script>
 {% endblock head_base %}
 
@@ -43,7 +65,7 @@
                                 <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                                 {{form.insumo}} 
                             </div> 
-                            <div class="col-1 ms-2">    
+                            <div class="col-1 ms-2" id="field_quantidade">    
                                 <label for="{{ form.quantidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.quantidade.label }}</label>
                                 {{form.quantidade}}  
                             </div> 
@@ -126,15 +148,29 @@
          
             return currentDate;
         }
+        newElement.find('[name$=-valorUnitario]').each(function() {
+            $(this).val('0,00')
+        });
+        newElement.find('[name$=-valorTotal]').each(function() {
+            $(this).val('0,00')
+        });
         newElement.find('[name$=-dataValidade]').each(function() {
             $(this).val(GetTodayDate())
         });
         newElement.find('[name$=-dataEntrada]').each(function() {
-            $(this).val('01/01/2000')
+            $(this).val('01/01/2000') 
         });
         newElement.find('[name$=-local]').each(function() {
             $(this).prop("selectedIndex", 0).val();
         });
+        //$(selector).on("click", function(){
+            //$('.mask-date').mask('00/00/0000');  
+            //$('.mask-money').mask("#.##0,00", {reverse: true});
+        //}) 
+        //$(function($){
+        //    $('.mask-date').mask('00/00/0000');  
+        //    $('.mask-money').mask("#.##0,00", {reverse: true});
+        //})
         total++;
         $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
         $(selector).before(newElement);

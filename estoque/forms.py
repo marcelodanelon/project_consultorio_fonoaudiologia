@@ -40,10 +40,12 @@ class ItemInsumoForm(forms.ModelForm):
         self.fields['valorUnitario'].widget.attrs.update({
             'class': 'form-control mask-money',
             'required': True,
+            'value': '0,00'
         })
         self.fields['valorTotal'].widget.attrs.update({
             'class': 'form-control',
             'disabled': True,
+            'value': '0,00'
         })
         self.fields['quantidade'].widget.attrs.update({
             'class': 'form-control',
