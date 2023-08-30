@@ -1,0 +1,63 @@
+.md-container {
+    display: flex;
+    justify-content: right;
+    align-items: center;  
+    position: absolute;
+    right: 2%;
+  }
+  .md-modal {
+    width: 100%;
+    max-width: 450px;
+    z-index: 9999;
+    visibility: hidden;
+    padding: 25px;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    background-color: #fff;
+    font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);
+    outline: 0;
+  }
+  
+  .md-show {
+      visibility: visible;
+  }
+  
+  .md-overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      visibility: hidden;
+      top: 0;
+      left: 0;
+      z-index: 9998;
+      opacity: 0;
+      background: rgba(40,43,49,.8);
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+  }
+  
+  .md-show ~ .md-overlay {
+      opacity: 1;
+      visibility: visible;
+  }
+  
+  .md-content {
+      color: #333;
+  }
+  
+  .md-effect-1 {
+      -webkit-transform: scale(0.7);
+      -ms-transform: scale(0.7);
+      transform: scale(0.7);
+      opacity: 0;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+  }
+  
+  .md-show.md-effect-1 {
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+  }

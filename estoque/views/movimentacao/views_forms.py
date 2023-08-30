@@ -16,10 +16,8 @@ def MovimentacaoInsumoCreate(request):
         form = MovimentacaoInsumoForm(request.POST, request.FILES, instance=modelMov)
         formset = formIte(request.POST, request.FILES, instance=modelMov)
 
-        print(form.errors)
-        print(formset.errors)
         if formset.is_valid() and form.is_valid():
-            success=True
+            success=None
             model = form.save(commit=False)
             modelSet = formset.save(commit=False)
 
@@ -31,6 +29,7 @@ def MovimentacaoInsumoCreate(request):
                         success=True
                     else:
                         success=False
+                        break
 
             # realiza ação e verificação
             if success:

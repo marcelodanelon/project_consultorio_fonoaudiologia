@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 def index(request):
     context = {
         'name_module': 'Estoque',
+        'title': 'Estoque',
     }
 
     return render(
