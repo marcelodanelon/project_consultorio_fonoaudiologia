@@ -231,11 +231,11 @@
   }
 
   .message {
-    max-width: 600px;
+    max-width: 450px;
     margin: var(--spacing) auto;
     margin-top: calc(var(--spacing) * 2);
     margin-bottom: 0;
-    padding: 0.5em;
+    padding: 23px;
     text-align: center;
     border-radius: var(--default-border-radius);
     font-size: var(--smaller-font-size);

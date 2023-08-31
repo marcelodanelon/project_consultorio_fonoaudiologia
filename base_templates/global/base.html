@@ -60,7 +60,7 @@
           {% for message in messages %}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <div class="md-container">
-            <div class="md-modal md-effect-1" id="modal-1">
+            <div class="md-effect-1 message {{message.tags}}" id="modal-1">
               <div class="md-content">
                 {{message}}
               </div>
