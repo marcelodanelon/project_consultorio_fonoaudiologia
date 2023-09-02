@@ -12,7 +12,7 @@ from django.http import HttpResponse
 def getJSONitem(request):
     if request.GET.get('searchLocal'):
         q = int(request.GET.get('searchLocal'))
-        model = list(ItensInsumoModel.objects.filter(local=q).values())
+        model = list(ItensInsumoModel.objects.filter(local=q).exclude(quantidade=0).values())
         print('passou')
         return JsonResponse(data={'results': model})
 
