@@ -3,10 +3,27 @@ from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from estoque.forms import MovimentacaoInsumoForm, InsumoForm, ItemInsumoForm
 from estoque.models import MovimentacaoInsumoModel, InsumoModel, ItensInsumoModel
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 
-def MovimentacaoInsumoCreate(request):
+def getJSONitem(request):
+    if request.GET.get('searchLocal'):
+        q = int(request.GET.get('searchLocal'))
+        model = list(ItensInsumoModel.objects.filter(local=q).values())
+        print('passou')
+        return JsonResponse(data={'results': model})
+
+def movimentacaoInsumoCreate(request):
+    try:
+        search = int(request.GET.get('searchLocal'))
+        items = ItensInsumoModel.objects.filter(local=search)
+    except:
+        search = None
+        items = None
+
     form_action = reverse('estoque:movimentacaoInsumoCreate')
     modelMov = MovimentacaoInsumoModel()
     formMov=MovimentacaoInsumoForm()
@@ -53,7 +70,7 @@ def MovimentacaoInsumoCreate(request):
                 return redirect('estoque:index')
             else:
                 messages.error(request, f'Saldo insuficiente para insumo {insumo}!')
-        
+
         context = {
         'title': 'Estoque',
         'name_module': 'Estoque',
@@ -61,6 +78,7 @@ def MovimentacaoInsumoCreate(request):
         'form_action': form_action,
         'formMov': form,
         'formIte': formset,
+        'items_saida': items,
         }
 
         return render(
@@ -74,6 +92,7 @@ def MovimentacaoInsumoCreate(request):
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
         'form_action': form_action,
+        'items_saida': items,
         'formMov': formMov,
         'formIte': formIte(instance=MovimentacaoInsumoModel()),
     }

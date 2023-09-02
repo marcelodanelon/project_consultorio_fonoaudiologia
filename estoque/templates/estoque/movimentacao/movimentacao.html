@@ -5,6 +5,7 @@
 {% block head_base %}
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
 <script>
     $(document).ready(function($){
         $('.mask-date').mask('00/00/0000');  
@@ -16,7 +17,57 @@
         $(document).on("focus", ".mask-money", function() {
             $(this).mask("#.##0,00", {reverse: true});
         });
+        // buscar dados do client, chamando a view
+        $("#id_local").change(function(){
+            var local = $(this).children("option:selected").val();
+            if(local!=''){
+              window.location.replace("{% url 'estoque:movimentacaoInsumoCreate' %}?searchLocal=" + local);
+            }
+        });
+        //obter valor parametro searchLocal (control select)
+        var url_string = window.location.href; 
+        var url = new URL(url_string);
+        var paramValue = url.searchParams.get("searchLocal");
+        $('#id_local option').each(function() {
+          if($(this).val() == paramValue) {
+            $(this).attr('selected', true);
+          }
+        });
+
+        var conditionRow = $('.form-row:not(:first)');
+        conditionRow.find('.btn.add-form-row')
+        .removeClass('btn-success').addClass('btn-danger')
+        .removeClass('add-form-row').addClass('remove-form-row')
+        .html('-');
+
+        //$("#id_q").change(function () {
+        //    $.ajax({
+        //        url: "{% url 'estoque:movimentacaoInsumoCreate' %}?searchLocal=1",   //Replace this with your search URL
+        //        type: "get",       // Querying means getting in HTTP terms
+        //        data: $("#search").serialize(),    // This transforms your search form into a JSON dictionary.
+        //        success: function (data){
+        //            example = data.results // That's where you get your query results.
+        //            console.log(example)
+        //        }, // Do sth here.
+        //    });
+        //})
     })
+
+    $(document).ready(function () {
+        var local = $("#id_local").children("option:selected").val();
+        if(local!=''){
+            $.ajax({
+                url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   //Replace this with your search URL
+                type: "get",       // Querying means getting in HTTP terms
+                data: $("#search").serialize(),    // This transforms your search form into a JSON dictionary.
+                success: function (data){
+                    example = data.results // That's where you get your query results.
+                    console.log(example)
+                }, // Do sth here.
+            });
+        }
+    })
+
     function parsePotentiallyGroupedFloat(stringValue) {
         stringValue = stringValue.trim();
         var result = stringValue.replace(/[^0-9]/g, '');
@@ -43,10 +94,9 @@
 {% endblock head_base %}
 
 {% block content %}
-
 <div class="container" style="padding:1px 16px;">
     <h3>{{name_screen}}</h3>
-    <form action="{{form_action}}" method="post" class="container-all form-horizontal">
+    <form action="{{form_action}}" method="post" class="container-all form-horizontal" id="search">
         {% csrf_token %}
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
         <div class="row align-items-center">
