@@ -79,4 +79,4 @@ class MovimentacaoInsumoForm(forms.ModelForm):
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = ('local','data','operacao')
+        fields = ('operacao','local','data')

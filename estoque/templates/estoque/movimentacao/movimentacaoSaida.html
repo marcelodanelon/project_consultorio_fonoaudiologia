@@ -21,7 +21,7 @@
         $("#id_local").change(function(){
             var local = $(this).children("option:selected").val();
             if(local!=''){
-              window.location.replace("{% url 'estoque:movimentacaoInsumoCreate' %}?searchLocal=" + local);
+              window.location.replace("{% url 'estoque:movimentacaoInsumoSaida' %}?searchLocal=" + local);
             }
         });
         //obter valor parametro searchLocal (control select)
@@ -40,20 +40,23 @@
         .removeClass('add-form-row').addClass('remove-form-row')
         .html('-');
 
-        //$("#id_q").change(function () {
-        //    $.ajax({
-        //        url: "{% url 'estoque:movimentacaoInsumoCreate' %}?searchLocal=1",   //Replace this with your search URL
-        //        type: "get",       // Querying means getting in HTTP terms
-        //        data: $("#search").serialize(),    // This transforms your search form into a JSON dictionary.
-        //        success: function (data){
-        //            example = data.results // That's where you get your query results.
-        //            console.log(example)
-        //        }, // Do sth here.
-        //    });
-        //})
     })
 
     $(document).ready(function () {
+        $('#id_operacao option').each(function() {
+            paramValue = "Saída";
+            if($(this).val() == paramValue) {
+              $(this).attr('selected', true);
+            }
+        });
+
+        $("#id_operacao").change(function(){
+            var operacao = $(this).children("option:selected").val();
+            if(operacao=="Entrada"){
+              window.location.replace("{% url 'estoque:movimentacaoInsumoEntrada' %}");
+            }
+        });
+
         var local = $("#id_local").children("option:selected").val();
         if(local!=''){
             $.ajax({
