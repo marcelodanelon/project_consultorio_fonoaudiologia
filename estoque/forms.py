@@ -57,6 +57,7 @@ class ItemInsumoForm(forms.ModelForm):
         })
         self.fields['serie'].widget.attrs.update({
             'class': 'form-control',
+            'required': True,
         })
 
     class Meta:

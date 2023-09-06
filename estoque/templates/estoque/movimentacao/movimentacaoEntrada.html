@@ -198,7 +198,7 @@
         });
         function GetTodayDate() {
             var tdate = new Date();
-            var dd = tdate.getDate(); //yields day
+            var dd = tdate.getDate().toString().padStart(2, "0"); //yields day
             var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); //yields month
             var yyyy = tdate.getFullYear(); //yields year
             var currentDate= dd + "/" + MM + "/" + yyyy;

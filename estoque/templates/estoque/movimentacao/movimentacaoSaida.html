@@ -40,9 +40,6 @@
         .removeClass('add-form-row').addClass('remove-form-row')
         .html('-');
 
-    })
-
-    $(document).ready(function () {
         $('#id_operacao option').each(function() {
             paramValue = "Saída";
             if($(this).val() == paramValue) {
@@ -50,6 +47,10 @@
             }
         });
 
+        //ajuste layout para opçao de SAIDA
+        $('[id$=-valorUnitario]').prop( "disabled", true );
+
+        //se a operacao for entrada, redireciona a página
         $("#id_operacao").change(function(){
             var operacao = $(this).children("option:selected").val();
             if(operacao=="Entrada"){
@@ -57,18 +58,34 @@
             }
         });
 
+        var items_estoque;
         var local = $("#id_local").children("option:selected").val();
         if(local!=''){
-            $.ajax({
-                url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   //Replace this with your search URL
-                type: "get",       // Querying means getting in HTTP terms
-                data: $("#search").serialize(),    // This transforms your search form into a JSON dictionary.
+            items_estoque = $.ajax({
+                url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   
+                type: "get",     
+                async: false,  
+                data: $("#search").serialize(),    
                 success: function (data){
-                    example = data.results // That's where you get your query results.
-                    console.log(example)
-                }, // Do sth here.
+                    data_items = data.results 
+                    console.log(data_items)
+                },                 
             });
-        }
+        };
+
+        $(document).on('change', '[id$=-insumo]', function(e){
+            var local = $("#id_local").children("option:selected").val();
+            var insumo = $(this).parent().parent().find('[id$=-insumo]').val();
+            var mySelect = $(this).parent().parent().find('[id=myItems]');
+            mySelect.empty();
+            for (const key in items_estoque.responseJSON.results){
+                if(items_estoque.responseJSON.results[key].local_id==local && items_estoque.responseJSON.results[key].insumo_id==insumo){
+                    mySelect.append(
+                        $('<option></option>').val(items_estoque.responseJSON.results[key].serie).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
+                    );
+                }
+            }
+        });  
     })
 
     function parsePotentiallyGroupedFloat(stringValue) {
@@ -92,7 +109,8 @@
         quantidade = $(this).val()
         calculo = valorConvertido * quantidade
         $(this).parent().parent().find('[id$=-valorTotal]').val(calculo.toFixed(2))
-    });    
+    });  
+      
 </script>
 {% endblock head_base %}
 
@@ -119,15 +137,28 @@
                 <div class="form-row ps-3 pe-3 pt-2">
                     <div class="row">
                         <div class="input-group-text d-flex align-items-start">
-                            <div class="col-2 ms-2"> 
+                            <div class="col-4 ms-2"> 
                                 {{form.errors}}
                                 <td class="hidden">{{ form.id }}</td>
                                 <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                                 {{form.insumo}} 
                             </div> 
+                            <div class="col-4 ms-2"> 
+                                <label class="form-label d-flex align-items-start">Serie/Lote</label>
+                                <select id='myItems' class="form-control required">                                    
+                                </select> 
+                            </div>
                             <div class="col-1 ms-2" id="field_quantidade">    
                                 <label for="{{ form.quantidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.quantidade.label }}</label>
                                 {{form.quantidade}}  
+                            </div> 
+                            <div class="col-1 ms-2"> 
+                                <label class="form-label d-flex align-items-start">Disponível</label>
+                                <input class="form-control" placeholder="0" disabled></input>
+                            </div> 
+                            <div class="col-1 ms-2"> 
+                                <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
+                                {{form.valorUnitario}} 
                             </div> 
                             <div hidden class="col-1 ms-2">    
                                 <label for="{{ form.dataEntrada.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataEntrada.label }}</label>
@@ -137,19 +168,15 @@
                                 <label for="{{ form.local.id_for_label }}" class="form-label d-flex align-items-start">{{ form.local.label }}</label>
                                 {{form.local}}  
                             </div> 
-                            <div class="col-1 ms-2"> 
-                                <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
-                                {{form.valorUnitario}} 
-                            </div> 
-                            <div class="col-1 ms-2">    
+                            <div hidden class="col-1 ms-2">    
                                 <label for="{{ form.valorTotal.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorTotal.label }}</label>
                                 {{form.valorTotal}}  
                             </div> 
-                            <div class="col-2 ms-2"> 
+                            <div hidden class="col-2 ms-2"> 
                                 <label for="{{ form.dataValidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataValidade.label }}</label>
                                 {{form.dataValidade}} 
                             </div> 
-                            <div class="col-4 ms-2">    
+                            <div hidden class="col-4 ms-2">    
                                 <label for="{{ form.serie.id_for_label }}" class="form-label d-flex align-items-start">{{ form.serie.label }}</label>
                                 {{form.serie}}  
                             </div> 
@@ -201,7 +228,7 @@
         });
         function GetTodayDate() {
             var tdate = new Date();
-            var dd = tdate.getDate(); //yields day
+            var dd = tdate.getDate().toString().padStart(2, "0"); //yields day
             var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); //yields month
             var yyyy = tdate.getFullYear(); //yields year
             var currentDate= dd + "/" + MM + "/" + yyyy;
@@ -222,6 +249,9 @@
         });
         newElement.find('[name$=-local]').each(function() {
             $(this).prop("selectedIndex", 0).val();
+        });
+        newElement.find('[id=myItems]').each(function() {
+            $(this).empty();
         });
         //newElement.find('[id$=-dataValidade]')each(function(e){
         //$(selector).on("click", function(){

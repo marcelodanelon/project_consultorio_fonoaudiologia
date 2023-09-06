@@ -36,7 +36,7 @@ class ItensInsumoModel(models.Model):
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
-    serie = models.CharField(max_length=20, blank=True, null=True, verbose_name='Serie')
+    serie = models.CharField(max_length=20, blank=True, null=True, verbose_name='Serie/Lote')
     local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True, default='UNIDADE')
 
     def __str__(self) -> str:
