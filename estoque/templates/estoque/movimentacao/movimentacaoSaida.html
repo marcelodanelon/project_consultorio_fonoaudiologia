@@ -73,6 +73,7 @@
             });
         };
 
+        //ação ao selecionar insumo
         $(document).on('change', '[id$=-insumo]', function(e){
             var local = $("#id_local").children("option:selected").val();
             var insumo = $(this).parent().parent().find('[id$=-insumo]').val();
@@ -81,8 +82,26 @@
             for (const key in items_estoque.responseJSON.results){
                 if(items_estoque.responseJSON.results[key].local_id==local && items_estoque.responseJSON.results[key].insumo_id==insumo){
                     mySelect.append(
-                        $('<option></option>').val(items_estoque.responseJSON.results[key].serie).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
+                        $('<option></option>').val(items_estoque.responseJSON.results[key].movimentacao_id).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
                     );
+                }
+            }
+            $( "[id=myItems]" ).trigger( "change" );
+        });  
+
+        //ação ao selecionar lote do insumo
+        $(document).on('change', '[id=myItems]', function(e){
+            var disponivel = $(this).parent().parent().find('[id=disponivel]');
+            var valorUnitario = $(this).parent().parent().find('[id$=-valorUnitario]');
+            var valorTotal = $(this).parent().parent().find('[id$=-valorTotal]');
+            var serie = $(this).parent().parent().find('[id$=-serie]');
+            var movimentacao = $(this).val();
+            for (const key in items_estoque.responseJSON.results){
+                if(items_estoque.responseJSON.results[key].movimentacao_id==movimentacao){
+                    disponivel.val(items_estoque.responseJSON.results[key].quantidade);
+                    valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
+                    valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
+                    serie.val(items_estoque.responseJSON.results[key].serie);
                 }
             }
         });  
@@ -154,7 +173,7 @@
                             </div> 
                             <div class="col-1 ms-2"> 
                                 <label class="form-label d-flex align-items-start">Disponível</label>
-                                <input class="form-control" placeholder="0" disabled></input>
+                                <input class="form-control" id="disponivel" placeholder="0" disabled></input>
                             </div> 
                             <div class="col-1 ms-2"> 
                                 <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
