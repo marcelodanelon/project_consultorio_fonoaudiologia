@@ -17,6 +17,7 @@
         $(document).on("focus", ".mask-money", function() {
             $(this).mask("#.##0,00", {reverse: true});
         });
+
         // buscar dados do client, chamando a view
         $("#id_local").change(function(){
             var local = $(this).children("option:selected").val();
@@ -105,6 +106,9 @@
                 }
             }
         });  
+
+        $('[id$=-insumo]').val(0)
+        $('[id$=-quantidade]').val(0)
     })
 
     function parsePotentiallyGroupedFloat(stringValue) {
@@ -271,6 +275,9 @@
         });
         newElement.find('[id=myItems]').each(function() {
             $(this).empty();
+        });
+        newElement.find('[id=disponivel]').each(function() {
+            $(this).val(0);
         });
         //newElement.find('[id$=-dataValidade]')each(function(e){
         //$(selector).on("click", function(){

@@ -139,57 +139,46 @@ def movimentacaoInsumoSaida(request):
 
         if formset.is_valid() and form.is_valid():
             success=None
-            model = form.save(commit=False)
+            form.save(commit=False)
             modelSet = formset.save(commit=False)
 
             # verifica se há saldo para saída
             for item in modelSet:
-                insumo = InsumoModel.objects.filter(pk=item.insumo.pk).get()
-                if model.operacao!='Entrada':                    
-                    if insumo.quantidade >= item.quantidade:
-                        success=True
-                    else:
-                        success=False
-                        break
+                insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()                   
+                if insumo.quantidade >= item.quantidade:
+                    success=True
+                else:
+                    success=False
+                    break
 
             # realiza ação e verificação
             if success:
                 form.save()
                 for item in modelSet:
-                    insumo = InsumoModel.objects.filter(pk=item.insumo.pk).get()
-                    if model.operacao=='Entrada':                    
-                        totalQuantidade = insumo.quantidade + item.quantidade
-                        print(item.valorTotal)
-                        totalValor = insumo.valor + float(item.valorTotal)
-                        InsumoModel.objects.filter(pk=item.insumo.pk).update(quantidade=totalQuantidade)
-                        InsumoModel.objects.filter(pk=item.insumo.pk).update(valor=totalValor)
-                    else:
-                        totalQuantidade = insumo.quantidade - item.quantidade
-                        totalValor = insumo.valor - float(item.valorTotal)
-                        InsumoModel.objects.filter(pk=item.insumo.pk).update(quantidade=totalQuantidade)
-                        InsumoModel.objects.filter(pk=item.insumo.pk).update(valor=totalValor)
-                    item.local = model.local
-                    item.dataEntrada = model.data
-                    item.save()
+                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get() 
+                    totalQuantidade = insumo.quantidade - item.quantidade
+                    totalValor = float(insumo.valorTotal) - float(item.valorTotal)
+                    ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
+                    ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                 return redirect('estoque:index')
             else:
                 messages.error(request, f'Saldo insuficiente para insumo {insumo}!')
 
-        context = {
-        'title': 'Estoque',
-        'name_module': 'Estoque',
-        'name_screen': 'Movimentação de Insumos',
-        'form_action': form_action,
-        'formMov': form,
-        'formIte': formset,
-        'items_saida': items,
-        }
+            context = {
+            'title': 'Estoque',
+            'name_module': 'Estoque',
+            'name_screen': 'Movimentação de Insumos',
+            'form_action': form_action,
+            'formMov': form,
+            'formIte': formIte,
+            'items_saida': items,
+            }
 
-        return render(
-            request,
-            'estoque/movimentacao/movimentacaoSaida.html',
-            context
-        )
+            return render(
+                request,
+                'estoque/movimentacao/movimentacaoSaida.html',
+                context
+            )
 
     context = {
         'title': 'Estoque',
