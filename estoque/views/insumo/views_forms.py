@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from estoque.forms import InsumoForm
-from estoque.models import InsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel
 
 @login_required(login_url='home:loginUser')
 def createInsumo(request):
@@ -48,10 +48,12 @@ def createInsumo(request):
 def updateInsumo(request, insumo_id):
     insumo = get_object_or_404(InsumoModel, pk=insumo_id)
     form_action = reverse('estoque:updateInsumo', args=(insumo_id,))
+    items = ItensInsumoModel.objects.filter(insumo=insumo_id)
 
     context = {
         'form' : InsumoForm(instance=insumo),
         'form_action': form_action,
+        'items': items,
         'insumo': insumo,
         'title':'Cadastro',
         'name_screen': 'Atualizar',
