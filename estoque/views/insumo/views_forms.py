@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.urls import reverse
 from django.contrib import messages
 from estoque.forms import InsumoForm
@@ -43,17 +44,23 @@ def createInsumo(request):
         'estoque/insumo/insumo.html',
         context
     )
-
+from django.db.models import FloatField
+from django.db.models.functions import Cast
 @login_required(login_url='home:loginUser')
 def updateInsumo(request, insumo_id):
     insumo = get_object_or_404(InsumoModel, pk=insumo_id)
     form_action = reverse('estoque:updateInsumo', args=(insumo_id,))
-    items = ItensInsumoModel.objects.filter(insumo=insumo_id)
+    itemsComSaldo = ItensInsumoModel.objects.filter(insumo=insumo_id).exclude(quantidade=0).order_by('-dataEntrada')
+    itemsSemSaldo = ItensInsumoModel.objects.filter(insumo=insumo_id).filter(quantidade=0).order_by('-dataEntrada')
+    insumo.quantidade = itemsComSaldo.aggregate(Sum('quantidade'))['quantidade__sum']
+    insumo.valor = itemsComSaldo.aggregate(Sum('valorTotal'))['valorTotal__sum']
+    #insumo.valor = itemsComSaldo.annotate(as_float=Cast('valorTotal', FloatField())).aggregate(Sum('as_float'))['as_float__sum']
 
     context = {
         'form' : InsumoForm(instance=insumo),
         'form_action': form_action,
-        'items': items,
+        'itemsComSaldo': itemsComSaldo,
+        'itemsSemSaldo': itemsSemSaldo,
         'insumo': insumo,
         'title':'Cadastro',
         'name_screen': 'Atualizar',

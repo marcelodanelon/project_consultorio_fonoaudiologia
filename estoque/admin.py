@@ -15,5 +15,6 @@ class MovimentacaoInsumoAdmin(admin.ModelAdmin):
 
 @admin.register(ItensInsumoModel)
 class ItensInsumoAdmin(admin.ModelAdmin):
-    ...
+    list_display = 'insumo', 'serie', 'quantidade', 'dataEntrada', 
+    ordering = '-dataEntrada', 'insumo',
 

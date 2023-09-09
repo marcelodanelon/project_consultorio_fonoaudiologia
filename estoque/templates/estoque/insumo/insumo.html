@@ -29,43 +29,93 @@
         </div> <br> 
         {% endif %}                                 
       {% endfor %}
-      <div style="height:350px;border: 1px solid #ccc;background-color: #faf5f5;border-radius: 5px;overflow-x: auto;">
-        <table class="clients-table">
-          <thead>
-              <tr class="table-row table-row-header">
-                  <th class="table-header">Serie</th>
-                  <th class="table-header">Local</th>
-                  <th class="table-header">Data da Entrada</th>
-                  <th class="table-header">Disponível</th>
-                  <th class="table-header">Val. Unitário</th>
-                  <th class="table-header">Val. Total</th>
-              </tr>
-          </thead>
-          <tbody>
-              {% for field in items %}
-                  <tr class="table-row">
-                      <td class="table-cel">
-                          {{ field.serie }}
-                      </td>
-                      <td class="table-cel">
-                        {{ field.local }}
-                      </td> 
-                      <td class="table-cel">
-                        {{ field.dataEntrada }}
-                      </td>
-                      <td class="table-cel">
-                        {{ field.quantidade }}
-                      </td>
-                      <td class="table-cel">
-                        {{ field.valorUnitario|floatformat:2 }}
-                      </td> 
-                      <td class="table-cel">
-                        {{ field.valorTotal|floatformat:2 }}
-                      </td>                      
-                  </tr>
-              {% endfor %}
-            </tbody>
-        </table>
+      <div class="row">
+        <div class="col-6 text-center">
+          <b>Lotes com Saldo</b>
+        </div>
+        <div class="col-6 text-center">
+          <b>Lotes sem Saldo</b>
+        </div>
+      </div>
+      <div class="row">
+        {% comment %} Tabela com saldo {% endcomment %}
+        <div class="col-6" style="width: 48%; margin-left: 15px; height:350px;border: 1px solid #ccc;background-color: #faf5f5;border-radius: 5px;overflow-x: auto; padding: 0px">
+          <table class="clients-table">
+            <thead>
+                <tr class="table-row table-row-header">
+                    <th class="table-header">Serie</th>
+                    <th class="table-header">Local</th>
+                    <th class="table-header">Data da Entrada</th>
+                    <th class="table-header">Disponível</th>
+                    <th class="table-header">Val. Unitário</th>
+                    <th class="table-header">Val. Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in itemsComSaldo %}
+                    <tr class="table-row">
+                        <td class="table-cel">
+                            {{ field.serie }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.local }}
+                        </td> 
+                        <td class="table-cel">
+                          {{ field.dataEntrada }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.quantidade }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.valorUnitario|floatformat:2 }}
+                        </td> 
+                        <td class="table-cel">
+                          {{ field.valorTotal|floatformat:2 }}
+                        </td>                      
+                    </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        {% comment %} Tabela sem saldo {% endcomment %}
+        <div class="col-6" style="width: 48%; margin-left: 20px; height:350px;border: 1px solid #ccc;background-color: #faf5f5;border-radius: 5px;overflow-x: auto; padding: 0px">
+          <table class="clients-table">
+            <thead>
+                <tr class="table-row table-row-header">
+                    <th class="table-header">Serie</th>
+                    <th class="table-header">Local</th>
+                    <th class="table-header">Data da Entrada</th>
+                    <th class="table-header">Disponível</th>
+                    <th class="table-header">Val. Unitário</th>
+                    <th class="table-header">Val. Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in itemsSemSaldo %}
+                    <tr class="table-row">
+                        <td class="table-cel">
+                            {{ field.serie }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.local }}
+                        </td> 
+                        <td class="table-cel">
+                          {{ field.dataEntrada }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.quantidade }}
+                        </td>
+                        <td class="table-cel">
+                          {{ field.valorUnitario|floatformat:2 }}
+                        </td> 
+                        <td class="table-cel">
+                          {{ field.valorTotal|floatformat:2 }}
+                        </td>                      
+                    </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
       </div>
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>

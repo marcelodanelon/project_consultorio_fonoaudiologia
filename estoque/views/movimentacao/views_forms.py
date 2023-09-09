@@ -6,15 +6,15 @@ from django.contrib import messages
 from django.http import JsonResponse
 from estoque.forms import MovimentacaoInsumoForm, InsumoForm, ItemInsumoForm
 from estoque.models import MovimentacaoInsumoModel, InsumoModel, ItensInsumoModel
-from django.template.loader import render_to_string
-from django.http import HttpResponse
 
+@login_required(login_url='home:loginUser')
 def getJSONitem(request):
     if request.GET.get('searchLocal'):
         q = int(request.GET.get('searchLocal'))
         model = list(ItensInsumoModel.objects.filter(local=q).exclude(quantidade=0).values())
         return JsonResponse(data={'results': model})
 
+@login_required(login_url='home:loginUser')
 def movimentacaoInsumoEntrada(request):
     try:
         search = int(request.GET.get('searchLocal'))
@@ -96,7 +96,7 @@ def movimentacaoInsumoEntrada(request):
         context
     )
 
-
+@login_required(login_url='home:loginUser')
 def movimentacaoInsumoSaida(request):
     try:
         search = int(request.GET.get('searchLocal'))
