@@ -3,8 +3,33 @@
 {% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
 
 {% block content %}
+  <script>
+    $(document).ready(function(){
+      // buscar dados do localitems, chamando a view
+      $("#id_local").change(function(){
+        var local = $(this).children("option:selected").val();
+        if(local!=''){
+          window.location.replace("{% url 'estoque:updateInsumo' insumo.id %}?localitems=" + local);
+        }else{
+          window.location.replace("{% url 'estoque:updateInsumo' insumo.id %}");
+        }
+      });
+      //obter valor parametro localitems (control select)
+      var url_string = window.location.href; 
+      var url = new URL(url_string);
+      var paramValue = url.searchParams.get("localitems");
+      $('#id_local option').each(function() {
+        if($(this).val() == paramValue) {
+          $(this).attr('selected', true);
+        }
+      });
+      alert(local)
+    });
+  </script>
   <div class="container" style="padding:1px 16px;">
-    <h3>{{name_screen}}</h3> <br>
+    <label>Unidade</label>
+    {{ formLocal.local }}<br>
+    {% if local != None %}
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
@@ -133,6 +158,7 @@
       </div>  
           </form> 
           {% endif %}  
+      {% endif %}
   </div>
 {% endblock content %}
 
