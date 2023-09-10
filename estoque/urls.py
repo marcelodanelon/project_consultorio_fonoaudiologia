@@ -10,7 +10,6 @@ urlpatterns = [
     path('createInsumo/', insumo.createInsumo, name='createInsumo'),
     path('searchInsumo/', insumo.searchInsumo, name='searchInsumo'),
     path('<int:insumo_id>/updateInsumo/', insumo.updateInsumo, name='updateInsumo'),
-    path('<int:insumo_id>/deleteInsumo/', insumo.deleteInsumo, name='deleteInsumo'),
 
     path('listMovimentacaoInsumo/', movimentacao.listMovimentacaoInsumo, name='listMovimentacaoInsumo'),
     path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),

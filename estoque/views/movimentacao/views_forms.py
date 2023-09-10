@@ -4,8 +4,8 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-from estoque.forms import MovimentacaoInsumoForm, InsumoForm, ItemInsumoForm
-from estoque.models import MovimentacaoInsumoModel, InsumoModel, ItensInsumoModel
+from estoque.forms import MovimentacaoInsumoForm, ItemInsumoForm
+from estoque.models import MovimentacaoInsumoModel, ItensInsumoModel
 
 @login_required(login_url='home:loginUser')
 def getJSONitem(request):

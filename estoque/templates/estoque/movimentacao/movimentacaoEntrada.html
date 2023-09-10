@@ -72,6 +72,9 @@
             $('select').each(function() {
                 $(this).prop("disabled", true);
             });
+            $('[id$=btnAddRow]').each(function() {
+                $(this).prop("hidden", true);
+            });
             $('#btnGravar').each(function() {
                 $(this).prop("hidden", true);
             });
@@ -166,7 +169,7 @@
                                 {{form.DELETE}}  
                             </div> 
                             
-                            <div class="col mt-3"> 
+                            <div id="btnAddRow" class="col mt-3"> 
                                 <button class="btn btn-success add-form-row">+</button> 
                             </div>   
                         </div>                      
