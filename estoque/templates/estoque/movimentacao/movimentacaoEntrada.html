@@ -64,8 +64,21 @@
             }
         });
 
-        //dar sequencia
-        console.log(items_estoque.responseJSON.results[0].insumo_id);
+        var up = $('#isUpdate').val();
+        if (up == 1){
+            $('[id=myItems]').each(function() {
+                $(this).prop("disabled", true);
+            });
+            $('[id$=-insumo]').each(function() {
+                $(this).prop("disabled", true);
+            });
+            $('[id$=-serie]').each(function() {
+                $(this).prop("disabled", true);
+            });
+            $('[id$=-valorUnitario]').each(function() {
+                $(this).prop("disabled", true);
+            });
+        }
     });
 
     function parsePotentiallyGroupedFloat(stringValue) {
@@ -116,6 +129,7 @@
                 <div class="form-row ps-3 pe-3 pt-2">
                     <div class="row">
                         <div class="input-group-text d-flex align-items-start">
+                            <input id="isUpdate" type="int" value="{{isUpdate}}" hidden>
                             <div class="col-2 ms-2"> 
                                 {{form.errors}}
                                 <td class="hidden">{{ form.id }}</td>

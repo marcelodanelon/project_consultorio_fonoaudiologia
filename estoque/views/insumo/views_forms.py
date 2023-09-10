@@ -9,6 +9,7 @@ from estoque.models import InsumoModel, ItensInsumoModel
 @login_required(login_url='home:loginUser')
 def createInsumo(request):
     form_action = reverse('estoque:createInsumo')
+    insumo = get_object_or_404(InsumoModel, pk=1)
 
     if request.method == 'POST':
         formInsumo = InsumoForm(request.POST)
@@ -22,6 +23,8 @@ def createInsumo(request):
             'form': formInsumo,
             'title':'Cadastro',
             'name_module': 'Estoque',
+            'isCreate': 1,
+            'insumo': insumo,
             'form_action': form_action,
         }
 
@@ -36,6 +39,8 @@ def createInsumo(request):
             'title':'Cadastro',
             'name_screen': 'Cadastro',
             'name_module': 'Estoque',
+            'isCreate': 1,
+            'insumo': insumo,
             'form_action': form_action,
     }
 
@@ -57,7 +62,33 @@ def updateInsumo(request, insumo_id):
     itemsSemSaldo = ItensInsumoModel.objects.filter(insumo=insumo_id).filter(local=local).filter(quantidade=0).order_by('-dataEntrada')
     insumo.quantidade = itemsComSaldo.aggregate(Sum('quantidade'))['quantidade__sum']
     insumo.valor = itemsComSaldo.aggregate(Sum('valorTotal'))['valorTotal__sum']
-    #insumo.valor = itemsComSaldo.annotate(as_float=Cast('valorTotal', FloatField())).aggregate(Sum('as_float'))['as_float__sum']
+
+    if request.method == 'POST':
+        formClient = InsumoForm(request.POST, instance=insumo)
+
+        if formClient.is_valid():
+            formClient.save()
+            messages.success(request, 'Insumo atualizado com sucesso!')
+            return redirect('estoque:listInsumo')
+
+        context = {
+            'form' : InsumoForm(instance=insumo),
+            'formLocal': MovimentacaoInsumoForm(),
+            'form_action': form_action,
+            'itemsComSaldo': itemsComSaldo,
+            'itemsSemSaldo': itemsSemSaldo,
+            'insumo': insumo,
+            'local': local,
+            'title':'Cadastro',
+            'name_module': 'Estoque',
+            'option_delete': 'yes',
+        }
+
+        return render(
+            request,
+            'estoque/insumo/insumo.html',
+            context
+        )
 
     context = {
         'form' : InsumoForm(instance=insumo),

@@ -23,13 +23,15 @@
           $(this).attr('selected', true);
         }
       });
-      alert(local)
     });
   </script>
   <div class="container" style="padding:1px 16px;">
-    <label>Unidade</label>
-    {{ formLocal.local }}<br>
-    {% if local != None %}
+    {% if isCreate != 1 %}
+      <label>Unidade</label>
+      {{ formLocal.local }}
+    {% endif %}
+    <br>
+    {% if local != None or isCreate == 1 %}
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
