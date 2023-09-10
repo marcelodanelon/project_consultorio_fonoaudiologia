@@ -66,17 +66,14 @@
 
         var up = $('#isUpdate').val();
         if (up == 1){
-            $('[id=myItems]').each(function() {
+            $('input').each(function() {
                 $(this).prop("disabled", true);
             });
-            $('[id$=-insumo]').each(function() {
+            $('select').each(function() {
                 $(this).prop("disabled", true);
             });
-            $('[id$=-serie]').each(function() {
-                $(this).prop("disabled", true);
-            });
-            $('[id$=-valorUnitario]').each(function() {
-                $(this).prop("disabled", true);
+            $('#btnGravar').each(function() {
+                $(this).prop("hidden", true);
             });
         }
     });
@@ -178,7 +175,8 @@
             {% endfor %}
         </div>
         <div style="position: absolute; bottom: 22%; margin-left: 1em;">        
-            <button class="btn btn-success" type="submit">Gravar</button>
+            <button id="btnGravar" class="btn btn-success" type="submit">Gravar</button>
+            <a href="{% url 'estoque:listMovimentacaoInsumo' %}" class="btn btn-primary" type="submit">Voltar</a>
         </div>
     </form>
 </div>

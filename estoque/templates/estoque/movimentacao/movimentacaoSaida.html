@@ -120,10 +120,10 @@
             $('[id$=-quantidade]').val(0)
         }else{
             $('[id$=-insumo]').trigger( "change" );
-            $('[id=myItems]').each(function() {
+            $('input').each(function() {
                 $(this).prop("disabled", true);
             });
-            $('[id$=-insumo]').each(function() {
+            $('select').each(function() {
                 $(this).prop("disabled", true);
             });
             var serie = $('[id$=-insumo]').parent().parent().find('[id$=-serie]').val();
@@ -132,6 +132,9 @@
                 if($(this).val() == paramValue) {
                   $(this).attr('selected', true);
                 }
+            });
+            $('#btnGravar').each(function() {
+                $(this).prop("hidden", true);
             });
         }
     })
@@ -243,7 +246,8 @@
             {% endfor %}
         </div>
         <div style="position: absolute; bottom: 22%; margin-left: 1em;">        
-            <button class="btn btn-success" type="submit">Gravar</button>
+            <button id="btnGravar" class="btn btn-success" type="submit">Gravar</button>
+            <a href="{% url 'estoque:listMovimentacaoInsumo' %}" class="btn btn-primary" type="submit">Voltar</a>
         </div>
     </form>
 </div>
