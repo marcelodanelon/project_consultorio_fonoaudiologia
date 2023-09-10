@@ -68,7 +68,6 @@ def updateInsumo(request, insumo_id):
         'insumo': insumo,
         'local': local,
         'title':'Cadastro',
-        'name_screen': 'Atualizar',
         'name_module': 'Estoque',
         'option_delete': 'yes',
     }

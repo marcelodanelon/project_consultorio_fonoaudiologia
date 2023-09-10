@@ -12,7 +12,9 @@ urlpatterns = [
     path('<int:insumo_id>/updateInsumo/', insumo.updateInsumo, name='updateInsumo'),
     path('<int:insumo_id>/deleteInsumo/', insumo.deleteInsumo, name='deleteInsumo'),
 
-    path('MovimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
-    path('MovimentacaoInsumoSaida/', movimentacao.movimentacaoInsumoSaida, name='movimentacaoInsumoSaida'),
+    path('listMovimentacaoInsumo/', movimentacao.listMovimentacaoInsumo, name='listMovimentacaoInsumo'),
+    path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
+    path('movimentacaoInsumoSaida/', movimentacao.movimentacaoInsumoSaida, name='movimentacaoInsumoSaida'),
+    path('<int:movimentacao_id>/movimentacaoInsumoUpdate/', movimentacao.movimentacaoInsumoUpdate, name='movimentacaoInsumoUpdate'),
     path('getJSONitem/', movimentacao.getJSONitem, name='getJSONitem'),
 ]

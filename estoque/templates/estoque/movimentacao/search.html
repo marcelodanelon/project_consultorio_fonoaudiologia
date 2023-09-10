@@ -1,0 +1,48 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+    <div class="d-flex justify-content-between">
+        <h3>Movimentações de Estoque</h3> <a href="{% url 'estoque:movimentacaoInsumoEntrada' %}" class="btn btn-primary">Incluir</a>
+    </div>
+    <br>
+<div class="responsive-table">
+    <form action="{% url 'home:searchLocal' %}" method="get">
+        <input class="form-control" type="text" name="q" placeholder="Digite um nome">
+    </form>
+    <table class="clients-table">
+        <thead>
+            <tr class="table-row table-row-header">
+                <th class="table-header">ID</th>
+                <th class="table-header">Data Entrada</th>
+                <th class="table-header">Local</th>
+                <th class="table-header">Operacao</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movimentacao in page_obj %}
+                <tr class="table-row">
+                    <td class="table-cel">
+                        <a href="{% url 'estoque:movimentacaoInsumoUpdate' movimentacao.id %}" class="table-link">
+                            {{ movimentacao.id }}
+                        </a>
+                    </td>
+                    <td class="table-cel">
+                        {{ movimentacao.data }}
+                    </td>     
+                    <td class="table-cel">
+                        {{ movimentacao.local }}
+                    </td>  
+                    <td class="table-cel">
+                        {{ movimentacao.operacao }}
+                    </td>               
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/_pagination.html' %}   
+</div>
+{% endblock content %}

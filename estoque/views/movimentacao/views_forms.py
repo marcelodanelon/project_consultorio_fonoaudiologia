@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
@@ -45,7 +45,7 @@ def movimentacaoInsumoEntrada(request):
                     insumo = None
 
                 # verifica valor unitario divergente
-                if insumo != None and float(item.valorUnitario) != float(insumo.valorUnitario.replace(",",".")):
+                if insumo != None and float(item.valorUnitario.replace(",",".")) != float(insumo.valorUnitario.replace(",",".")):
                     messages.error(request, f'Valor Unitário para o {insumo}, diferente da série/lote existente.')
                     success = False
                     break
@@ -58,6 +58,7 @@ def movimentacaoInsumoEntrada(request):
                         totalValor = float(insumo.valorTotal) + float(item.valorTotal)
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
+                        messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                     else:
                         item.local = model.local
                         item.dataEntrada = model.data
@@ -116,7 +117,7 @@ def movimentacaoInsumoSaida(request):
 
         if formset.is_valid() and form.is_valid():
             success=None
-            form.save(commit=False)
+            model = form.save(commit=False)
             modelSet = formset.save(commit=False)
 
             # verifica se há saldo para saída
@@ -127,17 +128,18 @@ def movimentacaoInsumoSaida(request):
                 else:
                     success=False
                     break
-
             # realiza ação e verificação
             if success:
                 form.save()
                 for item in modelSet:
                     insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get() 
-                    print(insumo.serie)
                     totalQuantidade = insumo.quantidade - item.quantidade
                     totalValor = float(insumo.valorTotal) - float(item.valorTotal)
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(quantidade=totalQuantidade)
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(valorTotal=totalValor)
+                    item.local = model.local
+                    item.dataEntrada = model.data
+                    item.save()
                 return redirect('estoque:index')
             else:
                 messages.error(request, f'Saldo insuficiente para insumo {insumo}!')
@@ -149,6 +151,7 @@ def movimentacaoInsumoSaida(request):
             'form_action': form_action,
             'formMov': form,
             'formIte': formIte,
+            'isUpdate': 0,
             'items_saida': items,
             }
 
@@ -166,10 +169,45 @@ def movimentacaoInsumoSaida(request):
         'items_saida': items,
         'formMov': formMov,
         'formIte': formIte(instance=MovimentacaoInsumoModel()),
+        'isUpdate': 0,
     }
 
     return render(
         request,
         'estoque/movimentacao/movimentacaoSaida.html',
+        context
+    )
+
+@login_required(login_url='home:loginUser')
+def movimentacaoInsumoUpdate(request, movimentacao_id):
+    try:
+        search = int(request.GET.get('searchLocal'))
+        items = ItensInsumoModel.objects.filter(local=search)
+    except:
+        search = None
+        items = None
+
+    movimentacao = get_object_or_404(MovimentacaoInsumoModel, pk=movimentacao_id)
+    formMov=MovimentacaoInsumoForm(instance=movimentacao)
+    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItemInsumoForm, extra=0, can_delete=True, min_num=1)
+
+    context = {
+        'title': 'Estoque',
+        'name_module': 'Estoque',
+        'name_screen': 'Movimentação de Insumos',
+        'items_saida': items,
+        'formMov': formMov,
+        'isUpdate': 1,
+        'formIte': formIte(instance=movimentacao),
+    }
+
+    if movimentacao.operacao == "Entrada":
+        url = 'estoque/movimentacao/movimentacaoEntrada.html' 
+    else:
+        url = 'estoque/movimentacao/movimentacaoSaida.html'
+        
+    return render(
+        request,
+        url,
         context
     )

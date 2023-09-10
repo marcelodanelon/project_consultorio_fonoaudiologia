@@ -49,7 +49,7 @@
         });
 
         //ajuste layout para opçao de SAIDA
-        $('[id$=-valorUnitario]').prop( "disabled", true );
+        $('[id$=-valorUnitario]').prop( "readonly", true );
 
         //se a operacao for entrada, redireciona a página
         $("#id_operacao").change(function(){
@@ -107,8 +107,13 @@
             }
         });  
 
-        $('[id$=-insumo]').val(0)
-        $('[id$=-quantidade]').val(0)
+        var up = $('#isUpdate').val();
+        if (up == 0){
+            $('[id$=-insumo]').val(0)
+            $('[id$=-quantidade]').val(0)
+        }else{
+            $('[id$=-insumo]').trigger( "change" );
+        }
     })
 
     function parsePotentiallyGroupedFloat(stringValue) {
@@ -160,6 +165,7 @@
                 <div class="form-row ps-3 pe-3 pt-2">
                     <div class="row">
                         <div class="input-group-text d-flex align-items-start">
+                            <input id="isUpdate" type="int" value="{{isUpdate}}" hidden>                                
                             <div class="col-4 ms-2"> 
                                 {{form.errors}}
                                 <td class="hidden">{{ form.id }}</td>
