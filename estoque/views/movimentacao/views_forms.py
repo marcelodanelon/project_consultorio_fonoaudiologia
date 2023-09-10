@@ -187,6 +187,7 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
         search = None
         items = None
 
+    form_action = reverse('estoque:movimentacaoInsumoUpdate', kwargs={'movimentacao_id':movimentacao_id})
     movimentacao = get_object_or_404(MovimentacaoInsumoModel, pk=movimentacao_id)
     formMov=MovimentacaoInsumoForm(instance=movimentacao)
     formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItemInsumoForm, extra=0, can_delete=True, min_num=1)
@@ -197,6 +198,7 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
         'name_screen': 'Movimentação de Insumos',
         'items_saida': items,
         'formMov': formMov,
+        'form_action': form_action,
         'isUpdate': 1,
         'formIte': formIte(instance=movimentacao),
     }

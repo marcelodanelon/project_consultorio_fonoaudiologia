@@ -83,12 +83,14 @@
             for (const key in items_estoque.responseJSON.results){
                 if(items_estoque.responseJSON.results[key].local_id==local && items_estoque.responseJSON.results[key].insumo_id==insumo){
                     mySelect.append(
-                        $('<option></option>').val(items_estoque.responseJSON.results[key].movimentacao_id).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
+                        $('<option></option>').val(items_estoque.responseJSON.results[key].serie).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
                     );
                 }
             }
             $(mySelect).trigger( "change" );
         });  
+
+        var up = $('#isUpdate').val();
 
         //ação ao selecionar lote do insumo
         $(document).on('change', '[id=myItems]', function(e){
@@ -96,23 +98,41 @@
             var valorUnitario = $(this).parent().parent().find('[id$=-valorUnitario]');
             var valorTotal = $(this).parent().parent().find('[id$=-valorTotal]');
             var serie = $(this).parent().parent().find('[id$=-serie]');
-            var movimentacao = $(this).val();
+            var serie = $(this).val();
             for (const key in items_estoque.responseJSON.results){
-                if(items_estoque.responseJSON.results[key].movimentacao_id==movimentacao){
+                if(items_estoque.responseJSON.results[key].serie==serie){
                     disponivel.val(items_estoque.responseJSON.results[key].quantidade);
                     valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
                     valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
-                    serie.val(items_estoque.responseJSON.results[key].serie);
+                    if (up == 0){
+                        serie.val(items_estoque.responseJSON.results[key].serie);
+                    }
                 }
             }
         });  
 
-        var up = $('#isUpdate').val();
+        $('#search').on('submit', function() {
+            $('[id$=-insumo]').prop('disabled', false);
+        });
+
         if (up == 0){
             $('[id$=-insumo]').val(0)
             $('[id$=-quantidade]').val(0)
         }else{
             $('[id$=-insumo]').trigger( "change" );
+            $('[id=myItems]').each(function() {
+                $(this).prop("disabled", true);
+            });
+            $('[id$=-insumo]').each(function() {
+                $(this).prop("disabled", true);
+            });
+            var serie = $('[id$=-insumo]').parent().parent().find('[id$=-serie]').val();
+            $('#myItems option').each(function() {
+                paramValue = serie;
+                if($(this).val() == paramValue) {
+                  $(this).attr('selected', true);
+                }
+            });
         }
     })
 
