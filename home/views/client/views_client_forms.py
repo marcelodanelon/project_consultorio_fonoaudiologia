@@ -11,17 +11,15 @@ def createClient(request):
 
     if request.method == 'POST':
         formClient = ClientForm(request.POST)
-        print(formClient['responsiblePhone'])
         if formClient.is_valid():
             form = formClient.save()
             messages.success(request, 'Cliente cadastrado com sucesso!')
-            return redirect('home:updateClient',form.id)
+            return redirect('home:listClient',form.id)
         else:
             if "born" in formClient.errors:
                 messages.error(request, 'Data de Nascimento Inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
-        print(formClient.errors)
         context = {
             'form': formClient,
             'title':'Cadastro',
@@ -30,7 +28,7 @@ def createClient(request):
 
         return render(
             request,
-            'home/client.html',
+            'home/client/client.html',
             context
         )
 
@@ -44,7 +42,7 @@ def createClient(request):
 
     return render(
         request,
-        'home/client.html',
+        'home/client/client.html',
         context
     )
 
@@ -77,7 +75,7 @@ def updateClient(request, client_id):
 
         return render(
             request,
-            'home/client.html',
+            'home/client/client.html',
             context
         )
 
@@ -92,7 +90,7 @@ def updateClient(request, client_id):
 
     return render(
         request,
-        'home/client.html',
+        'home/client/client.html',
         context
     )
 
@@ -120,7 +118,7 @@ def deleteClient(request, client_id):
 
     return render(
         request,
-        'home/client.html',
+        'home/client/client.html',
         context
     )
 

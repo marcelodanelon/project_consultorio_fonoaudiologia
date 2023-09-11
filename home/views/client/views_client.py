@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from home.models import ClientModel
-from atendimento.models import AtendimentoModel, ProfessionalModel
+from django.db.models import ExpressionWrapper, F
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -24,13 +24,6 @@ def index(request):
     #     { "label": "grape",  "y": 28  }
     # ]
 
-    count = int(ProfessionalModel.objects.all().count())
-    professionals = list(ProfessionalModel.objects.all())
-    data_points = []
-    for i in range(count):
-        professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
-        data_points.append({'label': str(professional.first().aProfessional), "y": professional.count()})
-
     # Busca de aniversariantes do dia e idade
     mes_atual=date.today().month
     data_atual=date.today().day
@@ -38,6 +31,38 @@ def index(request):
     for a in aniversarios:
         today = date.today()
         a.age = today.year - a.born.year - ((today.month, today.day) < (a.born.month, a.born.day))
+
+    # Criação primeiro gráfico de Faixas Etarias
+    data_idade = []
+    data_points = []
+    clients = ClientModel.objects.all()
+    ## cria a lista de idades dos clientes atualmente cadastrados
+    for a in clients:
+        today = date.today()
+        a.age = today.year - a.born.year - ((today.month, today.day) < (a.born.month, a.born.day))
+        data_idade.append(a.age)
+    data_idade = sorted(set(data_idade))
+    count = len(data_idade)
+    ## inclui um campo de idade para cada client
+    for client in clients:
+        today = date.today()
+        client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
+    ## inclui no data do gráfico, a quantidade referente a cada idade do data_idade
+    for i in range(count):
+        aux = 0
+        for a in range(clients.count()):
+            if clients[a].age == data_idade[i]:
+                aux = aux + 1
+        data_points.append({'label': str(data_idade[i]) + " Anos", "y": aux})
+
+    print(data_points)
+
+    # count = int(ProfessionalModel.objects.all().count())
+    # professionals = list(ProfessionalModel.objects.all())
+    # data_points = []
+    # for i in range(count):
+    #     professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
+    #     data_points.append({'label': str(professional.first().aProfessional), "y": professional.count()})
 
     context = {
         'title': 'Home',
@@ -68,7 +93,7 @@ def listClient(request):
 
     return render(
         request,
-        'home/search.html',
+        'home/client/search.html',
         context
     )
 
@@ -85,8 +110,8 @@ def searchClient(request):
         clients = ClientModel.objects.filter(born=datetime.strptime(search_client, '%d/%m/%Y').date()).order_by('id')
     else:        
         clients = ClientModel.objects.filter(
-            Q(first_name=search_client) | 
-            Q(last_name=search_client)
+            Q(first_name__iexact=search_client) | 
+            Q(last_name__iexact=search_client) 
         ).order_by('id')
 
     paginator = Paginator(clients, 14)
@@ -101,6 +126,6 @@ def searchClient(request):
 
     return render(
         request,
-        'home/search.html',
+        'home/client/search.html',
         context
     )
