@@ -60,6 +60,7 @@ def movimentacaoInsumoEntrada(request):
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                         messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                     else:
+                        item.valorUnitario = item.valorUnitario.replace(",",".")
                         item.local = model.local
                         item.dataEntrada = model.data
                         item.save()

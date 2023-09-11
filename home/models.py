@@ -28,7 +28,7 @@ class ClientModel(models.Model):
     phone1 = models.CharField(max_length=20, verbose_name='Telefone', null=True, blank=True)
     phone2 = models.CharField(max_length=20, verbose_name='Celular', null=True, blank=True)
     profissao = models.CharField(max_length=50, verbose_name='Profissão', null=True, blank=True)
-    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default='Ativo')
+    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default=1)
     # owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:

@@ -24,6 +24,7 @@ def createClient(request):
             'form': formClient,
             'title':'Cadastro',
             'form_action': form_action,
+            'name_module': 'Home',
         }
 
         return render(
@@ -38,6 +39,7 @@ def createClient(request):
             'name_screen': 'Cadastro',
             'name_module': 'Home',
             'form_action': form_action,
+            'name_module': 'Home',
     }
 
     return render(
@@ -71,6 +73,7 @@ def updateClient(request, client_id):
             'option_delete': 'yes',
             'client': client,
             'form_action': form_action,
+            'name_module': 'Home',
         }
 
         return render(
@@ -86,6 +89,7 @@ def updateClient(request, client_id):
             'option_delete': 'yes',
             'client': client,
             'form_action': form_action,
+            'name_module': 'Home',
     }
 
     return render(
@@ -114,6 +118,7 @@ def deleteClient(request, client_id):
         'client': client,
         'confirmation_delete': confirmation,
         'form_action': form_action,
+        'name_module': 'Home',
     }
 
     return render(

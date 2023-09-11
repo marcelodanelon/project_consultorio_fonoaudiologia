@@ -11,13 +11,16 @@
             theme: "light2", // "light2", "dark1", "dark2"
             animationEnabled: true, // change to true		
             title:{
-                text: "Basic Column Chart"
+                text: "Total de Clientes"
+            },
+            axisX:{
+              interval: 1
             },
             data: [
             {
                 // Change type to "bar", "area", "spline", "pie",etc.
                 type: "column",
-                dataPoints: {{ data_points | safe }}
+                dataPoints: {{ data_points3 | safe }}
             }
             ]
         });
@@ -42,13 +45,13 @@
           theme: "light2", // "light2", "dark1", "dark2"
           animationEnabled: true, // change to true		
           title:{
-              text: "Basic Column Chart"
+              text: "Clientes por Cidades"
           },
           data: [
           {
               // Change type to "bar", "area", "spline", "pie",etc.
               type: "pie",
-              dataPoints: {{ data_points | safe }}
+              dataPoints: {{ data_points2 | safe }}
           }
           ]
         });
@@ -94,9 +97,9 @@
   <div class="row">
     <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
     {% comment %} <div id="chartContainer4" style="width: 45%; height: 360px;"></div> {% endcomment %}
-    <div style="width:46%; height:350px; overflow-x: auto;">
+    <div style="width:46%; height:370px; overflow-x: auto;">
       <table style="width: 100%;">
-        <div style="text-align: center; background: white; font-size: 30px"><b>Aniversários do Dia</b></div>
+        <div style="text-align: center; background: white; font-size: 30px"><b>Aniversariantes do Dia</b></div>
         <thead>
             <tr class="table-row table-row-header">
                 <th class="table-header"></th>
@@ -136,6 +139,9 @@
             {% endfor %}
         </tbody>
       </table>
+      {% if not aniversarios %}
+        <div style="background-color:white;height:76%;display: flex;align-items: center;justify-content: center;"><b>Sem Aniversariantes</b></div>
+      {% endif %}
     </div>
   </div>
 {% endblock content %}

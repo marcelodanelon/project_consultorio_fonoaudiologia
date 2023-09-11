@@ -7,6 +7,19 @@ from home.models import ClientModel
 from atendimento.models import AtendimentoModel, AnamneseModel
 
 @login_required(login_url='home:loginUser')
+def index(request):
+    context = {
+        'name_module': 'Atendimento',
+        'title': 'Atendimento',
+    }
+
+    return render(
+        request,
+        'atendimento/index.html',
+        context
+    )
+
+@login_required(login_url='home:loginUser')
 def atendimento(request):
     form_action = reverse('atendimento:atendimento')
     order_forms = AtendimentoModel()

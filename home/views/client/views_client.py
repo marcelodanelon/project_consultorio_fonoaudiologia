@@ -55,7 +55,24 @@ def index(request):
                 aux = aux + 1
         data_points.append({'label': str(data_idade[i]) + " Anos", "y": aux})
 
-    print(data_points)
+    # Criação segundo gráfico cidades
+    data_points2 = []
+    data_cidades = []
+    for a in clients:
+        if a.city != None and a.city != '-' and not a.city.isdigit():
+            data_cidades.append(a.city)
+    data_cidades = list(set(data_cidades))
+    count = len(data_cidades)
+    for i in range(count):
+        clients_db = ClientModel.objects.filter(city=data_cidades[i])
+        data_points2.append({'label': data_cidades[i], "y": clients_db.count()})
+
+    # Criação terceiro gráfico clientes e sua situação
+    data_points3 = []
+    clients_Ativo = ClientModel.objects.filter(status=1)
+    clients_Inativo = ClientModel.objects.filter(status=2)
+    data_points3.append({'label': 'Ativos', "y": clients_Ativo.count()})
+    data_points3.append({'label': 'Inativos', "y": clients_Inativo.count()})
 
     # count = int(ProfessionalModel.objects.all().count())
     # professionals = list(ProfessionalModel.objects.all())
@@ -68,6 +85,8 @@ def index(request):
         'title': 'Home',
         'name_module': 'Home',
         'data_points' : data_points,
+        'data_points2': data_points2,
+        'data_points3': data_points3,
         'aniversarios': aniversarios,
     }
 
