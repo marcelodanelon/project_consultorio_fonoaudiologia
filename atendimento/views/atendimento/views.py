@@ -2,13 +2,51 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.urls import reverse
+from datetime import date
 from atendimento.forms import AtendimentoForm, AnamneseForm
-from home.models import ClientModel
+from home.models import ClientModel, ProfessionalModel, LocalModel
 from atendimento.models import AtendimentoModel, AnamneseModel
 
 @login_required(login_url='home:loginUser')
 def index(request):
+    # Criação primeiro gráfico por Atendimento
+    count = int(ProfessionalModel.objects.all().count())
+    professionals = list(ProfessionalModel.objects.all())
+    data_points1 = []
+    for i in range(count):
+        professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
+        data_points1.append({'label': str(professional.first().aProfessional), "y": professional.count()})
+
+    # Criação segundo gráfico por Unidade
+    count = int(LocalModel.objects.all().count())
+    locais = list(LocalModel.objects.all())
+    data_points2 = []
+    for i in range(count):
+        local = AtendimentoModel.objects.filter(aLocal=locais[i])
+        data_points2.append({'label': locais[i].name, "y": local.count()})
+
+    # Criação terceiro gráfico por mês no ano atual (Anamnese)
+    data_meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    data_points3 = []
+    for i in range(12):
+        meses = AnamneseModel.objects.filter(aDataAna__month=i).filter(aDataAna__year=date.today().year)
+        if meses.count() != 0:
+            data_points3.append({'label': data_meses[i], "y": meses.count()})
+
+    # Criação terceiro gráfico por mês no ano atual (1º Atendimento)
+    data_points4 = []
+    for i in range(12):
+        meses = AtendimentoModel.objects.filter(aDataPri__month=i).filter(aDataPri__year=date.today().year)
+        if meses.count() != 0:
+            data_points4.append({'label': data_meses[i], "y": meses.count()})
+
     context = {
+        'title': 'Home',
+        'name_module': 'Home',
+        'data_points' : data_points1,
+        'data_points2' : data_points2,
+        'data_points3' : data_points3,
+        'data_points4' : data_points4,
         'name_module': 'Atendimento',
         'title': 'Atendimento',
     }
@@ -49,12 +87,12 @@ def atendimento(request):
                         delete_value.instance.delete()
                 forms = forms.save()    
                 formset.save()  
-                return redirect('home:index') 
+                return redirect('atendimento:index') 
             
         if forms.is_valid() and formset.is_valid():
             forms = forms.save()    
             formset.save()  
-            return redirect('home:index')
+            return redirect('atendimento:index')
     else:
         forms = AtendimentoForm(instance=order_forms)
         formset = item_order_formset(instance=order_forms)

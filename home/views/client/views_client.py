@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from home.models import ClientModel
-from django.db.models import ExpressionWrapper, F
 from django.db.models import Q
 from datetime import datetime
 from django.core.paginator import Paginator

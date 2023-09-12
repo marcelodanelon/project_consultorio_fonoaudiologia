@@ -2,10 +2,100 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
 
-{% block head_base %}{% endblock head_base %}
+{% block head_base %}
+{% load static %}
+<script src="{% static 'global/partials/canvasjs.min.js' %}"></script>
+<script>
+    window.onload = function () {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            theme: "light2", // "light2", "dark1", "dark2"
+            animationEnabled: true, // change to true		
+            title:{
+                text: "Atendimentos por Profissional"
+            },
+            axisX:{
+              interval: 1
+            },
+            data: [
+            {
+                // Change type to "bar", "area", "spline", "pie",etc.
+                type: "column",
+                dataPoints: {{ data_points | safe }}
+            }
+            ]
+        });
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Atendimentos por Local"
+          },
+          axisX:{
+            interval: 1
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "bar",
+              dataPoints: {{ data_points2 | safe }},
+          }
+          ]
+        });
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Atendimentos(Anamneses) por Mês"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "pie",
+              dataPoints: {{ data_points3 | safe }}
+          }
+          ]
+        });
+        var chart4 = new CanvasJS.Chart("chartContainer4", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Atendimentos(1º Atend.) por Mês"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "area",
+              dataPoints: {{ data_points4 | safe }}
+          }
+          ]
+        });
+        chart1.render();
+        chart2.render();
+        chart3.render();
+        chart4.render();
+    }
+</script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+        field.mask(SPMaskBehavior.apply({}, arguments), options);
+      }
+  };
+</script>
+{% endblock head_base %}
 
 {% block content %}
-<div class="container" style="padding:1px 16px;">
-    <h1>INDEX</h1>
+<div class="row" style="z-index: -1;">
+    <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+    <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
+</div>
+<br><br>
+<div class="row">
+    <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+    <div id="chartContainer4" style="width: 45%; height: 360px;"></div>
 </div>
 {% endblock content %}
