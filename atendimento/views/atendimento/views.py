@@ -6,6 +6,7 @@ from datetime import date
 from atendimento.forms import AtendimentoForm, AnamneseForm
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from atendimento.models import AtendimentoModel, AnamneseModel
+import json
 
 @login_required(login_url='home:loginUser')
 def index(request):
@@ -159,3 +160,15 @@ def historicoAtendimento(request):
         context
     )
 
+def audiometria(request):
+    # Suponha que você tenha suas coordenadas x e y em listas separadas.
+    coordenadas_x = [9000, 8000, 6000, 4000, 3000, 2000]
+    coordenadas_y = [70, 50, 40, 30, 40, 50]
+
+    # Combine as coordenadas em um dicionário
+    data = {'x': coordenadas_x, 'y': coordenadas_y}
+
+    # Converta o dicionário em formato JSON
+    data_json = json.dumps(data)
+
+    return render(request, 'atendimento/audiometria.html', {'data_json': data_json})

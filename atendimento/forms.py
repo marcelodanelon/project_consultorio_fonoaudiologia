@@ -1,5 +1,4 @@
 from atendimento.models import AtendimentoModel, AnamneseModel
-from home.models import ClientModel
 from django import forms
 
 class AtendimentoForm(forms.ModelForm):

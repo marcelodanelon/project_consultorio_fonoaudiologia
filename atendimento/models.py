@@ -81,3 +81,4 @@ class AnamneseModel(models.Model):
 
     def __str__(self) -> str:
         return f'ID: {self.pk} - Data: {self.aDataAna} - IDAtend: {self.aIDAtend}'
+    
