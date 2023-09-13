@@ -14,6 +14,7 @@ class ClientModel(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Primeiro Nome')
     last_name = models.CharField(max_length=50, verbose_name='Sobrenome')
     born = models.DateField(verbose_name='Data de Nascimento')
+    age = models.IntegerField(verbose_name='Idade', null=True, blank=True)
     responsibleName = models.CharField(max_length=50, verbose_name='Responsável', null=True, blank=True)
     responsiblePhone = models.CharField(max_length=20, verbose_name='Contato', null=True, blank=True)
     zipcode = models.CharField(max_length=8,verbose_name='CEP', null=True, blank=True)

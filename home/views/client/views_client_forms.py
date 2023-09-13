@@ -4,6 +4,9 @@ from django.urls import reverse
 from home.forms import ClientForm
 from home.models import ClientModel
 from django.contrib import messages
+from datetime import date
+from datetime import datetime
+from django.utils.formats import get_format
 
 @login_required(login_url='home:loginUser')
 def createClient(request):
@@ -12,9 +15,21 @@ def createClient(request):
     if request.method == 'POST':
         formClient = ClientForm(request.POST)
         if formClient.is_valid():
-            form = formClient.save()
+            form = formClient.save(commit=False)
+
+            # inclusão de idade no field age
+            today = date.today()
+            date_born = None
+            for item in get_format('DATE_INPUT_FORMATS'):
+                try:
+                    date_born = datetime.strptime(formClient['born'].value(), item).date()
+                except (ValueError, TypeError):
+                    continue
+            form.age = today.year - date_born.year - ((today.month, today.day) < (date_born.month, date_born.day))
+
+            form.save()
             messages.success(request, 'Cliente cadastrado com sucesso!')
-            return redirect('home:listClient',form.id)
+            return redirect('home:listClient')
         else:
             if "born" in formClient.errors:
                 messages.error(request, 'Data de Nascimento Inválida!')
@@ -52,6 +67,9 @@ def createClient(request):
 def updateClient(request, client_id):
     client = get_object_or_404(ClientModel, pk=client_id)
     form_action = reverse('home:updateClient', args=(client_id,))
+
+    today = date.today()
+    client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
 
     if request.method == 'POST':
         formClient = ClientForm(request.POST, instance=client)

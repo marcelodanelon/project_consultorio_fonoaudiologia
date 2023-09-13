@@ -3,7 +3,8 @@ from home.models import ClientModel, StatusModel, LocalModel, ProfessionalModel,
 
 @admin.register(ClientModel)
 class ClientAdmin(admin.ModelAdmin):
-    ...
+    list_display = 'id', 'first_name', 'last_name', 'age',
+    ordering = 'id',
 
 @admin.register(StatusModel)
 class StatusAdmin(admin.ModelAdmin):
