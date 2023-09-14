@@ -1,5 +1,5 @@
 from django.contrib import admin
-from estoque.models import MarcaModel, InsumoModel, ItensInsumoModel, MovimentacaoInsumoModel
+from estoque.models import MarcaModel, InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
 
 @admin.register(MarcaModel)
 class MarcaAdmin(admin.ModelAdmin):
@@ -18,3 +18,7 @@ class ItensInsumoAdmin(admin.ModelAdmin):
     list_display = 'movimentacao', 'id', 'insumo', 'serie', 'quantidade', 'dataEntrada', 
     ordering = '-movimentacao', 'insumo',
 
+@admin.register(ItensMovimentacaoInsumoModel)
+class ItensInsumoAdmin(admin.ModelAdmin):
+    list_display = 'movimentacao', 'id', 'insumo', 'serie', 'quantidade', 'dataEntrada', 
+    ordering = '-movimentacao', 'insumo',

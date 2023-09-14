@@ -98,9 +98,9 @@
             var valorUnitario = $(this).parent().parent().find('[id$=-valorUnitario]');
             var valorTotal = $(this).parent().parent().find('[id$=-valorTotal]');
             var serie = $(this).parent().parent().find('[id$=-serie]');
-            var serie = $(this).val();
+            serie.val($(this).val());
             for (const key in items_estoque.responseJSON.results){
-                if(items_estoque.responseJSON.results[key].serie==serie){
+                if(items_estoque.responseJSON.results[key].serie==serie.val()){
                     disponivel.val(items_estoque.responseJSON.results[key].quantidade);
                     valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
                     valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);

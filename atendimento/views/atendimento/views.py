@@ -171,4 +171,15 @@ def audiometria(request):
     # Converta o dicionário em formato JSON
     data_json = json.dumps(data)
 
-    return render(request, 'atendimento/audiometria.html', {'data_json': data_json})
+    context = {
+        'name_screen' : 'Audiometria',
+        'title': 'Audiometria',
+        'name_module': 'Atendimento',
+        'data_json': data_json,
+    }
+
+    return render(
+        request, 
+        'atendimento/audiometria.html', 
+        context
+    )

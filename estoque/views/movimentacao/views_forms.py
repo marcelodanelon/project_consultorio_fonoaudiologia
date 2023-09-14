@@ -4,8 +4,8 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-from estoque.forms import MovimentacaoInsumoForm, ItemInsumoForm
-from estoque.models import MovimentacaoInsumoModel, ItensInsumoModel
+from estoque.forms import MovimentacaoInsumoForm, ItensMovimentacaoInsumoForm, ItensInsumoForm
+from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, ItensInsumoModel
 
 @login_required(login_url='home:loginUser')
 def getJSONitem(request):
@@ -18,7 +18,7 @@ def getJSONitem(request):
 def movimentacaoInsumoEntrada(request):
     try:
         search = int(request.GET.get('searchLocal'))
-        items = ItensInsumoModel.objects.filter(local=search)
+        items = ItensMovimentacaoInsumoModel.objects.filter(local=search)
     except:
         search = None
         items = None
@@ -26,21 +26,39 @@ def movimentacaoInsumoEntrada(request):
     form_action = reverse('estoque:movimentacaoInsumoEntrada')
     modelMov = MovimentacaoInsumoModel()
     formMov=MovimentacaoInsumoForm()
-    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItemInsumoForm, extra=0, can_delete=True, min_num=1)
+    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, form=ItensMovimentacaoInsumoForm, extra=0, can_delete=True, min_num=1)
+    formIteInsumo=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItensInsumoForm, extra=0, can_delete=True, min_num=1)
 
     if request.method == 'POST':
         form = MovimentacaoInsumoForm(request.POST, request.FILES, instance=modelMov)
         formset = formIte(request.POST, request.FILES, instance=modelMov)
+        formsetInsumo = formIteInsumo(request.POST, request.FILES, instance=modelMov)
 
         if formset.is_valid() and form.is_valid():
             success = True
             model = form.save()
             modelSet = formset.save(commit=False)
+            modelSetInsumo = formsetInsumo.save(commit=False)
 
+            for item in modelSet:
+                novo_item_insumo = ItensInsumoModel(
+                    movimentacao=item.movimentacao,  
+                    insumo=item.insumo,
+                    valorUnitario=item.valorUnitario,  
+                    valorTotal=item.valorTotal,  
+                    quantidade=item.quantidade,
+                    dataValidade=item.dataValidade,  
+                    dataEntrada=item.dataEntrada,  
+                    serie=item.serie,  
+                    local=item.local,  
+                )
+                modelSetInsumo.append(novo_item_insumo)
+
+            print(modelSetInsumo)
             # verifica se há lote existente
             for item in modelSet:
                 try:
-                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()
+                    insumo = ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()
                 except:
                     insumo = None
 
@@ -52,6 +70,20 @@ def movimentacaoInsumoEntrada(request):
 
             if success == True:
                 for item in modelSet:
+                    # controle inclusão de entrada para lote existente ou novo 
+                    if insumo:                    
+                        totalQuantidade = insumo.quantidade + item.quantidade
+                        totalValor = float(insumo.valorTotal) + float(item.valorTotal)
+                        ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
+                        ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
+                        messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
+                    else:
+                        item.valorUnitario = item.valorUnitario.replace(",",".")
+                        item.local = model.local
+                        item.dataEntrada = model.data
+                        item.save()
+
+                for item in modelSetInsumo:
                     # controle inclusão de entrada para lote existente ou novo 
                     if insumo:                    
                         totalQuantidade = insumo.quantidade + item.quantidade
@@ -102,7 +134,7 @@ def movimentacaoInsumoEntrada(request):
 def movimentacaoInsumoSaida(request):
     try:
         search = int(request.GET.get('searchLocal'))
-        items = ItensInsumoModel.objects.filter(local=search)
+        items = ItensMovimentacaoInsumoModel.objects.filter(local=search)
     except:
         search = None
         items = None
@@ -110,7 +142,7 @@ def movimentacaoInsumoSaida(request):
     form_action = reverse('estoque:movimentacaoInsumoSaida')
     modelMov = MovimentacaoInsumoModel()
     formMov=MovimentacaoInsumoForm()
-    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItemInsumoForm, extra=0, can_delete=True, min_num=1)
+    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, form=ItensMovimentacaoInsumoForm, extra=0, can_delete=True, min_num=1)
 
     if request.method == 'POST':
         form = MovimentacaoInsumoForm(request.POST, request.FILES, instance=modelMov)
@@ -183,7 +215,7 @@ def movimentacaoInsumoSaida(request):
 def movimentacaoInsumoUpdate(request, movimentacao_id):
     try:
         search = int(request.GET.get('searchLocal'))
-        items = ItensInsumoModel.objects.filter(local=search)
+        items = ItensMovimentacaoInsumoModel.objects.filter(local=search)
     except:
         search = None
         items = None
@@ -191,7 +223,7 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
     form_action = reverse('estoque:movimentacaoInsumoUpdate', kwargs={'movimentacao_id':movimentacao_id})
     movimentacao = get_object_or_404(MovimentacaoInsumoModel, pk=movimentacao_id)
     formMov=MovimentacaoInsumoForm(instance=movimentacao)
-    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensInsumoModel, form=ItemInsumoForm, extra=0, can_delete=True, min_num=1)
+    formIte=inlineformset_factory(MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, form=ItensMovimentacaoInsumoForm, extra=0, can_delete=True, min_num=1)
 
     context = {
         'title': 'Estoque',

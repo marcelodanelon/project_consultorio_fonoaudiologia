@@ -42,4 +42,18 @@ class ItensInsumoModel(models.Model):
     def __str__(self) -> str:
         return f'{self.insumo}'
     
+class ItensMovimentacaoInsumoModel(models.Model):
+    movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True)
+    insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
+    valorUnitario = models.CharField(max_length=10, verbose_name='Valor Unitario', null=True)
+    valorTotal = models.CharField(max_length=10, verbose_name='Valor Total', null=True)
+    quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
+    dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
+    dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
+    serie = models.CharField(max_length=20, null=True, verbose_name='Serie/Lote')
+    local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True, default='UNIDADE')
+
+    def __str__(self) -> str:
+        return f'{self.insumo}'
+    
 

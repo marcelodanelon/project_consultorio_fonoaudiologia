@@ -1,6 +1,5 @@
 from django import forms
-from estoque.models import InsumoModel, ItensInsumoModel, MovimentacaoInsumoModel
-from datetime import date
+from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
 
 class InsumoForm(forms.ModelForm):
     valor = forms.FloatField(disabled = True, required=False)
@@ -29,7 +28,7 @@ class InsumoForm(forms.ModelForm):
         model = InsumoModel
         fields = '__all__'
 
-class ItemInsumoForm(forms.ModelForm):
+class ItensInsumoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -65,6 +64,44 @@ class ItemInsumoForm(forms.ModelForm):
 
     class Meta:
         model = ItensInsumoModel
+        fields = '__all__'
+
+class ItensMovimentacaoInsumoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['insumo'].widget.attrs.update({
+            'class': 'form-control',
+            'required': True,
+        })
+        self.fields['valorUnitario'].widget.attrs.update({
+            'class': 'form-control mask-money',
+            'required': True,
+            'value': '0,00',
+            'min': "0",
+        })
+        self.fields['valorTotal'].widget.attrs.update({
+            'class': 'form-control',
+            'readonly': True,
+            'value': '0,00',
+            'min': "0",
+        })
+        self.fields['quantidade'].widget.attrs.update({
+            'class': 'form-control',
+            'required': True,
+            'oninput': 'this.value = Math.round(this.value);',
+            'min': "0",
+        })
+        self.fields['dataValidade'].widget.attrs.update({
+            'class': 'form-control mask-date',
+        })
+        self.fields['serie'].widget.attrs.update({
+            'class': 'form-control',
+            'required': True,
+        })
+
+    class Meta:
+        model = ItensMovimentacaoInsumoModel
         fields = '__all__'
 
 class MovimentacaoInsumoForm(forms.ModelForm):
