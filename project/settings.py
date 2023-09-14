@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'home',
     'estoque',
     'atendimento',
+    'relatorios',
 ]
 
 MIDDLEWARE = [

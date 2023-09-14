@@ -8,9 +8,6 @@ app_name = 'home'
 
 urlpatterns = [
     path('', client.index, name='index'),
-
-    # exemplo para relatorios url
-    path('pdf/', client.sua_view_de_relatorio_pdf, name='pdf'),
     
     path('listClient/', client.listClient, name='listClient'),
     path('createClient/', client.createClient, name='createClient'),

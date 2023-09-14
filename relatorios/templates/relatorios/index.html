@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleção de Insumos</title>
+    <style>
+        .select-container {
+            display: flex;
+            align-items: flex-start;
+        }
+        .select-list {
+            width: 150px;
+            height: 200px;
+        }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 10px;
+        }
+    </style>
+    <script>
+        function moveInsumo(fromSelect, toSelect) {
+            var selectedOptions = fromSelect.selectedOptions;
+            for (var i = 0; i < selectedOptions.length; i++) {
+                var option = selectedOptions[i];
+                toSelect.appendChild(option);
+            }
+        }
+
+        document.getElementById('form_insumos_direita').addEventListener('submit', function(event) {
+            var insumosDireitaSelect = document.getElementById('insumos_direita');
+            var hiddenInput = document.querySelector('input[name="insumos_direita[]"]');
+            var selectedValues = [];
+
+            for (var i = 0; i < insumosDireitaSelect.options.length; i++) {
+                if (insumosDireitaSelect.options[i].selected) {
+                    selectedValues.push(insumosDireitaSelect.options[i].value);
+                }
+            }
+
+            hiddenInput.value = JSON.stringify(selectedValues);
+        });
+    </script>
+</head>
+<body>
+    <h1>Seleção de Insumos</h1>
+    <div class="select-container">
+        <select class="select-list" id="insumos_esquerda" multiple="multiple">
+            {% for insumo in insumos_list %}
+                <option value="{{ insumo }}">{{ insumo }}</option>
+            {% endfor %}
+            <!-- Adicione mais opções conforme necessário -->
+        </select>
+
+        <div class="btn-container">
+            <button onclick="moveInsumo(document.getElementById('insumos_esquerda'), document.getElementById('insumos_direita'))">Mover &gt;</button>
+            <button onclick="moveInsumo(document.getElementById('insumos_direita'), document.getElementById('insumos_esquerda'))">&lt; Mover</button>
+        </div>
+
+        <form id="form_insumos_direita" method="post" action="{% url 'relatorios:pdf' %}">
+            {% csrf_token %}
+            <div class="select-container">
+                <select class="select-list" id="insumos_direita" name="insumos_direita[]" multiple="multiple">
+                    <!-- Inicialmente vazio, você pode adicionar opções aqui se necessário -->
+                </select>
+            </div>
+            <div>
+                <label for="data">Data:</label>
+                <input type="text" name="data" id="data" placeholder="Data">
+            </div>
+            <div>
+                <button type="submit">Enviar</button>
+            </div>
+        </form>
+        
+        
+    </div>
+</body>
+</html>
