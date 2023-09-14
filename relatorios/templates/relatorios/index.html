@@ -1,79 +1,53 @@
+<!-- relatorio.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Seleção de Insumos</title>
-    <style>
-        .select-container {
-            display: flex;
-            align-items: flex-start;
-        }
-        .select-list {
-            width: 150px;
-            height: 200px;
-        }
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin: 0 10px;
-        }
-    </style>
-    <script>
-        function moveInsumo(fromSelect, toSelect) {
-            var selectedOptions = fromSelect.selectedOptions;
-            for (var i = 0; i < selectedOptions.length; i++) {
-                var option = selectedOptions[i];
-                toSelect.appendChild(option);
-            }
-        }
-
-        document.getElementById('form_insumos_direita').addEventListener('submit', function(event) {
-            var insumosDireitaSelect = document.getElementById('insumos_direita');
-            var hiddenInput = document.querySelector('input[name="insumos_direita[]"]');
-            var selectedValues = [];
-
-            for (var i = 0; i < insumosDireitaSelect.options.length; i++) {
-                if (insumosDireitaSelect.options[i].selected) {
-                    selectedValues.push(insumosDireitaSelect.options[i].value);
-                }
-            }
-
-            hiddenInput.value = JSON.stringify(selectedValues);
-        });
-    </script>
+    <title>Relatório</title>
 </head>
 <body>
-    <h1>Seleção de Insumos</h1>
-    <div class="select-container">
-        <select class="select-list" id="insumos_esquerda" multiple="multiple">
-            {% for insumo in insumos_list %}
-                <option value="{{ insumo }}">{{ insumo }}</option>
-            {% endfor %}
-            <!-- Adicione mais opções conforme necessário -->
-        </select>
-
-        <div class="btn-container">
-            <button onclick="moveInsumo(document.getElementById('insumos_esquerda'), document.getElementById('insumos_direita'))">Mover &gt;</button>
-            <button onclick="moveInsumo(document.getElementById('insumos_direita'), document.getElementById('insumos_esquerda'))">&lt; Mover</button>
-        </div>
-
-        <form id="form_insumos_direita" method="post" action="{% url 'relatorios:pdf' %}">
-            {% csrf_token %}
-            <div class="select-container">
-                <select class="select-list" id="insumos_direita" name="insumos_direita[]" multiple="multiple">
-                    <!-- Inicialmente vazio, você pode adicionar opções aqui se necessário -->
-                </select>
-            </div>
-            <div>
-                <label for="data">Data:</label>
-                <input type="text" name="data" id="data" placeholder="Data">
-            </div>
-            <div>
-                <button type="submit">Enviar</button>
-            </div>
-        </form>
+    <h1>Selecione os campos para o relatório</h1>
+    <form method="post">
+        {% csrf_token %}
+        <h3>Campos de Agrupamento</h3>
+        {% for campo in form.campos_agrupamento %}
+            {{ campo.tag }} {{ campo.choice_label }}
+        {% endfor %}
+    
+        <h3>Campos Selecionados</h3>
+        {% for campo in form.campos %}
+            {{ campo.tag }} {{ campo.choice_label }}
+        {% endfor %}
         
-        
-    </div>
+        <input type="submit" value="Gerar Relatório">
+    </form>
+    
+    {% if dados_agrupados %}
+        <h3>Dados Agrupados</h3>
+        <table>
+            <thead>
+                <tr>
+                    {% for campo in form.campos_agrupamento %}
+                        <th>{{ campo.choice_label }}</th>
+                    {% endfor %}
+                    <!-- Adicione cabeçalhos para campos de dados aqui -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for agrupamento, dados in dados_agrupados.items %}
+                    <tr>
+                        {% for valor in agrupamento %}
+                            <td>{{ valor }}</td>
+                        {% endfor %}
+                        <!-- Adicione dados para campos de dados aqui -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% for valor in agrupamento %}
+    <td>{{ valor }}</td>
+{% endfor %}
+
+    {% endif %}
+    
 </body>
 </html>
