@@ -62,7 +62,7 @@ class ProfessionalModel(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Primeiro Nome')
     last_name = models.CharField(max_length=50, verbose_name='Sobrenome')
     born = models.DateField(verbose_name='Data de Nascimento')
-    responsibleName = models.CharField(max_length=50, verbose_name='Responsável', null=True, blank=True)
+    responsibleName = models.CharField(max_length=50, verbose_name='Pessoa para Recados', null=True, blank=True)
     responsiblePhone = PhoneNumberField(verbose_name='Contato', null=True, blank=True)
     zipcode = models.IntegerField(verbose_name='CEP', null=True, blank=True)
     street = models.CharField(max_length=30, verbose_name='Logradouro', null=True, blank=True)
@@ -76,7 +76,7 @@ class ProfessionalModel(models.Model):
     phone1 = PhoneNumberField(verbose_name='Telefone', null=True, blank=True)
     phone2 = PhoneNumberField(verbose_name='Celular', null=True, blank=True)
     specialty = models.ForeignKey(SpecialtyModel, on_delete=models.SET_NULL, verbose_name="Especialidade", null=True)
-    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True)
+    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default=1)
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'

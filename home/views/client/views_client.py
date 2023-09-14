@@ -147,3 +147,42 @@ def searchClient(request):
         'home/client/search.html',
         context
     )
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+
+def sua_view_de_relatorio_pdf(request):
+    # Suponha que 'resultados' contenha os resultados da consulta agrupada
+    resultados = [
+        {'campo_grupo': 'Grupo A', 'total': 10},
+        {'campo_grupo': 'Grupo B', 'total': 15},
+        {'campo_grupo': 'Grupo C', 'total': 8},
+    ]
+
+    # Crie uma resposta HTTP com o tipo de conteúdo PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
+
+    # Crie o PDF usando o ReportLab
+    p = canvas.Canvas(response)
+
+    # Adicione título e cabeçalho
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, 750, "Relatório Agrupado")
+    p.setFont("Helvetica", 12)
+    p.drawString(100, 730, "Agrupamento | Total")
+
+    # Adicione os dados agrupados
+    p.setFont("Helvetica", 12)
+    y = 710
+    for resultado in resultados:
+        grupo = resultado['campo_grupo']
+        total = resultado['total']
+        p.drawString(100, y, f"{grupo} | {total}")
+        y -= 20
+
+    # Fecha o PDF
+    p.showPage()
+    p.save()
+
+    return response
