@@ -11,7 +11,7 @@ from django.utils.formats import get_format
 @login_required(login_url='home:loginUser')
 def createClient(request):
     form_action = reverse('home:createClient')
-
+    
     if request.method == 'POST':
         formClient = ClientForm(request.POST)
         if formClient.is_valid():
@@ -23,9 +23,9 @@ def createClient(request):
             for item in get_format('DATE_INPUT_FORMATS'):
                 try:
                     date_born = datetime.strptime(formClient['born'].value(), item).date()
+                    form.age = today.year - date_born.year - ((today.month, today.day) < (date_born.month, date_born.day))
                 except (ValueError, TypeError):
-                    continue
-            form.age = today.year - date_born.year - ((today.month, today.day) < (date_born.month, date_born.day))
+                    continue            
 
             form.save()
             messages.success(request, 'Cliente cadastrado com sucesso!')
@@ -35,9 +35,11 @@ def createClient(request):
                 messages.error(request, 'Data de Nascimento Inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
+        
         context = {
             'form': formClient,
             'title':'Cadastro',
+            'name_screen': 'Cadastro',
             'form_action': form_action,
             'name_module': 'Home',
         }
@@ -52,7 +54,6 @@ def createClient(request):
             'form': ClientForm(),
             'title':'Cadastro',
             'name_screen': 'Cadastro',
-            'name_module': 'Home',
             'form_action': form_action,
             'name_module': 'Home',
     }

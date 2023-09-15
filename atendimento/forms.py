@@ -15,7 +15,7 @@ class AtendimentoForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['aDataPri'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-date',
         })
         self.fields['aConhece'].label = 'Onde conheceu a MARKI?'
         self.fields['aConhece'].widget.attrs.update({
@@ -262,7 +262,7 @@ class AnamneseForm(forms.ModelForm):
 
         self.fields['aDataAna'].label = 'Data:'
         self.fields['aDataAna'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-date',
         })
         self.fields['aAjustOD'].label = 'Ajuste OD:'
         self.fields['aAjustOD'].widget.attrs.update({

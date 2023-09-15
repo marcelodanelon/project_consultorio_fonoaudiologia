@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from estoque.models import ItensMovimentacaoInsumoModel
 from relatorios.forms import RelatorioForm
-from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table
 from reportlab.platypus import Paragraph
@@ -10,8 +10,13 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+from django.contrib import messages
 
 def index(request):
+    # if not request.user.groups.filter(name="NomeDoGrupo").exists():  # Substitua "NomeDoGrupo" pelo nome do grupo desejado.
+    #     messages.error(request, "Você não tem permissão para acessar esta página.")
+    #     return redirect('home:loginUser')  # Redireciona para a página de login
+
     insumos_list = []
     for f in ItensMovimentacaoInsumoModel._meta.get_fields():
         if hasattr(f, 'verbose_name'):

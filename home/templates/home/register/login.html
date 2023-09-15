@@ -13,6 +13,11 @@
                 <img src="/media/logo.png" alt="" style="border-radius: 20px; width:100%; height:100%;">
             </div>
             {% if user.is_authenticated %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {{message}}  <br><br>              
+                    {% endfor %}
+                {% endif %}
                 Você já está logado como {{user.username}}<br>
                 Clique <a href="{% url 'home:logoutUser' %}">aqui</a> para sair
             {% else %}

@@ -131,6 +131,7 @@ def atendimento(request):
 
     return render(request, 'atendimento/atendimento.html', context)
 
+@login_required(login_url='home:loginUser')
 def historicoAtendimento(request):
     form_atendimento = AtendimentoForm()
 
@@ -160,6 +161,7 @@ def historicoAtendimento(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def audiometria(request):
     # Suponha que você tenha suas coordenadas x e y em listas separadas.
     coordenadas_x = [9000, 8000, 6000, 4000, 3000, 2000]

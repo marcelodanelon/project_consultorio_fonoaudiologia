@@ -2,6 +2,19 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
 
+{% block head_base %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  $(document).ready(function($){
+    $('.mask-date').mask('00/00/0000');  
+    $(document).on("focus", ".mask-date", function() {
+      $(this).mask('00/00/0000');
+    });
+  })
+</script>
+{% endblock head_base %}
+
 {% block content %}
   <script>
   $(document).ready(function(){

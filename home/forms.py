@@ -156,6 +156,9 @@ class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['typeRegister'].widget.attrs.update({
+            'class':'form-control',
+        })
         self.fields['first_name'].widget.attrs.update({
             'class':'form-control',
         })
@@ -216,7 +219,7 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = ClientModel
-        fields = ('first_name', 'last_name', 'born', 'responsibleName', 'responsiblePhone',
+        fields = ('typeRegister', 'first_name', 'last_name', 'born', 'responsibleName', 'responsiblePhone',
                 'zipcode', 'street', 'district', 'number', 'city', 'state', 'complement',
                 'document1', 'document2', 'phone1', 'phone2','status',
                 )

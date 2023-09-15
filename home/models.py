@@ -12,8 +12,8 @@ class StatusModel(models.Model):
 
 class ClientModel(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Primeiro Nome')
-    last_name = models.CharField(max_length=50, verbose_name='Sobrenome')
-    born = models.DateField(verbose_name='Data de Nascimento')
+    last_name = models.CharField(max_length=50, verbose_name='Sobrenome', blank=True, null=True)
+    born = models.DateField(verbose_name='Data de Nascimento', blank=True, null=True)
     age = models.IntegerField(verbose_name='Idade', null=True, blank=True)
     responsibleName = models.CharField(max_length=50, verbose_name='Responsável', null=True, blank=True)
     responsiblePhone = models.CharField(max_length=20, verbose_name='Contato', null=True, blank=True)
@@ -28,8 +28,9 @@ class ClientModel(models.Model):
     document2 = models.CharField(max_length=10,verbose_name='RG', null=True, blank=True)
     phone1 = models.CharField(max_length=20, verbose_name='Telefone', null=True, blank=True)
     phone2 = models.CharField(max_length=20, verbose_name='Celular', null=True, blank=True)
-    profissao = models.CharField(max_length=50, verbose_name='Profissão', null=True, blank=True)
+    profession = models.CharField(max_length=50, verbose_name='Profissão', null=True, blank=True)
     status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default=1)
+    typeRegister = models.CharField(max_length=15, choices=[('simplificado','Simplificado'),('completo','Completo')], default=1, verbose_name='Tipo do Cadastro')
     # owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
