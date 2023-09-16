@@ -38,14 +38,20 @@ def index(request):
     ## cria a lista de idades dos clientes atualmente cadastrados
     for a in clients:
         today = date.today()
-        a.age = today.year - a.born.year - ((today.month, today.day) < (a.born.month, a.born.day))
+        try:
+            a.age = today.year - a.born.year - ((today.month, today.day) < (a.born.month, a.born.day))
+        except:
+            continue
         data_idade.append(a.age)
     data_idade = sorted(set(data_idade))
     count = len(data_idade)
     ## inclui um campo de idade para cada client
     for client in clients:
         today = date.today()
-        client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
+        try:
+            client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
+        except:
+            continue
     ## inclui no data do gráfico, a quantidade referente a cada idade do data_idade
     for i in range(count):
         aux = 0

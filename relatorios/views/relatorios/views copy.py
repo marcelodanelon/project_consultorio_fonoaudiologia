@@ -12,7 +12,22 @@ from django.contrib import messages
 from estoque.models import ItensMovimentacaoInsumoModel
 from relatorios.forms import RelatorioForm
 from datetime import date
-from django.contrib import messages
+
+def index(request):
+    insumos_list = []
+    for f in ItensMovimentacaoInsumoModel._meta.get_fields():
+        if hasattr(f, 'verbose_name'):
+            insumos_list.append(f.verbose_name)
+
+    context = {
+        'insumos_list': insumos_list,
+    }
+
+    return render(
+        request,
+        'relatorios/index.html',
+        context
+    )
 
 def sua_view_de_relatorio_pdf(request):
     form = RelatorioForm()
@@ -43,6 +58,7 @@ def sua_view_de_relatorio_pdf(request):
                         query |= Q(**{lookup: filtro_valor_int})
 
             dados = ItensMovimentacaoInsumoModel.objects.filter(query)
+            print("Resultado da consulta SQL:", dados)
 
             for obj in dados:
                 agrupamento = tuple(getattr(obj, campo) for campo in campos_agrupamento_selecionados)
@@ -50,45 +66,44 @@ def sua_view_de_relatorio_pdf(request):
                     dados_agrupados[agrupamento] = []
                 dados_agrupados[agrupamento].append(obj)
 
-            # Verifique se há dados antes de gerar o PDF
-            if not dados_agrupados:
-                messages.warning(request, "Não há informações para serem apresentadas.")
-            else:
-                # Crie o objeto de resposta PDF
-                response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
+            print("Dados agrupados:", dados_agrupados)
 
-                doc = SimpleDocTemplate(response, pagesize=letter)
-                elements = []
+            # Crie o objeto de resposta PDF
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
 
-                for agrupamento, objs in dados_agrupados.items():
-                    header_style = getSampleStyleSheet()["Normal"]
-                    header_text = f"<b>Agrupamento:</b> {' | '.join(map(str, agrupamento))}"
-                    header_paragraph = Paragraph(header_text, header_style)
-                    elements.append(header_paragraph)
+            doc = SimpleDocTemplate(response, pagesize=letter)
+            elements = []
 
-                    table_data = [campos_selecionados]
+            for agrupamento, objs in dados_agrupados.items():
+                header_style = getSampleStyleSheet()["Normal"]
+                header_text = f"<b>Agrupamento:</b> {' | '.join(map(str, agrupamento))}"
+                header_paragraph = Paragraph(header_text, header_style)
+                elements.append(header_paragraph)
 
-                    for obj in objs:
-                        row_data = [getattr(obj, campo) for campo in campos_selecionados]
-                        table_data.append(row_data)
+                table_data = [campos_selecionados]
 
-                    t = Table(table_data)
+                for obj in objs:
+                    row_data = [getattr(obj, campo) for campo in campos_selecionados]
+                    table_data.append(row_data)
 
-                    style = TableStyle([
-                        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                    ])
+                t = Table(table_data)
+                print(table_data)
+                style = TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ])
 
-                    t.setStyle(style)
-                    elements.append(t)
+                t.setStyle(style)
+                elements.append(t)
 
-                doc.build(elements)
-                return response
+            # print(elements)
+            doc.build(elements)
+            return response
 
     return render(request, 'relatorios/index.html', {'form': form, 'dados_agrupados': dados_agrupados})
