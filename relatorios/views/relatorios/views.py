@@ -38,8 +38,12 @@ def sua_view_de_relatorio_pdf(request):
 
                     # Verifique se o campo de filtro é um campo numérico (exemplo: 'quantidade')
                     if hasattr(ItensMovimentacaoInsumoModel, lookup):
-                        # Converta o filtro_valor para inteiro antes de aplicar o filtro
-                        filtro_valor_int = int(filtro_valor)
+                        if isinstance(filtro_valor, int):
+                            filtro_valor_int = int(filtro_valor)
+                        if isinstance(filtro_valor, float):
+                            filtro_valor_int = float(filtro_valor)
+                        if isinstance(filtro_valor, str):
+                            filtro_valor_int = str(filtro_valor)
                         query |= Q(**{lookup: filtro_valor_int})
 
             dados = ItensMovimentacaoInsumoModel.objects.filter(query)
