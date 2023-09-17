@@ -42,3 +42,68 @@ def lista_itens_movimentacao(request):
         'filtro_local': filtro_local,
         'count_itens_movimentacao': itens_movimentacao.count(),
     })
+# for obj in dados:
+#     agrupamento = tuple(getattr(obj, campo) for campo in campos_agrupamento_selecionados)
+#     if agrupamento not in dados_agrupados:
+#         dados_agrupados[agrupamento] = []
+#     dados_agrupados[agrupamento].append(obj)
+
+from django.db.models import Q
+from django.shortcuts import render
+from relatorios.forms import RelatorioForm
+
+def sua_view_de_relatorio_pdf(request):
+    form = RelatorioForm()
+
+    if request.method == 'POST':
+        form = RelatorioForm(request.POST)
+        if form.is_valid():
+            campos_agrupamento_selecionados = form.cleaned_data['campos_agrupamento']
+            campos_selecionados = form.cleaned_data['campos']
+            resultados = ItensMovimentacaoInsumoModel.objects.all()
+            
+            # [FILTRO]
+            # coletando todos os filtros enviados para um dict
+            primeiro_filtro = {form.cleaned_data['campo_filtro']:form.cleaned_data.get('filtro_valor', None)}
+            campos_filtro = {}
+            for key, value in request.POST.items():
+                if key.startswith('campo_filtro_'):
+                    filtro_number = key.split('_')[-1] 
+                    campo_name = f'filtro_valor_{filtro_number}'
+                    campos_filtro[value] = request.POST[campo_name]
+            campos_filtro.update(primeiro_filtro) 
+                            
+            # utilizando os filtros para buscar os dados
+            query = Q()
+            for campo, valor in campos_filtro.items():
+                query &= Q(**{campo: valor})
+            for campo, valor in campos_filtro.items():
+                if valor:
+                    resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
+                    break
+            
+            # [DETALHES]
+            resultados = resultados.values(*campos_selecionados)
+
+            context = {
+                'form': form, 
+                'campos_agrupamento_selecionados':campos_agrupamento_selecionados,
+                'campos_selecionados':campos_selecionados,
+                'resultados': resultados,
+            }
+
+            return render(
+                request, 
+                'relatorios/relatorio.html', 
+                context,
+            )
+
+    context = {
+        'form': form, 
+    }
+
+    return render(
+        request, 
+        'relatorios/relatorio.html', 
+        context,
+    )
