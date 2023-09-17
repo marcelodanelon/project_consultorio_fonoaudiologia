@@ -4,5 +4,5 @@ from relatorios.views import relatorios
 app_name = 'relatorios'
 
 urlpatterns = [
-    path('pdf/', relatorios.sua_view_de_relatorio_pdf, name='pdf'),
+    path('pdf/', relatorios.lista_itens_movimentacao, name='pdf'),
 ]

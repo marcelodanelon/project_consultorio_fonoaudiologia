@@ -1,98 +1,44 @@
-from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Table
-from reportlab.platypus import Paragraph
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.lib import colors
-from django.db.models import Q
-from reportlab.lib.styles import getSampleStyleSheet
-from django.contrib import messages
+from django.shortcuts import render
 from estoque.models import ItensMovimentacaoInsumoModel
-from relatorios.forms import RelatorioForm
-from datetime import date
-from django.contrib import messages
 
-def sua_view_de_relatorio_pdf(request):
-    form = RelatorioForm()
-    dados_agrupados = {}
+def lista_itens_movimentacao(request):
+    filtro_insumo = request.GET.get('filtro_insumo', '')
+    filtro_valor_unitario = request.GET.get('filtro_valor_unitario', '')
+    filtro_valor_total = request.GET.get('filtro_valor_total', '')
+    filtro_quantidade = request.GET.get('filtro_quantidade', '')
+    filtro_data_validade = request.GET.get('filtro_data_validade', '')
+    filtro_data_entrada = request.GET.get('filtro_data_entrada', '')
+    filtro_serie = request.GET.get('filtro_serie', '')
+    filtro_local = request.GET.get('filtro_local', '')
 
-    if request.method == 'POST':
-        form = RelatorioForm(request.POST)
-        if form.is_valid():
-            campos_selecionados = form.cleaned_data['campos']
-            campos_agrupamento_selecionados = form.cleaned_data['campos_agrupamento']
-            campo_filtro = form.cleaned_data['campo_filtro']
-            filtro_valor = form.cleaned_data.get('filtro_valor', None)
+    itens_movimentacao = ItensMovimentacaoInsumoModel.objects.all()
+    
+    if filtro_insumo:
+        itens_movimentacao = itens_movimentacao.filter(insumo__descricao__icontains=filtro_insumo)
+    if filtro_valor_unitario:
+        itens_movimentacao = itens_movimentacao.filter(valorUnitario__icontains=filtro_valor_unitario)
+    if filtro_valor_total:
+        itens_movimentacao = itens_movimentacao.filter(valorTotal=filtro_valor_total)
+    if filtro_quantidade:
+        itens_movimentacao = itens_movimentacao.filter(quantidade=filtro_quantidade)
+    if filtro_data_validade:
+        itens_movimentacao = itens_movimentacao.filter(dataValidade=filtro_data_validade)
+    if filtro_data_entrada:
+        itens_movimentacao = itens_movimentacao.filter(dataEntrada=filtro_data_entrada)
+    if filtro_serie:
+        itens_movimentacao = itens_movimentacao.filter(serie=filtro_serie)
+    if filtro_local:
+        itens_movimentacao = itens_movimentacao.filter(local__name__icontains=filtro_local)
 
-            # Construa a consulta com base nas seleções do formulário
-            query = Q()
-            for campo in campos_selecionados:
-                if campo_filtro and filtro_valor:
-                    # Verifique se o campo está em campos_agrupamento_selecionados
-                    if campo in campos_agrupamento_selecionados:
-                        lookup = f'{campo}__{campo_filtro}'
-                    else:
-                        lookup = campo_filtro
-
-                    # Verifique se o campo de filtro é um campo numérico (exemplo: 'quantidade')
-                    if hasattr(ItensMovimentacaoInsumoModel, lookup):
-                        if isinstance(filtro_valor, int):
-                            filtro_valor_int = int(filtro_valor)
-                        if isinstance(filtro_valor, float):
-                            filtro_valor_int = float(filtro_valor)
-                        if isinstance(filtro_valor, str):
-                            filtro_valor_int = str(filtro_valor)
-                        query |= Q(**{lookup: filtro_valor_int})
-
-            dados = ItensMovimentacaoInsumoModel.objects.filter(query)
-
-            for obj in dados:
-                agrupamento = tuple(getattr(obj, campo) for campo in campos_agrupamento_selecionados)
-                if agrupamento not in dados_agrupados:
-                    dados_agrupados[agrupamento] = []
-                dados_agrupados[agrupamento].append(obj)
-
-            # Verifique se há dados antes de gerar o PDF
-            if not dados_agrupados:
-                messages.warning(request, "Não há informações para serem apresentadas.")
-            else:
-                # Crie o objeto de resposta PDF
-                response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
-
-                doc = SimpleDocTemplate(response, pagesize=letter)
-                elements = []
-
-                for agrupamento, objs in dados_agrupados.items():
-                    header_style = getSampleStyleSheet()["Normal"]
-                    header_text = f"<b>Agrupamento:</b> {' | '.join(map(str, agrupamento))}"
-                    header_paragraph = Paragraph(header_text, header_style)
-                    elements.append(header_paragraph)
-
-                    table_data = [campos_selecionados]
-
-                    for obj in objs:
-                        row_data = [getattr(obj, campo) for campo in campos_selecionados]
-                        table_data.append(row_data)
-
-                    t = Table(table_data)
-
-                    style = TableStyle([
-                        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                    ])
-
-                    t.setStyle(style)
-                    elements.append(t)
-
-                doc.build(elements)
-                return response
-
-    return render(request, 'relatorios/index.html', {'form': form, 'dados_agrupados': dados_agrupados})
+    return render(request, 'relatorios/index.html', {
+        'itens_movimentacao': itens_movimentacao,
+        'filtro_insumo': filtro_insumo,
+        'filtro_valor_unitario': filtro_valor_unitario,
+        'filtro_valor_total': filtro_valor_total,
+        'filtro_quantidade': filtro_quantidade,
+        'filtro_data_validade': filtro_data_validade,
+        'filtro_data_entrada': filtro_data_entrada,
+        'filtro_serie': filtro_serie,
+        'filtro_local': filtro_local,
+        'count_itens_movimentacao': itens_movimentacao.count(),
+    })
