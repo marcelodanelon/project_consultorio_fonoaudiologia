@@ -46,6 +46,7 @@ def lista_itens_movimentacao(request):
 from django.db.models import Q
 from django.shortcuts import render
 from relatorios.forms import RelatorioForm
+from django.db.models import F
 
 def sua_view_de_relatorio_pdf(request):
     form = RelatorioForm()
@@ -53,12 +54,9 @@ def sua_view_de_relatorio_pdf(request):
     if request.method == 'POST':
         form = RelatorioForm(request.POST)
         if form.is_valid():
-            campos_agrupamento_selecionados = form.cleaned_data['campos_agrupamento']
+            campo_agrupamento = form.cleaned_data['campos_agrupamento']
             campos_selecionados = form.cleaned_data['campos']
             resultados = ItensMovimentacaoInsumoModel.objects.all()
-            # for result in resultados:
-            #     movimentacao = MovimentacaoInsumoModel.objects.filter(pk=result.movimentacao.id).get()
-            #     result.operacao = movimentacao.operacao
 
             # [FILTRO]
             # coletando todos os filtros enviados para um dict
@@ -69,14 +67,13 @@ def sua_view_de_relatorio_pdf(request):
                     filtro_number = key.split('_')[-1] 
                     campo_name = f'filtro_valor_{filtro_number}'
                     campos_filtro[value] = request.POST[campo_name]
-            campos_filtro.update(primeiro_filtro)                             
+            campos_filtro.update(primeiro_filtro)                      
             # utilizando os filtros para buscar os dados
             query = Q()
             for campo, valor in campos_filtro.items():
                 if valor:
-                    if campo == 'movimentacao':
-                        # query &= Q(movimentacao__operacao='Entrada')
-                        query &= Q(**{campo: valor})
+                    if campo == 'operacao':
+                        query &= Q(movimentacao__operacao=valor)
                     else:
                         query &= Q(**{campo: valor})
             for campo, valor in campos_filtro.items():
@@ -84,44 +81,47 @@ def sua_view_de_relatorio_pdf(request):
                     resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
                     break
 
+            # [INCLUINDO CAMPOS DE OUTRAS TABELAS RELACIONADAS]   
+            # inclui o campo operacao da tabela de movimentacao
+            if 'operacao' in campos_selecionados:
+                for resultado in resultados:
+                    movimentacao_id = resultado.movimentacao.id
+                    operacao = MovimentacaoInsumoModel.objects.get(pk=movimentacao_id).operacao
+                    resultado.operacao = operacao
+            if 'operacao' in campos_selecionados:
+                resultados = resultados.annotate(operacao=F('movimentacao__operacao'))
+
             # [AGRUPAMENTO]
             dados_agrupados = {}
             saida_formatada = []
             saida_html = []
-            # saida_formatada = ""
-            for result in resultados:  
-                for agrupamento in campos_agrupamento_selecionados:                  
-                    valor = getattr(result, agrupamento)
-                    if valor not in dados_agrupados:
-                        dados_agrupados[valor] = []
-                    dados_agrupados[valor].append(result)
-            # consulta de campos nos dict
-            # for grupo, objetos in dados_agrupados.items():
-            #     saida_formatada += f'GRUPO {grupo}\n'
-            #     for objeto in objetos:
-            #         for campo in campos_selecionados:
-            #             valor_do_campo = getattr(objeto, campo, "")  # Substitua '' pelo valor padrão desejado, se necessário
-            #             saida_formatada += f'{campo}: {valor_do_campo}\n' 
-            #     saida_formatada += '\n'                       
-            # print(saida_formatada)
+            for result in resultados:
+                if campo_agrupamento == 'operacao':
+                    valor = result.movimentacao.operacao
+                else:
+                    valor = getattr(result, campo_agrupamento)
 
+                if valor not in dados_agrupados:
+                    dados_agrupados[valor] = []
+                dados_agrupados[valor].append(result)
+            # adiciona para visualização no sql, junto com os detalhes
+            # [DETALHES AGRUPAMENTO]
             for grupo, objetos in dados_agrupados.items():
-                saida_formatada.append(f'GRUPO {grupo}')  # Adiciona o cabeçalho do grupo
+                saida_formatada.append(f'GRUPO {grupo}')  
                 for objeto in objetos:
                     for campo in campos_selecionados:
-                        valor_do_campo = getattr(objeto, campo, "")  # Substitua '' pelo valor padrão desejado, se necessário
+                        valor_do_campo = getattr(objeto, campo, "")  
                         saida_formatada.append(f'{campo}: {valor_do_campo}')
-                saida_formatada.append('')  # Adiciona uma linha em branco após cada grupo
+                saida_formatada.append('')  
 
-            # Crie uma string única unindo todas as linhas com quebras de linha HTML
             saida_html = '<br>'.join(saida_formatada)
 
-            # [DETALHES]
+            # [DETALHES] [opcional para visualização]
             resultados = resultados.values(*campos_selecionados)
 
             context = {
                 'form': form, 
-                'campos_agrupamento_selecionados':campos_agrupamento_selecionados,
+                'campo_agrupamento':campo_agrupamento,
                 'campos_selecionados':campos_selecionados,
                 'resultados': resultados,
                 'dados_agrupados': saida_html,

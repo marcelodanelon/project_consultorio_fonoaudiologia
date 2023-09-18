@@ -1,22 +1,31 @@
 # forms.py
 from django import forms
-from estoque.models import ItensMovimentacaoInsumoModel
+from django.db import models
+from estoque.models import ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
+
+campos_incluidos = ['operacao']
 
 class RelatorioForm(forms.Form):
     campos = forms.MultipleChoiceField(
-        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()],
+        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()] + 
+        [(field.name, field.verbose_name) for field in MovimentacaoInsumoModel._meta.get_fields()
+          if isinstance(field, models.Field) and hasattr(field, 'verbose_name') and field.name in campos_incluidos],
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
 
-    campos_agrupamento = forms.MultipleChoiceField(
-        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()],
-        widget=forms.CheckboxSelectMultiple,
+    campos_agrupamento = forms.ChoiceField(
+        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()] + 
+        [(field.name, field.verbose_name) for field in MovimentacaoInsumoModel._meta.get_fields()
+          if isinstance(field, models.Field) and hasattr(field, 'verbose_name') and field.name in campos_incluidos],
+        widget=forms.Select(attrs={'class': 'form-control'}),
         required=False,
     )
 
     campo_filtro = forms.ChoiceField(
-        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()],
+        choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()]+ 
+        [(field.name, field.verbose_name) for field in MovimentacaoInsumoModel._meta.get_fields()
+          if isinstance(field, models.Field) and hasattr(field, 'verbose_name') and field.name in campos_incluidos],
         required=False,
     )
 

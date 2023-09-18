@@ -10,10 +10,7 @@
         {% csrf_token %}
         <h3>Campos de Agrupamento</h3>
         {{ form.campos_agrupamento.label_tag }}
-        {% for campo in form.campos_agrupamento %}
-            {{ campo }}
-            {{ campo.label_tag }}
-        {% endfor %}
+        {{ form.campos_agrupamento }}
 
         <h3>Campos Selecionados</h3>
         {{ form.campos.label_tag }}
@@ -41,9 +38,9 @@
         <input type="submit" value="Gerar Relatório">
     </form>
 
-    {% if campos_agrupamento_selecionados %}
+    {% if campo_agrupamento %}
         <h3>Dados Agrupados</h3>
-        {{campos_agrupamento_selecionados}}
+        {{campo_agrupamento}}
     {% endif %}
 
     {% if campos_selecionados %}
