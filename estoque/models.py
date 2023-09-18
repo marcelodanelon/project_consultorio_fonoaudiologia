@@ -46,7 +46,7 @@ class ItensInsumoModel(models.Model):
         return f'{self.insumo}'
     
 class ItensMovimentacaoInsumoModel(models.Model):
-    movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True)
+    movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True, verbose_name='Movimentação')
     insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
     valorUnitario = models.CharField(max_length=10, verbose_name='Valor Unitario', null=True)
     valorTotal = models.CharField(max_length=10, verbose_name='Valor Total', null=True)

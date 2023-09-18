@@ -1,5 +1,10 @@
 from django.shortcuts import render
+from django.contrib import messages
 from estoque.models import ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
+from django.db.models import Q
+from relatorios.forms import RelatorioForm
+from django.db.models import F
+from datetime import datetime
 
 def lista_itens_movimentacao(request):
     filtro_insumo = request.GET.get('filtro_insumo', '')
@@ -43,11 +48,6 @@ def lista_itens_movimentacao(request):
         'count_itens_movimentacao': itens_movimentacao.count(),
     })
 
-from django.db.models import Q
-from django.shortcuts import render
-from relatorios.forms import RelatorioForm
-from django.db.models import F
-
 def sua_view_de_relatorio_pdf(request):
     form = RelatorioForm()
 
@@ -72,14 +72,38 @@ def sua_view_de_relatorio_pdf(request):
             query = Q()
             for campo, valor in campos_filtro.items():
                 if valor:
+                    if campo == 'dataEntrada' or campo == 'dataValidade':
+                        try:
+                            valor = datetime.strptime(valor, '%d/%m/%Y').date()
+                        except ValueError:
+                            messages.error(request, f'A data "{valor}" não é válida no formato "dd/mm/yyyy"')
+                            return render(
+                                request, 
+                                'relatorios/relatorio.html', 
+                                {'form': form,},
+                            )
+                        query &= Q(**{campo: valor})
                     if campo == 'operacao':
                         query &= Q(movimentacao__operacao=valor)
                     else:
                         query &= Q(**{campo: valor})
             for campo, valor in campos_filtro.items():
                 if valor:
-                    resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
-                    break
+                    try:
+                        resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
+                        break
+                    except Exception as e:
+                        error_message = str(e)
+                        if "Field 'id' expected a number but got" in error_message:
+                            translated_error_message = "Campo 'id' esperava um número, mas recebeu texto"
+                        else:
+                            translated_error_message = error_message
+                        messages.error(request, translated_error_message)
+                        return render(
+                            request, 
+                            'relatorios/relatorio.html', 
+                            {'form': form,},
+                        )
 
             # [INCLUINDO CAMPOS DE OUTRAS TABELAS RELACIONADAS]   
             # inclui o campo operacao da tabela de movimentacao
@@ -98,6 +122,8 @@ def sua_view_de_relatorio_pdf(request):
             for result in resultados:
                 if campo_agrupamento == 'operacao':
                     valor = result.movimentacao.operacao
+                elif campo_agrupamento == 'dataEntrada' or campo_agrupamento == 'dataValidade':
+                    valor = result.dataEntrada.strftime('%d/%m/%Y')
                 else:
                     valor = getattr(result, campo_agrupamento)
 
@@ -108,9 +134,13 @@ def sua_view_de_relatorio_pdf(request):
             # [DETALHES AGRUPAMENTO]
             for grupo, objetos in dados_agrupados.items():
                 saida_formatada.append(f'GRUPO {grupo}')  
+                total_registros = len(objetos)  # Conta o número de objetos no grupo
+                saida_formatada.append(f'Total de Registros: {total_registros}')
                 for objeto in objetos:
                     for campo in campos_selecionados:
                         valor_do_campo = getattr(objeto, campo, "")  
+                        if campo == 'dataEntrada' or campo == 'dataValidade':
+                            valor_do_campo = valor_do_campo.strftime('%d/%m/%Y')
                         saida_formatada.append(f'{campo}: {valor_do_campo}')
                 saida_formatada.append('')  
 
