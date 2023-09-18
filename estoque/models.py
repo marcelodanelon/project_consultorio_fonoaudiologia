@@ -26,7 +26,10 @@ class InsumoModel(models.Model):
 class MovimentacaoInsumoModel(models.Model):
     operacao = models.CharField(max_length=10, choices=CHOICES_OPERACAO, default='Entrada', verbose_name='Operação')
     local = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
-    data = models.DateField(default=date.today)
+    data = models.DateField(default=date.today, verbose_name='Data')
+
+    def __str__(self) -> str:
+        return f'ID:{self.id} Data:{self.data} Local:{self.local} Operação:{self.operacao}'
 
 class ItensInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True)

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from estoque.models import ItensMovimentacaoInsumoModel
+from estoque.models import ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
 
 def lista_itens_movimentacao(request):
     filtro_insumo = request.GET.get('filtro_insumo', '')
@@ -56,6 +56,9 @@ def sua_view_de_relatorio_pdf(request):
             campos_agrupamento_selecionados = form.cleaned_data['campos_agrupamento']
             campos_selecionados = form.cleaned_data['campos']
             resultados = ItensMovimentacaoInsumoModel.objects.all()
+            # for result in resultados:
+            #     movimentacao = MovimentacaoInsumoModel.objects.filter(pk=result.movimentacao.id).get()
+            #     result.operacao = movimentacao.operacao
 
             # [FILTRO]
             # coletando todos os filtros enviados para um dict
@@ -66,12 +69,16 @@ def sua_view_de_relatorio_pdf(request):
                     filtro_number = key.split('_')[-1] 
                     campo_name = f'filtro_valor_{filtro_number}'
                     campos_filtro[value] = request.POST[campo_name]
-            campos_filtro.update(primeiro_filtro) 
-                            
+            campos_filtro.update(primeiro_filtro)                             
             # utilizando os filtros para buscar os dados
             query = Q()
             for campo, valor in campos_filtro.items():
-                query &= Q(**{campo: valor})
+                if valor:
+                    if campo == 'movimentacao':
+                        # query &= Q(movimentacao__operacao='Entrada')
+                        query &= Q(**{campo: valor})
+                    else:
+                        query &= Q(**{campo: valor})
             for campo, valor in campos_filtro.items():
                 if valor:
                     resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
@@ -80,6 +87,7 @@ def sua_view_de_relatorio_pdf(request):
             # [AGRUPAMENTO]
             dados_agrupados = {}
             saida_formatada = []
+            saida_html = []
             # saida_formatada = ""
             for result in resultados:  
                 for agrupamento in campos_agrupamento_selecionados:                  
