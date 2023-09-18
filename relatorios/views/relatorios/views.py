@@ -42,11 +42,6 @@ def lista_itens_movimentacao(request):
         'filtro_local': filtro_local,
         'count_itens_movimentacao': itens_movimentacao.count(),
     })
-# for obj in dados:
-#     agrupamento = tuple(getattr(obj, campo) for campo in campos_agrupamento_selecionados)
-#     if agrupamento not in dados_agrupados:
-#         dados_agrupados[agrupamento] = []
-#     dados_agrupados[agrupamento].append(obj)
 
 from django.db.models import Q
 from django.shortcuts import render
@@ -61,7 +56,7 @@ def sua_view_de_relatorio_pdf(request):
             campos_agrupamento_selecionados = form.cleaned_data['campos_agrupamento']
             campos_selecionados = form.cleaned_data['campos']
             resultados = ItensMovimentacaoInsumoModel.objects.all()
-            
+
             # [FILTRO]
             # coletando todos os filtros enviados para um dict
             primeiro_filtro = {form.cleaned_data['campo_filtro']:form.cleaned_data.get('filtro_valor', None)}
@@ -81,7 +76,38 @@ def sua_view_de_relatorio_pdf(request):
                 if valor:
                     resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
                     break
-            
+
+            # [AGRUPAMENTO]
+            dados_agrupados = {}
+            saida_formatada = []
+            # saida_formatada = ""
+            for result in resultados:  
+                for agrupamento in campos_agrupamento_selecionados:                  
+                    valor = getattr(result, agrupamento)
+                    if valor not in dados_agrupados:
+                        dados_agrupados[valor] = []
+                    dados_agrupados[valor].append(result)
+            # consulta de campos nos dict
+            # for grupo, objetos in dados_agrupados.items():
+            #     saida_formatada += f'GRUPO {grupo}\n'
+            #     for objeto in objetos:
+            #         for campo in campos_selecionados:
+            #             valor_do_campo = getattr(objeto, campo, "")  # Substitua '' pelo valor padrão desejado, se necessário
+            #             saida_formatada += f'{campo}: {valor_do_campo}\n' 
+            #     saida_formatada += '\n'                       
+            # print(saida_formatada)
+
+            for grupo, objetos in dados_agrupados.items():
+                saida_formatada.append(f'GRUPO {grupo}')  # Adiciona o cabeçalho do grupo
+                for objeto in objetos:
+                    for campo in campos_selecionados:
+                        valor_do_campo = getattr(objeto, campo, "")  # Substitua '' pelo valor padrão desejado, se necessário
+                        saida_formatada.append(f'{campo}: {valor_do_campo}')
+                saida_formatada.append('')  # Adiciona uma linha em branco após cada grupo
+
+            # Crie uma string única unindo todas as linhas com quebras de linha HTML
+            saida_html = '<br>'.join(saida_formatada)
+
             # [DETALHES]
             resultados = resultados.values(*campos_selecionados)
 
@@ -90,6 +116,7 @@ def sua_view_de_relatorio_pdf(request):
                 'campos_agrupamento_selecionados':campos_agrupamento_selecionados,
                 'campos_selecionados':campos_selecionados,
                 'resultados': resultados,
+                'dados_agrupados': saida_html,
             }
 
             return render(

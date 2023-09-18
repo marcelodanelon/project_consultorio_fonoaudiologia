@@ -56,6 +56,11 @@
         {{resultados}}
     {% endif %}
 
+    {% if dados_agrupados %}
+        <h3>Dados Agrupados</h3>
+        {{dados_agrupados | safe}}
+    {% endif %}
+
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const addFilterButton = document.getElementById('add_filter');
