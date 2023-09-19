@@ -18,7 +18,7 @@ class RelatorioForm(forms.Form):
         choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()] + 
         [(field.name, field.verbose_name) for field in MovimentacaoInsumoModel._meta.get_fields()
           if isinstance(field, models.Field) and hasattr(field, 'verbose_name') and field.name in campos_incluidos],
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        widget=forms.Select(attrs={'class': 'form-control','style': 'font-size: 18px;'}),
         required=False,
     )
 
@@ -26,10 +26,11 @@ class RelatorioForm(forms.Form):
         choices=[(field.name, field.verbose_name) for field in ItensMovimentacaoInsumoModel._meta.get_fields()]+ 
         [(field.name, field.verbose_name) for field in MovimentacaoInsumoModel._meta.get_fields()
           if isinstance(field, models.Field) and hasattr(field, 'verbose_name') and field.name in campos_incluidos],
+        widget=forms.Select(attrs={'class': 'form-control'}),
         required=False,
     )
 
-    filtro_valor = forms.CharField(max_length=100, required=False)
+    filtro_valor = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 # codigo para restringir fields
 # campos_incluidos = ['campo1', 'campo2', 'campo3']

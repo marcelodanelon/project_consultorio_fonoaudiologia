@@ -153,6 +153,7 @@ def sua_view_de_relatorio_pdf(request):
                 'form': form, 
                 'campo_agrupamento':campo_agrupamento,
                 'campos_selecionados':campos_selecionados,
+                'campos_filtros': query,
                 'resultados': resultados,
                 'dados_agrupados': saida_html,
             }

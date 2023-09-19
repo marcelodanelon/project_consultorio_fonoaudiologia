@@ -1,90 +1,92 @@
-<!-- relatorio.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Relatório</title>
-</head>
-<body>
-    <h1>Selecione os campos para o relatório</h1>
-    {% if messages %}
-        {% for message in messages %}
-            - {{message}}
-        {% endfor %}
-    {% endif %}
+{% extends 'global/base.html' %}
+{% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
+{% block head_base %}{% endblock head_base %}
+{% block content %}
+<div class="container mt-3">
+    <h2 class="mb-3">Relatório de Movimentações do Estoque</h2>
     <form method="post">
         {% csrf_token %}
-        <h3>Campos de Agrupamento</h3>
-        {{ form.campos_agrupamento.label_tag }}
-        {{ form.campos_agrupamento }}
-
-        <h3>Campos Selecionados</h3>
-        {{ form.campos.label_tag }}
-        {% for campo in form.campos %}
-            {{ campo }}
-            {{ campo.label_tag }}
-        {% endfor %}
-
-        <h3>Filtros</h3>
-        <div id="filtro_container">
-            <div class="filtro-item">
-                <label for="id_campo_filtro">Campo de Filtro:</label>
-                {{ form.campo_filtro.label_tag }}
-                <select name="campo_filtro" id="id_campo_filtro">
-                    <option value="">-- Selecione um campo --</option>
-                    {% for campo in form.campo_filtro.field.choices %}
-                        <option value="{{ campo.0 }}">{{ campo.1 }}</option>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Detalhes</h4>
+                <div style="font-size: 18px;">
+                    {% for campo in form.campos %}
+                        {{ campo.label_tag }}
+                        {{ campo }}
+                        <br>
                     {% endfor %}
-                </select>
-                <input type="text" name="filtro_valor" placeholder="Digite o valor de filtro">
+                </div>
+                <br>
+                <button class="btn btn-sm btn-success" type="submit">Gerar</button>
+            </div>
+            <div class="col-md-6">
+                <h4>Agrupamento</h4>
+                <div style="transform: scale(0.8); transform-origin: top left; margin-bottom: 0px;">
+                    {{ form.campos_agrupamento }}
+                </div>
+                <h4 class="mt-3" style="margin-top: 0px;">Filtros</h4><button class="btn btn-sm btn-primary" type="button" id="add_filter">+ Adicionar Filtro</button>
+                <div id="filtro_container" style="margin-top: 5px; width: 100%; max-height: 227px; overflow-y: auto; overflow-x: hidden;">
+                    <!-- Adicione filtros aqui -->
+                </div>                
             </div>
         </div>
-        <input type="button" id="add_filter" value="Adicionar Filtro">
-
-        <input type="submit" value="Gerar Relatório">
     </form>
+    <div class="mt-4 p-3" style="width: 90%; height: 35%; background-color: white; border: 1px solid black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); overflow-x: hidden; overflow-y: auto;">
+        {% if dados_agrupados %}
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-4">
+                    <div style="width: 200px; margin-top: 0px; padding: 0px;">
+                        <img src="/media/logo.png" alt="">
+                    </div>
+                </div>   
+                <div class="col-7">
+                    <h4>Relatório de Movimentações do Estoque</h4>
+                </div>    
+            </div>  
+            <div class="row" style="font-size:10px;">
+                {% if campo_agrupamento %}
+                    <i>Agrupamento: {{ campo_agrupamento }}</i>
+                {% endif %}
+                {% if campos_filtros %}
+                    <i>Filtros: {{ campos_filtros }}</i>
+                {% endif %}
+                {% if campos_selecionados %}
+                    <i>Detalhes: {{ campos_selecionados }}</i>
+                {% endif %}
+            </div>    
+            {{ dados_agrupados | safe }}
+        {% endif %}
+    </div>    
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addFilterButton = document.getElementById('add_filter');
+    const filtroContainer = document.getElementById('filtro_container');
 
-    {% if campo_agrupamento %}
-        <h3>Dados Agrupados</h3>
-        {{campo_agrupamento}}
-    {% endif %}
-
-    {% if campos_selecionados %}
-        <h3>Dados Selecionados</h3>
-        {{campos_selecionados}}
-    {% endif %}
-
-    {% if resultados %}
-        <h3>Resultados</h3>
-        {{resultados}}
-    {% endif %}
-
-    {% if dados_agrupados %}
-        <h3>Dados Agrupados</h3>
-        {{dados_agrupados | safe}}
-    {% endif %}
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const addFilterButton = document.getElementById('add_filter');
-        const filtroContainer = document.getElementById('filtro_container');
-
-        addFilterButton.addEventListener('click', function() {
-            const filterCount = filtroContainer.querySelectorAll('.filtro-item').length + 1;
-            const newFilterField = document.createElement('div');
-            newFilterField.className = 'filtro-item';
-            newFilterField.innerHTML = `
-                <label for="id_campo_filtro_${filterCount}">Campo de Filtro ${filterCount}:</label>
-                <select name="campo_filtro_${filterCount}" id="id_campo_filtro_${filterCount}">
+    addFilterButton.addEventListener('click', function() {
+        const filterCount = filtroContainer.querySelectorAll('.group').length + 1;
+        const newFilterField = document.createElement('div');
+        newFilterField.className = 'group';
+        newFilterField.innerHTML = `
+        <div class="row" style="margin-top: 3px;">
+            <div class="col-2 d-flex justify-content-start align-items-center">
+                <label style="font-size: 16px;" for="id_campo_filtro_${filterCount}">Filtro ${filterCount}:</label>
+            </div>
+            <div class="col-4 pe-1">
+                <select class="form-control form-control-sm" style="font-size: 0.875rem; padding: 0.25rem; font-size: 16px;" name="campo_filtro_${filterCount}" id="id_campo_filtro_${filterCount}">
                     <option value="">-- Selecione um campo --</option>
                     {% for campo in form.campo_filtro.field.choices %}
                         <option value="{{ campo.0 }}">{{ campo.1 }}</option>
                     {% endfor %}
                 </select>
-                <input type="text" name="filtro_valor_${filterCount}" placeholder="Digite o valor de filtro">
-            `;
-            filtroContainer.appendChild(newFilterField);
-        });
+            </div>
+            <div class="col-4 ps-1">
+                <input class="form-control form-control-sm" type="text" name="filtro_valor_${filterCount}" placeholder="Valor de filtro" style="font-size: 0.875rem; padding: 0.25rem; font-size: 16px;">
+            </div>
+        </div>
+        `;
+        filtroContainer.appendChild(newFilterField);
     });
-    </script>
-</body>
-</html>
+});
+</script>
+{% endblock content %}
