@@ -6,49 +6,7 @@ from relatorios.forms import RelatorioForm
 from django.db.models import F
 from datetime import datetime
 
-def lista_itens_movimentacao(request):
-    filtro_insumo = request.GET.get('filtro_insumo', '')
-    filtro_valor_unitario = request.GET.get('filtro_valor_unitario', '')
-    filtro_valor_total = request.GET.get('filtro_valor_total', '')
-    filtro_quantidade = request.GET.get('filtro_quantidade', '')
-    filtro_data_validade = request.GET.get('filtro_data_validade', '')
-    filtro_data_entrada = request.GET.get('filtro_data_entrada', '')
-    filtro_serie = request.GET.get('filtro_serie', '')
-    filtro_local = request.GET.get('filtro_local', '')
-
-    itens_movimentacao = ItensMovimentacaoInsumoModel.objects.all()
-    
-    if filtro_insumo:
-        itens_movimentacao = itens_movimentacao.filter(insumo__descricao__icontains=filtro_insumo)
-    if filtro_valor_unitario:
-        itens_movimentacao = itens_movimentacao.filter(valorUnitario__icontains=filtro_valor_unitario)
-    if filtro_valor_total:
-        itens_movimentacao = itens_movimentacao.filter(valorTotal=filtro_valor_total)
-    if filtro_quantidade:
-        itens_movimentacao = itens_movimentacao.filter(quantidade=filtro_quantidade)
-    if filtro_data_validade:
-        itens_movimentacao = itens_movimentacao.filter(dataValidade=filtro_data_validade)
-    if filtro_data_entrada:
-        itens_movimentacao = itens_movimentacao.filter(dataEntrada=filtro_data_entrada)
-    if filtro_serie:
-        itens_movimentacao = itens_movimentacao.filter(serie=filtro_serie)
-    if filtro_local:
-        itens_movimentacao = itens_movimentacao.filter(local__name__icontains=filtro_local)
-
-    return render(request, 'relatorios/index.html', {
-        'itens_movimentacao': itens_movimentacao,
-        'filtro_insumo': filtro_insumo,
-        'filtro_valor_unitario': filtro_valor_unitario,
-        'filtro_valor_total': filtro_valor_total,
-        'filtro_quantidade': filtro_quantidade,
-        'filtro_data_validade': filtro_data_validade,
-        'filtro_data_entrada': filtro_data_entrada,
-        'filtro_serie': filtro_serie,
-        'filtro_local': filtro_local,
-        'count_itens_movimentacao': itens_movimentacao.count(),
-    })
-
-def sua_view_de_relatorio_pdf(request):
+def rel_movimentacao_insumos(request):
     form = RelatorioForm()
 
     if request.method == 'POST':
@@ -80,7 +38,7 @@ def sua_view_de_relatorio_pdf(request):
                             return render(
                                 request, 
                                 'relatorios/relatorio.html', 
-                                {'form': form,},
+                                {'form': form,'name_module': 'Relatórios',},
                             )
                         query &= Q(**{campo: valor})
                     if campo == 'operacao':
@@ -102,7 +60,7 @@ def sua_view_de_relatorio_pdf(request):
                         return render(
                             request, 
                             'relatorios/relatorio.html', 
-                            {'form': form,},
+                            {'form': form, 'name_module': 'Relatórios',},
                         )
 
             # [INCLUINDO CAMPOS DE OUTRAS TABELAS RELACIONADAS]   
@@ -130,21 +88,92 @@ def sua_view_de_relatorio_pdf(request):
                 if valor not in dados_agrupados:
                     dados_agrupados[valor] = []
                 dados_agrupados[valor].append(result)
-            # adiciona para visualização no sql, junto com os detalhes
+
             # [DETALHES AGRUPAMENTO]
+            saida_formatada.append('<table border="1" style="border-collapse: collapse; width: 100%;">') 
+
+            # Cabeçalho da tabela
+            saida_formatada.append('<tr>')  
+            if len(campos_selecionados) == 1:
+                saida_formatada.append('<th colspan="2" style="padding: 8px; background-color: #a3a3a3;">' + campos_selecionados[0] + '</th>')  
+            else:
+                ## alterando cabeçalho tabela para nome verbose_name
+                for campo in campos_selecionados:
+                    if campo == 'local':
+                        campo = 'Unidade'
+                    elif campo == 'dataEntrada':
+                        campo = 'Data de Entrada'
+                    elif campo == 'dataValidade':
+                        campo = 'Data de Validade'
+                    elif campo == 'id':
+                        campo = 'Id'
+                    elif campo == 'movimentacao':
+                        campo = 'Id Movimentação'
+                    elif campo == 'insumo':
+                        campo = 'Insumo'
+                    elif campo == 'valorUnitario':
+                        campo = 'Valor Unitário'
+                    elif campo == 'valorTotal':
+                        campo = 'Valor Total'
+                    elif campo == 'quantidade':
+                        campo = 'Quantidade'
+                    elif campo == 'serie':
+                        campo = 'Série/Lote'
+                    elif campo == 'operacao':
+                        campo = 'Operação'
+                    saida_formatada.append('<th style="padding: 8px; background-color: #a3a3a3;">' + campo + '</th>')  
+            saida_formatada.append('</tr>') 
+
             for grupo, objetos in dados_agrupados.items():
-                saida_formatada.append(f'GRUPO {grupo}')  
-                total_registros = len(objetos)  # Conta o número de objetos no grupo
-                saida_formatada.append(f'Total de Registros: {total_registros}')
+                total_registros_grupo = len(objetos) 
+                saida_formatada.append('<tr>')
+                for campo in campos_selecionados:
+                    ## alterando nome agrupamento para verbose_name de cada grupo
+                    if campo == campos_selecionados[0]:
+                        header_text = campo + ': ' + str(grupo)
+                        if campo_agrupamento == 'local':
+                            header_text = 'Unidade: ' + str(grupo)
+                        elif campo_agrupamento == 'dataEntrada':
+                            header_text = 'Data de Entrada: ' + grupo
+                        elif campo_agrupamento == 'dataValidade':
+                            header_text = 'Data de Validade: ' + grupo
+                        elif campo_agrupamento == 'id':
+                            header_text = 'Id: ' + str(grupo)
+                        elif campo_agrupamento == 'movimentacao':
+                            header_text = 'Id Movimentação: ' + str(grupo)
+                        elif campo_agrupamento == 'insumo':
+                            header_text = 'Insumo: ' + str(grupo)
+                        elif campo_agrupamento == 'valorUnitario':
+                            header_text = 'Valor Unitário: ' + grupo
+                        elif campo_agrupamento == 'valorTotal':
+                            header_text = 'Valor Total: ' + grupo
+                        elif campo_agrupamento == 'quantidade':
+                            header_text = 'Quantidade: ' + str(grupo)
+                        elif campo_agrupamento == 'serie':
+                            header_text = 'Série/Lote: ' + grupo
+                        elif campo_agrupamento == 'operacao':
+                            header_text = 'Operação: ' + grupo
+
+                        if len(campos_selecionados) == 1:
+                            saida_formatada.append('<th style="background-color: #ccc; text-align: left;">' + header_text + '</th>')
+                        else:
+                            saida_formatada.append('<th colspan="' + str(len(campos_selecionados) - 1) + '" style="background-color: #ccc; text-align: left;">' + header_text + '</th>')
+                        saida_formatada.append('<th style="background-color: #ccc; text-align: right;">Total: ' + str(total_registros_grupo) + '</th>')
+                    else:
+                        saida_formatada.append('<th></th>')
+                saida_formatada.append('</tr>')
+
                 for objeto in objetos:
+                    saida_formatada.append('<tr>')
                     for campo in campos_selecionados:
-                        valor_do_campo = getattr(objeto, campo, "")  
+                        valor_do_campo = getattr(objeto, campo, "")
                         if campo == 'dataEntrada' or campo == 'dataValidade':
                             valor_do_campo = valor_do_campo.strftime('%d/%m/%Y')
-                        saida_formatada.append(f'{campo}: {valor_do_campo}')
-                saida_formatada.append('')  
+                        saida_formatada.append('<td style="padding: 2px;">' + str(valor_do_campo) + '</td>')  
+                    saida_formatada.append('</tr>')  
 
-            saida_html = '<br>'.join(saida_formatada)
+            saida_formatada.append('</table>')
+            saida_html = '\n'.join(saida_formatada)
 
             # [DETALHES] [opcional para visualização]
             resultados = resultados.values(*campos_selecionados)
@@ -156,6 +185,7 @@ def sua_view_de_relatorio_pdf(request):
                 'campos_filtros': query,
                 'resultados': resultados,
                 'dados_agrupados': saida_html,
+                'name_module': 'Relatórios',
             }
 
             return render(
@@ -166,6 +196,7 @@ def sua_view_de_relatorio_pdf(request):
 
     context = {
         'form': form, 
+        'name_module': 'Relatórios',
     }
 
     return render(

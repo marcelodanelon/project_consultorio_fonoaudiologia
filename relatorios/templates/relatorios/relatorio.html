@@ -1,6 +1,7 @@
 {% extends 'global/base.html' %}
-{% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
-{% block head_base %}{% endblock head_base %}
+
+{% block nav_lateral %}{% include 'partials/_nav_relatorios.html' %}{% endblock nav_lateral %}
+
 {% block content %}
 <div class="container mt-3">
     <h2 class="mb-3">Relatório de Movimentações do Estoque</h2>
@@ -17,7 +18,10 @@
                     {% endfor %}
                 </div>
                 <br>
-                <button class="btn btn-sm btn-success" type="submit">Gerar</button>
+                <button class="btn btn btn-success" type="submit">Gerar</button>
+                {% if resultados %}
+                    <a class="btn btn-success" id="gerarPDF">Gerar PDF</a>
+                {% endif %}
             </div>
             <div class="col-md-6">
                 <h4>Agrupamento</h4>
@@ -31,11 +35,11 @@
             </div>
         </div>
     </form>
-    <div class="mt-4 p-3" style="width: 90%; height: 35%; background-color: white; border: 1px solid black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); overflow-x: hidden; overflow-y: auto;">
+    <div class="mt-4 p-3 table-print" style="width: 100%; height: 35%; background-color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); overflow-x: hidden; overflow-y: auto;">
         {% if dados_agrupados %}
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-4">
-                    <div style="width: 200px; margin-top: 0px; padding: 0px;">
+                    <div style="width: 130px; margin-top: 0px; padding: 0px;">
                         <img src="/media/logo.png" alt="">
                     </div>
                 </div>   
@@ -54,10 +58,11 @@
                     <i>Detalhes: {{ campos_selecionados }}</i>
                 {% endif %}
             </div>    
-            {{ dados_agrupados | safe }}
+                {{ dados_agrupados | safe }}
         {% endif %}
     </div>    
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const addFilterButton = document.getElementById('add_filter');
@@ -87,6 +92,19 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         filtroContainer.appendChild(newFilterField);
     });
+});
+document.getElementById('gerarPDF').addEventListener('click', function () {
+    const element = document.querySelector(".table-print");
+
+    const opt = {
+        margin: [0,0,0,0],
+        filename: 'relatorio.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Mude para portrait se desejar
+    };
+
+    html2pdf().set(opt).from(element).save()
 });
 </script>
 {% endblock content %}

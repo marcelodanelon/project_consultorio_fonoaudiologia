@@ -29,7 +29,7 @@ class MovimentacaoInsumoModel(models.Model):
     data = models.DateField(default=date.today, verbose_name='Data')
 
     def __str__(self) -> str:
-        return f'ID:{self.id} Data:{self.data} Local:{self.local} Operação:{self.operacao}'
+        return f'{self.id}'
 
 class ItensInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True)
