@@ -1,0 +1,104 @@
+{% load custom_template_tag %}
+{% csrf_token %}
+<div style="width: 100%;height: 600px;overflow-y: auto;">
+    {{formTeleSet.management_form}}
+    {% for form in formTeleSet %} 
+        <div class="form-row-tel ps-3 pe-3 pt-2">
+            <div class="row">
+                <div class="input-group-text d-flex align-items-start">
+                    <div class="col-2 ms-1"> 
+                        <td class="hidden">{{ form.id }}</td>
+                        <label for="{{ form.aTelData.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aTelData.label }}</label>
+                        {{form.aTelData}} 
+                    </div> 
+                    <div class="col-2 ms-1">    
+                        <label for="{{ form.aTelLiga.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aTelLiga.label }}</label>
+                        {{form.aTelLiga}}  
+                    </div> 
+                    <div class="col-7 ms-1">    
+                        <label for="{{ form.aTelObse.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aTelObse.label }}</label>
+                        {{form.aTelObse}}  
+                    </div> 
+                    <div hidden class="col-5 ms-1">    
+                        <label for="{{ form.aTelObse.id_for_label }}" class="form-label d-flex align-items-start">{{ form.DELETE.label }}</label>
+                        {{form.DELETE}}  
+                    </div> 
+                    
+                    <div class="col mt-3"> 
+                        <button class="btn btn-success add-form-row-tel">+</button> 
+                    </div>   
+                </div>                      
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMoreTel(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + prefix + '_set-TOTAL_FORMS').val();
+    console.log(parseInt(total))
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+        forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+        $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
+    $(selector).before(newElement);
+    var conditionRow = $('.form-row-tel:not(:first)');
+    conditionRow.find('.btn.add-form-row-tel')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row-tel').addClass('remove-form-row-tel')
+    .html('-');
+    return false;
+}
+function deleteFormTel(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '_set-TOTAL_FORMS').val());
+    if (total > 1){
+        var divFind = btn.parents('.form-row-tel');
+        var elementFind = divFind.find("input[name$='aTelObse']");
+        var numberElement = elementFind.attr('name').replace(/[^0-9]/g,'')
+        document.getElementById("id_" + prefix + "_set-" + numberElement + "-DELETE").checked = true;
+
+        btn.closest('.form-row-tel').hide();
+
+        var forms = $('.form-row-tel');
+        $('#id_' + prefix + '_set-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row-tel', function(e){
+    e.preventDefault();
+    cloneMoreTel('.form-row-tel:first', 'contatostelefonicosmodel');
+    return false;
+});
+$(document).on('click', '.remove-form-row-tel', function(e){
+    e.preventDefault();
+    deleteFormTel('contatostelefonicosmodel', $(this));
+    return false;
+});
+
+</script>

@@ -13,6 +13,8 @@ class AtendimentoModel(models.Model):
     aProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
     aLocal = models.ForeignKey(LocalModel, verbose_name="Unidade de Atendimento", on_delete=models.SET_NULL, null=True)
     aDataPri = models.DateField(verbose_name="Data 1ª consulta", null=True)
+    aDemanda = models.CharField(max_length=15, choices=[('espontanea', 'Espontânea'), ('telefone', 'Telefone'), ('agendamento', 'Agendamento')], default='espontanea', verbose_name='Demanda')
+    aObsAten = models.TextField(blank=True, null=True, verbose_name='Observações')
     aConhece = models.CharField(max_length=50, null=True, blank=True)
     aDifiEsc = models.CharField(max_length=50, null=True, blank=True)
     aDifiPio = models.CharField(max_length=50, null=True, blank=True)
@@ -72,6 +74,17 @@ class AtendimentoModel(models.Model):
     def __str__(self) -> str:
         return f'{self.pk} - {self.aDataPri} {self.aClient}'
     
+class ContatosTelefonicosModel(models.Model):
+    aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    aDemanda = models.CharField(max_length=15, choices=[('telefone', 'Telefone'), ('espontanea', 'Espontânea'), ('agendamento', 'Agendamento')], default=2, verbose_name='Demanda')
+    aTelData = models.DateField(verbose_name='Data Telefonema')
+    aTelLiga = models.CharField(max_length=20, verbose_name='Telefone')
+    aTelObse = models.CharField(max_length=50,blank=True, null=True, verbose_name='Observações')
+
+    def __str__(self):
+        return f'{self.aTelData} - {self.aTelLiga}'
+    
+
 class AnamneseModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
     aDataAna = models.DateField(default=date.today)

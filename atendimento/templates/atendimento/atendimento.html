@@ -7,9 +7,21 @@
 <script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
 <script>
   $(document).ready(function($){
+    var SPMaskBehavior = function (val) {
+      return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+    spOptions = {
+      onKeyPress: function(val, e, field, options) {
+          field.mask(SPMaskBehavior.apply({}, arguments), options);
+        }
+    };
     $('.mask-date').mask('00/00/0000');  
+    $('.mask-telefone').mask(SPMaskBehavior, spOptions);
     $(document).on("focus", ".mask-date", function() {
       $(this).mask('00/00/0000');
+    });
+    $(document).on("focus", ".mask-telefone", function() {
+      $('.mask-telefone').mask(SPMaskBehavior, spOptions);
     });
   })
 </script>
@@ -39,11 +51,35 @@
       .removeClass('btn-success').addClass('btn-danger')
       .removeClass('add-form-row').addClass('remove-form-row')
       .html('-');
+
+      var conditionRow = $('.form-row-tel:not(:first)');
+      conditionRow.find('.btn.add-form-row-tel')
+      .removeClass('btn-success').addClass('btn-danger')
+      .removeClass('add-form-row-tel').addClass('remove-form-row-tel')
+      .html('-');
+
+      $('#id_aDemanda').prop('disabled', false);
+      if ($('[name=updateAtendimento]').val() == 1){
+        $('#id_aDemanda').prop('disabled', true);
+      }
+      $('#btn_gravar').on('click', function(){
+        $('#id_aDemanda').prop('disabled', false);
+      });
+      
+      $('#id_aDemanda').on('change', function(){
+        if ($(this).val() == 'telefone'){
+            $('#abaTelefonemas').prop('hidden', false);
+        } else {
+            $('#abaTelefonemas').prop('hidden', true);
+        }
+      });
+      $('#id_aDemanda').trigger('change');
   });
   </script>
   <div class="container" style="padding:1px 16px;">
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'first')" id="defaultOpen">Dados Iniciais</button>
+      <button hidden class="tablinks" onclick="openTab(event, 'additional_first')" id="abaTelefonemas">Telefonemas</button>
       <button class="tablinks" onclick="openTab(event, 'second')">Anamnese</button>
       <button class="tablinks" onclick="openTab(event, 'third')">Aparelho</button>
       <button class="tablinks" onclick="openTab(event, 'fourth')">Acompanhamento</button>
@@ -57,6 +93,10 @@
       <!-- Conteúdo da Primeira Aba -->
       <div id="first" class="tabcontent">
         {% include 'atendimento/pages_atendimentos/page1_at.html' %}
+      </div>
+      <!-- Conteúdo da Adicionar para aba telefonemas -->
+      <div id="additional_first" class="tabcontent">
+        {% include 'atendimento/pages_atendimentos/page1_at_additional.html' %} 
       </div>
       <!-- Conteúdo da Segunda Aba -->
       <div id="second" class="tabcontent">
@@ -72,7 +112,7 @@
       </div>   
 
       <div style="position: absolute; bottom: 20%; ">        
-        <button class="btn btn-success me-1" type="submit">Gravar</button>
+        <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
     </form>
           {% if option_delete == 'yes'%}
           <form action="{% url 'storage:deleteInsumo' insumo.id %}" method="POST">

@@ -1,4 +1,4 @@
-from atendimento.models import AtendimentoModel, AnamneseModel
+from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
 from django import forms
 
 class AtendimentoForm(forms.ModelForm):
@@ -12,6 +12,9 @@ class AtendimentoForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['aLocal'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aDemanda'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['aDataPri'].widget.attrs.update({
@@ -39,6 +42,9 @@ class AtendimentoForm(forms.ModelForm):
         })
         self.fields['aTrabRui'].label = 'Já trabalhou em ambiente ruidoso? Por quanto tempo?'
         self.fields['aTrabRui'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aObsAten'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['aTelevis'].label = 'Televisão'
@@ -241,8 +247,8 @@ class AtendimentoForm(forms.ModelForm):
 
     class Meta:
         model = AtendimentoModel
-        fields = ('aClient', 'aProfessional', 'aLocal','aDataPri', 'aConhece', 
-                  'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 
+        fields = ('aClient', 'aProfessional', 'aLocal', 'aDemanda', 'aDataPri', 'aConhece', 
+                  'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 'aObsAten', 
                   'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
                   'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',
                   'aZumbido', 'aCoceira', 'aOtiteOO','aDorOOOO', 'aCiruOuv', 
@@ -253,6 +259,26 @@ class AtendimentoForm(forms.ModelForm):
                   'aValApar', 'aLadoInd', 'aFormPag', 'aSaiTest', 'aRetTest',
                   'aComClik', 'aSemClik', 'aClikOOD', 'aClikOOE', 'aTuboOOD', 
                   'aTuboOOE', 'aReceOOD', 'aReceOOE', 'aSituaca')
+
+class ContatosTelefonicosForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['aTelData'].widget.attrs.update({
+            'class':'form-control mask-date',
+            'required': True,
+        })
+        self.fields['aTelLiga'].widget.attrs.update({
+            'class':'form-control mask-telefone',
+            'required': True,
+        })
+        self.fields['aTelObse'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = ContatosTelefonicosModel
+        fields = ('aTelData', 'aTelLiga', 'aTelObse')
 
 class AnamneseForm(forms.ModelForm):
     aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
