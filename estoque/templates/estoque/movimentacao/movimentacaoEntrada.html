@@ -41,20 +41,79 @@
         .removeClass('add-form-row').addClass('remove-form-row')
         .html('-');
 
-        var items_estoque;
-        var local = $("#id_local").children("option:selected").val();
-        if(local!=''){
-            items_estoque = $.ajax({
-                url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   
-                type: "get",     
-                async: false,  
-                data: $("#search").serialize(),    
-                success: function (data){
-                    data_items = data.results 
-                    console.log(data_items)
-                },                 
-            });
-        };
+        //ação ao selecionar insumo
+        var items_insumo;
+        var items_grupo;
+        $(document).on('change', '[id$=-insumo]', function(e){
+            var insumo = $(this).children("option:selected").val();
+            if(insumo!=''){
+                items_insumo = $.ajax({
+                    url: "{% url 'estoque:getJSONinsumo' %}?searchInsumo=" + insumo,   
+                    type: "get",     
+                    async: false,  
+                    data: $("#search").serialize(),    
+                    success: function (data){
+                        data_items = data.results 
+                        var jsonDataInsumo = JSON.parse(data.results);
+                        // pegando o grupo do insumo
+                        var grupo = jsonDataInsumo[0].fields.grupoInsumo;
+                        if(grupo!=null){
+                            items_grupo = $.ajax({
+                                url: "{% url 'estoque:getJSONgrupo' %}?searchGrupo=" + grupo,   
+                                type: "get",     
+                                async: false,  
+                                data: $("#search").serialize(),    
+                                success: function (data){            
+                                    var jsonDataGrupo = JSON.parse(data.results);
+                                    
+                                    var controle = jsonDataGrupo[0].fields.controleDeCompra;
+                                },                 
+                            });
+                        }else{
+                            items_grupo = null
+                        }
+                    },                 
+                });
+            };
+            // verifica se o grupo do insumo está configurado para controle por compra
+            var controlaCompra = 'nao'
+            var grupos_gruposDeInsumos = null
+            if (items_grupo && items_grupo.responseJSON) {
+                var resultJSON = items_grupo.responseJSON;
+                var resultsArray = JSON.parse(resultJSON.results);
+                var primeiroResultado = resultsArray[0];
+                var grupos_gruposDeInsumos = primeiroResultado.fields.perfis;
+                var controlaCompra = primeiroResultado.fields.controleDeCompra;
+            }
+
+            // verifica se grupos do usuários esta em grupos do insumo selecionado
+            var grupos_usuario = $('#groups_user').val()
+            if (grupos_usuario !== null && grupos_gruposDeInsumos !== null) {
+                var usuarioEstaEmGrupoDeInsumos = false;
+                for (var i = 0; i < grupos_usuario.length; i++) {
+                    var grupoUsuario = grupos_usuario[i];
+                    
+                    for (var j = 0; j < grupos_gruposDeInsumos.length; j++) {
+                        var grupoInsumo = grupos_gruposDeInsumos[j];                   
+                        if (grupoUsuario === grupoInsumo) {
+                            usuarioEstaEmGrupoDeInsumos = true;
+                            break; 
+                        }
+                    }                    
+                    if (usuarioEstaEmGrupoDeInsumos) {
+                        break; 
+                    }
+                }
+            }
+
+            if (controlaCompra == 'sim' && usuarioEstaEmGrupoDeInsumos) {
+                var valorCompra = $(this).parent().parent().find('#div_valorCompra');
+                valorCompra.prop('hidden', false);
+            } else {
+                var valorCompra = $(this).parent().parent().find('#div_valorCompra');
+                valorCompra.prop('hidden', true);
+            }
+        });  
 
         //se a operacao for saída, redireciona a página
         $("#id_operacao").change(function(){
@@ -111,6 +170,7 @@
     <h3>{{name_screen}}</h3>
     <form action="{{form_action}}" method="post" class="container-all form-horizontal" id="search">
         {% csrf_token %}
+        <input hidden id="groups_user" value="{{groups_user}}">
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
         <div class="row align-items-center">
             {% for field in formMov %}
@@ -129,7 +189,7 @@
                 <div class="form-row ps-3 pe-3 pt-2">
                     <div class="row">
                         <div class="input-group-text d-flex align-items-start">
-                            <input id="isUpdate" type="int" value="{{isUpdate}}" hidden>
+                            <input hidden id="isUpdate" type="int" value="{{isUpdate}}">
                             <div class="col-2 ms-2"> 
                                 {{form.errors}}
                                 <td class="hidden">{{ form.id }}</td>
@@ -148,12 +208,10 @@
                                 <label for="{{ form.local.id_for_label }}" class="form-label d-flex align-items-start">{{ form.local.label }}</label>
                                 {{form.local}}  
                             </div> 
-                            {% if 'Administrador' in groups_user %}
-                                <div class="col-1 ms-2"> 
-                                    <label for="{{ form.valorCompra.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorCompra.label }}</label>
-                                    {{ form.valorCompra }}
-                                </div>                                 
-                            {% endif %}
+                            <div hidden class="col-1 ms-2" id="div_valorCompra"> 
+                                <label for="{{ form.valorCompra.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorCompra.label }}</label>
+                                {{ form.valorCompra }}
+                            </div>                                 
                             <div class="col-1 ms-2"> 
                                 <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
                                 {{ form.valorUnitario }}
@@ -175,9 +233,11 @@
                                 {{form.DELETE}}  
                             </div> 
                             
-                            <div id="btnAddRow" class="col mt-3 me-0"> 
-                                <button class="btn btn-success add-form-row">+</button> 
-                            </div>   
+                            <div class="col mt-3">
+                                <div class="text-end"> <!-- Use a classe text-end para alinhar à direita -->
+                                    <button id="btnAddRow" class="btn btn-success add-form-row">+</button>
+                                </div>
+                            </div>  
                         </div>                      
                     </div>
                 </div>

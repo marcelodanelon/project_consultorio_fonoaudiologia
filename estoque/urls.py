@@ -20,5 +20,8 @@ urlpatterns = [
     path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
     path('movimentacaoInsumoSaida/', movimentacao.movimentacaoInsumoSaida, name='movimentacaoInsumoSaida'),
     path('<int:movimentacao_id>/movimentacaoInsumoUpdate/', movimentacao.movimentacaoInsumoUpdate, name='movimentacaoInsumoUpdate'),
+
     path('getJSONitem/', movimentacao.getJSONitem, name='getJSONitem'),
+    path('getJSONinsumo/', movimentacao.getJSONinsumo, name='getJSONinsumo'),
+    path('getJSONgrupo/', movimentacao.getJSONgrupo, name='getJSONgrupo'),
 ]

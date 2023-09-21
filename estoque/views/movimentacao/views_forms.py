@@ -4,9 +4,10 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from babel.numbers import format_currency
+from django.core import serializers
 from django.http import JsonResponse
 from estoque.forms import MovimentacaoInsumoForm, ItensMovimentacaoInsumoForm, ItensInsumoForm
-from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, ItensInsumoModel
+from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, ItensInsumoModel,InsumoModel, GrupoInsumoModel
 
 @login_required(login_url='home:loginUser')
 def getJSONitem(request):
@@ -14,6 +15,32 @@ def getJSONitem(request):
         q = int(request.GET.get('searchLocal'))
         model = list(ItensInsumoModel.objects.filter(local=q).exclude(quantidade=0).values())
         return JsonResponse(data={'results': model})
+
+@login_required(login_url='home:loginUser')
+def getJSONinsumo(request):
+    if request.GET.get('searchInsumo'):
+        q = int(request.GET.get('searchInsumo'))
+        model = InsumoModel.objects.filter(pk=q).first()
+        if model:
+            model_data = serializers.serialize('json', [model])
+            return JsonResponse(data={'results': model_data}, safe=False)
+        else:
+            return JsonResponse(data={'results': None})
+    else:
+        return JsonResponse(data={'results': None})
+    
+@login_required(login_url='home:loginUser')
+def getJSONgrupo(request):
+    if request.GET.get('searchGrupo'):
+        q = int(request.GET.get('searchGrupo'))
+        model = GrupoInsumoModel.objects.filter(pk=q).first() 
+        if model:
+            model_data = serializers.serialize('json', [model])
+            return JsonResponse(data={'results': model_data}, safe=False)
+        else:
+            return JsonResponse(data={'results': None})
+    else:
+        return JsonResponse(data={'results': None})
 
 @login_required(login_url='home:loginUser')
 def movimentacaoInsumoEntrada(request):
@@ -125,7 +152,7 @@ def movimentacaoInsumoEntrada(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
-        'groups_user': request.user.groups.values_list('name', flat=True),
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'form_action': form_action,
         'formMov': form,
         'formIte': formset,
@@ -142,7 +169,7 @@ def movimentacaoInsumoEntrada(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
-        'groups_user': request.user.groups.values_list('name', flat=True),
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'form_action': form_action,
         'items_saida': items,
         'formMov': formMov,
@@ -211,7 +238,7 @@ def movimentacaoInsumoSaida(request):
             'title': 'Estoque',
             'name_module': 'Estoque',
             'name_screen': 'Movimentação de Insumos',
-            'groups_user': request.user.groups.values_list('name', flat=True),
+            'groups_user': list(request.user.groups.values_list('name', flat=True)),
             'form_action': form_action,
             'formMov': form,
             'formIte': formIte,
@@ -229,7 +256,7 @@ def movimentacaoInsumoSaida(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
-        'groups_user': request.user.groups.values_list('name', flat=True),
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'form_action': form_action,
         'items_saida': items,
         'formMov': formMov,
@@ -261,7 +288,7 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
-        'groups_user': request.user.groups.values_list('name', flat=True),
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'items_saida': items,
         'formMov': formMov,
         'form_action': form_action,
