@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-import locale
-from django.db.models import Sum
-from decimal import Decimal
+from babel.numbers import format_currency
 from django.urls import reverse
 from django.contrib import messages
 from estoque.forms import InsumoForm, MovimentacaoInsumoForm
@@ -17,7 +15,7 @@ def createInsumo(request):
         formInsumo = InsumoForm(request.POST)
 
         if formInsumo.is_valid():
-            form = formInsumo.save()
+            formInsumo.save()
             messages.success(request, 'Insumo cadastrado com sucesso!')
             return redirect('estoque:listInsumo')
 
@@ -67,13 +65,12 @@ def updateInsumo(request, insumo_id):
     valor_total = 0.00
 
     for item in itemsComSaldo:
-        # Remova todos os caracteres não numéricos e converta para Decimal
-        valor_float = item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip()
+        valor_float = item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip()
         valor_total += float(valor_float)
         quantidade_total += item.quantidade
     
     insumo.quantidade = str(quantidade_total)
-    insumo.valor = str(valor_total)
+    insumo.valor = format_currency(valor_total, 'BRL', locale='pt_BR')
 
     if request.method == 'POST':
         formClient = InsumoForm(request.POST, instance=insumo)

@@ -2,8 +2,8 @@ from django import forms
 from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel
 
 class InsumoForm(forms.ModelForm):
-    valor = forms.FloatField(disabled = True, required=False)
-    quantidade = forms.IntegerField(disabled = True, required=False)
+    valor = forms.CharField(disabled = True, required=False)
+    quantidade = forms.CharField(disabled = True, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

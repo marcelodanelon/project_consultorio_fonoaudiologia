@@ -41,7 +41,10 @@ def movimentacaoInsumoEntrada(request):
             modelSet = formset.save(commit=False)
             modelSetInsumo = formsetInsumo.save(commit=False)
 
-            # replica para o Itens no cadastro do Insumo
+            for item in modelSet:
+                item.local = model.local
+                item.dataEntrada = model.data
+            # replica para o Itens no cadastro do Insumo | valores e quantidades serão ajustados mais abaixo
             for item in modelSet:
                 novo_item_insumo = ItensInsumoModel(
                     movimentacao=item.movimentacao,  
@@ -56,22 +59,24 @@ def movimentacaoInsumoEntrada(request):
                 )
                 modelSetInsumo.append(novo_item_insumo)
 
+            insumo = None
             # verifica se há lote existente
             for item in modelSet:
                 try:
-                    insumo = ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()
-                    # retira pontos e virgulas e converte em reais
-                    insumo_valorUnitario = float(insumo.valorUnitario.replace(",","").replace(".",""))
-                    insumo_valorUnitario = format_currency(insumo_valorUnitario / 100, 'BRL', locale='pt_BR')
-                except:
+                    insumo = ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).get()
+                    insumo_valorUnitario = float(insumo.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                    insumo_valorUnitario = format_currency(insumo_valorUnitario, 'BRL', locale='pt_BR')
+                except Exception as e:
                     insumo = None
+                    print(e)
 
                 # retira pontos e virgulas e converte em reais
-                item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))                
-                item_valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
+                item_valorUnitario = float(item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())                
+                item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
 
                 # verifica valor unitario divergente
                 if insumo != None and item_valorUnitario != insumo_valorUnitario:
+                    print(item_valorUnitario, insumo_valorUnitario)
                     messages.error(request, f'Valor Unitário para o {insumo}, diferente da série/lote existente.')
                     success = False
                     break
@@ -81,7 +86,10 @@ def movimentacaoInsumoEntrada(request):
                     # controle inclusão de entrada para lote existente ou novo 
                     if insumo:                    
                         totalQuantidade = insumo.quantidade + item.quantidade
-                        totalValor = float(insumo.valorTotal) + float(item.valorTotal)
+                        valorTotal_insumo = float(insumo.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                        valorTotal_item = float(item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                        totalValor = valorTotal_insumo + (valorTotal_item/100)
+                        totalValor = format_currency(totalValor, 'BRL', locale='pt_BR')
                         ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
                         ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                         messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
@@ -92,15 +100,16 @@ def movimentacaoInsumoEntrada(request):
                         item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
                         item_valorCompra = float(item.valorCompra.replace(",","").replace(".",""))
                         item.valorCompra = format_currency(item_valorCompra / 100, 'BRL', locale='pt_BR')
-                        item.local = model.local
-                        item.dataEntrada = model.data
                         item.save()
 
                 for item in modelSetInsumo:
                     # controle inclusão de entrada para lote existente ou novo 
                     if insumo:                    
                         totalQuantidade = insumo.quantidade + item.quantidade
-                        totalValor = float(insumo.valorTotal) + float(item.valorTotal)
+                        valorTotal_insumo = float(insumo.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                        valorTotal_item = float(item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                        totalValor = valorTotal_insumo + (valorTotal_item/100)
+                        totalValor = format_currency(totalValor, 'BRL', locale='pt_BR')
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                         messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
@@ -109,8 +118,6 @@ def movimentacaoInsumoEntrada(request):
                         item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
                         item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
                         item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
-                        item.local = model.local
-                        item.dataEntrada = model.data
                         item.save()
                 return redirect('estoque:index')
 
@@ -171,6 +178,10 @@ def movimentacaoInsumoSaida(request):
             model = form.save(commit=False)
             modelSet = formset.save(commit=False)
 
+            for item in modelSet:
+                item.local = model.local
+                item.dataEntrada = model.data
+
             # verifica se há saldo para saída
             for item in modelSet:
                 insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()                   
@@ -183,13 +194,14 @@ def movimentacaoInsumoSaida(request):
             if success:
                 form.save()
                 for item in modelSet:
-                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get() 
+                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).get() 
                     totalQuantidade = insumo.quantidade - item.quantidade
-                    totalValor = float(insumo.valorTotal) - float(item.valorTotal)
+                    valorTotal_insumo = float(insumo.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                    valorTotal_item = float(item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
+                    totalValor = valorTotal_insumo - (valorTotal_item/100)
+                    totalValor = format_currency(totalValor, 'BRL', locale='pt_BR')
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(quantidade=totalQuantidade)
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(valorTotal=totalValor)
-                    item.local = model.local
-                    item.dataEntrada = model.data
                     item.save()
                 return redirect('estoque:index')
             else:
