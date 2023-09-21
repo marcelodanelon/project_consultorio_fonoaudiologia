@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from estoque.models import InsumoModel, ItensInsumoModel
 from django.core.paginator import Paginator
 from django.db.models import Sum
+from django.contrib import messages
 
 @login_required(login_url='home:loginUser')
 def index(request):
@@ -17,7 +18,8 @@ def index(request):
         for item in items_agrupados:
             if insumo.descricao == item["insumo__descricao"]:
                 if int(item["total_quantidade"]) < int(insumo.quantidadeMin):
-                    text_estoqueMin += (f'{item["insumo__descricao"]} abaixo da quantidade minima na unidade: {item["local__name"]}<br>')
+                    text_estoqueMin += (f'<p>- {item["insumo__descricao"]} abaixo da quantidade minima ({insumo.quantidadeMin}) na unidade: {item["local__name"]}</p>')
+    messages.info(request, text_estoqueMin)
 
     context = {
         'name_module': 'Estoque',
