@@ -5,11 +5,11 @@
 {% block content %}
 <div class="container" style="padding:1px 16px;">
     <div class="d-flex justify-content-between">
-        <h3>Insumos</h3> <a href="{% url 'estoque:createInsumo' %}" class="btn btn-primary">Cadastrar</a>
+        <h3>Grupos de Insumos</h3> <a href="{% url 'estoque:createGrupo' %}" class="btn btn-primary">Cadastrar</a>
     </div>
     <br>
 <div class="responsive-table">
-    <form action="{% url 'estoque:searchInsumo' %}" method="get">
+    <form action="{% url 'estoque:searchGrupo' %}" method="get">
         <input class="form-control" type="text" name="q" placeholder="Digite um nome">
     </form>
     <table class="clients-table">
@@ -20,15 +20,15 @@
             </tr>
         </thead>
         <tbody>
-            {% for insumo in page_obj %}
+            {% for grupo in page_obj %}
                 <tr class="table-row">
                     <td class="table-cel">
-                        <a href="{% url 'estoque:updateInsumo' insumo.id %}" class="table-link">
-                            {{ insumo.id }}
+                        <a href="{% url 'estoque:updateGrupo' grupo.id %}" class="table-link">
+                            {{ grupo.id }}
                         </a>
                     </td>
                     <td class="table-cel">
-                            {{ insumo.descricao }}
+                            {{ grupo.descricao }}
                     </td>                  
                 </tr>
             {% endfor %}

@@ -1,5 +1,5 @@
 from django import forms
-from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel
 
 class InsumoForm(forms.ModelForm):
     valor = forms.FloatField(disabled = True, required=False)
@@ -27,6 +27,21 @@ class InsumoForm(forms.ModelForm):
     class Meta:
         model = InsumoModel
         fields = '__all__'
+
+class GrupoInsumoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['descricao'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['controleDeCompra'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = GrupoInsumoModel
+        fields = ('descricao', 'controleDeCompra',)
 
 class ItensInsumoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -1,0 +1,89 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+  <form action="{{form_action}}" method="post" class="form-control" id="form_grupo">
+    {% csrf_token %}   
+        <div class="col"> 
+          <label for="{{ form.descricao.id_for_label }}" class="form-label">{{ form.descricao.label }}</label>
+          {{ form.descricao }}       
+        </div> <br>  
+        <div class="col-2"> 
+          <label for="{{ form.controleDeCompra.id_for_label }}" class="form-label">{{ form.controleDeCompra.label }}</label>
+          {{ form.controleDeCompra }}       
+        </div> <br>  
+    <div hidden id="card_perfis">                    
+      <label class="form-label">Perfis Permitidos</label>
+      {{grupos_disponiveis.name}}
+      <table>
+        <tr>
+            <td style="">
+              <select class="form-select" multiple="multiple" name="grupos_disponiveis[]" id="grupos_disponiveis" style="width: 150px; height: 200px;">
+                {% for grupo in grupos_disponiveis %}
+                    <option value="{{ grupo.name }}">{{ grupo.name }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td>
+                <div class="controls" style="margin-left: 10px; margin-right: 10px;">
+                    <a class="btn btn-primary" id="mover_para_direita">&gt;</a><br><br>
+                    <a class="btn btn-primary" id="mover_para_esquerda">&lt;</a>
+                </div>
+            </td>
+            <td style="">
+              <select class="form-select" multiple="multiple" name="grupos_selecionados[]" id="grupos_selecionados" style="width: 150px; height: 200px;">
+                {% for grupo in grupos_selecionados %}
+                    <option value="{{ grupo.name }}">{{ grupo.name }}</option>
+                {% endfor %}
+              </select>
+            </td>
+        </tr>
+      </table>
+    </div>   
+    <div class="form-content d-flex flex-row bd-highlight mb-3">        
+      <button class="btn btn-success me-1" type="submit">Gravar</button>
+      <a href="{% url 'estoque:listGrupo' %}" class="btn btn-primary">Voltar</a>
+    </div>
+  </form> 
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#mover_para_direita').click(function() {
+          $('#grupos_disponiveis option:selected').each(function() {
+              var selectedOption = $(this);
+              selectedOption.appendTo('#grupos_selecionados');
+          });
+        });
+
+        $('#mover_para_esquerda').click(function() {
+          $('#grupos_selecionados option:selected').each(function() {
+              var selectedOption = $(this);
+              selectedOption.appendTo('#grupos_disponiveis');
+          });
+        });
+
+        if ($('#id_controleDeCompra').val() == 'sim') {
+          $('#card_perfis').prop('hidden', false)
+        }else{
+          $('#card_perfis').prop('hidden', true)
+        };
+
+        $('#id_controleDeCompra').on('change', function(){
+          if ($('#id_controleDeCompra').val() == 'sim') {
+            $('#card_perfis').prop('hidden', false)
+          }else{
+            $('#card_perfis').prop('hidden', true)
+          }
+        });
+        
+        $('#form_grupo').submit(function() {
+          $('#grupos_disponiveis option').attr('selected', 'selected');
+          $('#grupos_selecionados option').attr('selected', 'selected');
+        });
+    });
+</script>
+{% endblock content %}

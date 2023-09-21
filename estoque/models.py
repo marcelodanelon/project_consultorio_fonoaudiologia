@@ -13,6 +13,14 @@ class MarcaModel(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class GrupoInsumoModel(models.Model):
+    descricao = models.CharField(max_length=50, verbose_name='Descrição')
+    perfis = models.CharField(max_length=50, blank=True, null=True, verbose_name='Perfis')
+    controleDeCompra = models.CharField(max_length=3, choices=[("nao", "Não"),("sim", "Sim")], default=1, verbose_name='Controle de Compra')
+
+    def __str__(self) -> str:
+        return self.descricao
+
 class InsumoModel(models.Model):
     descricao = models.CharField(max_length=50, verbose_name='Descrição')
     valor = models.FloatField(verbose_name='Valor', null=True, blank=True, default=0.0)

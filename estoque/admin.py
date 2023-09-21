@@ -1,8 +1,12 @@
 from django.contrib import admin
-from estoque.models import MarcaModel, InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
+from estoque.models import MarcaModel, InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel
 
 @admin.register(MarcaModel)
 class MarcaAdmin(admin.ModelAdmin):
+    ...
+
+@admin.register(GrupoInsumoModel)
+class GrupoInsumoAdmin(admin.ModelAdmin):
     ...
 
 @admin.register(InsumoModel)

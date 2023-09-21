@@ -1,29 +1,16 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from estoque.models import InsumoModel
+from estoque.models import GrupoInsumoModel
 from django.core.paginator import Paginator
 
 @login_required(login_url='home:loginUser')
-def index(request):
-    context = {
-        'name_module': 'Estoque',
-        'title': 'Estoque',
-    }
+def listGrupo(request):
+    form_action = reverse('estoque:createGrupo')
 
-    return render(
-        request,
-        'estoque/index.html',
-        context
-    )
+    grupos = GrupoInsumoModel.objects.all().order_by('id')
 
-@login_required(login_url='home:loginUser')
-def listInsumo(request):
-    form_action = reverse('estoque:createInsumo')
-
-    insumos = InsumoModel.objects.all().order_by('id')
-
-    paginator = Paginator(insumos, 14)
+    paginator = Paginator(grupos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -37,21 +24,21 @@ def listInsumo(request):
 
     return render(
         request,
-        'estoque/insumo/search.html',
+        'estoque/grupo/search.html',
         context
     )
 
 @login_required(login_url='home:loginUser')
-def searchInsumo(request):
-    search_insumo = request.GET.get('q','').strip()
+def searchGrupo(request):
+    search_grupo = request.GET.get('q','').strip()
 
-    if search_insumo == "":
+    if search_grupo == "":
         return redirect('estoque:listInsumo')
 
-    if search_insumo.isdigit():
-        insumos = InsumoModel.objects.filter(id=int(search_insumo)).order_by('id')
+    if search_grupo.isdigit():
+        grupos = GrupoInsumoModel.objects.filter(id=int(search_grupo)).order_by('id')
 
-    paginator = Paginator(insumos, 14)
+    paginator = Paginator(grupos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -63,6 +50,6 @@ def searchInsumo(request):
 
     return render(
         request,
-        'estoque/insumo/search.html',
+        'estoque/grupo/search.html',
         context
     )

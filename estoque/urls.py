@@ -1,5 +1,5 @@
 from django.urls import path
-from estoque.views import movimentacao, insumo
+from estoque.views import movimentacao, insumo, grupo
 
 app_name = 'estoque'
 
@@ -10,6 +10,11 @@ urlpatterns = [
     path('createInsumo/', insumo.createInsumo, name='createInsumo'),
     path('searchInsumo/', insumo.searchInsumo, name='searchInsumo'),
     path('<int:insumo_id>/updateInsumo/', insumo.updateInsumo, name='updateInsumo'),
+
+    path('listGrupo/', grupo.listGrupo, name='listGrupo'),
+    path('createGrupo/', grupo.createGrupo, name='createGrupo'),
+    path('searchGrupo/', grupo.searchGrupo, name='searchGrupo'),
+    path('<int:grupo_id>/updateGrupo/', grupo.updateGrupo, name='updateGrupo'),
 
     path('listMovimentacaoInsumo/', movimentacao.listMovimentacaoInsumo, name='listMovimentacaoInsumo'),
     path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
