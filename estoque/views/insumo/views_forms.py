@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+import locale
 from django.db.models import Sum
+from decimal import Decimal
 from django.urls import reverse
 from django.contrib import messages
 from estoque.forms import InsumoForm, MovimentacaoInsumoForm
@@ -17,7 +19,7 @@ def createInsumo(request):
         if formInsumo.is_valid():
             form = formInsumo.save()
             messages.success(request, 'Insumo cadastrado com sucesso!')
-            return redirect('estoque:updateInsumo',form.id)
+            return redirect('estoque:listInsumo')
 
         context = {
             'form': formInsumo,
@@ -60,8 +62,18 @@ def updateInsumo(request, insumo_id):
     form_action = reverse('estoque:updateInsumo', args=(insumo_id,))
     itemsComSaldo = ItensInsumoModel.objects.filter(insumo=insumo_id).filter(local=local).exclude(quantidade=0).order_by('-dataEntrada')
     itemsSemSaldo = ItensInsumoModel.objects.filter(insumo=insumo_id).filter(local=local).filter(quantidade=0).order_by('-dataEntrada')
-    insumo.quantidade = itemsComSaldo.aggregate(Sum('quantidade'))['quantidade__sum']
-    insumo.valor = itemsComSaldo.aggregate(Sum('valorTotal'))['valorTotal__sum']
+
+    quantidade_total = 0
+    valor_total = 0.00
+
+    for item in itemsComSaldo:
+        # Remova todos os caracteres não numéricos e converta para Decimal
+        valor_float = item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip()
+        valor_total += float(valor_float)
+        quantidade_total += item.quantidade
+    
+    insumo.quantidade = str(quantidade_total)
+    insumo.valor = str(valor_total)
 
     if request.method == 'POST':
         formClient = InsumoForm(request.POST, instance=insumo)

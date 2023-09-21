@@ -81,8 +81,8 @@
         });
         
         $('#form_grupo').submit(function() {
-          $('#grupos_disponiveis option').attr('selected', 'selected');
-          $('#grupos_selecionados option').attr('selected', 'selected');
+          $('#grupos_disponiveis option').prop('selected', true);
+          $('#grupos_selecionados option').prop('selected', true);
         });
     });
 </script>

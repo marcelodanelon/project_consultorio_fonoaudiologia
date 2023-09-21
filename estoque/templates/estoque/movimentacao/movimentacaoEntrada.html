@@ -121,7 +121,7 @@
             {% endfor %}
         </div> <br>
 
-
+        
         {% comment "insumo" %}Formulario Item{% endcomment %}
         <div style="width: 100%;height: 600px;overflow-y: auto;">
             {{formIte.management_form}}
@@ -148,9 +148,15 @@
                                 <label for="{{ form.local.id_for_label }}" class="form-label d-flex align-items-start">{{ form.local.label }}</label>
                                 {{form.local}}  
                             </div> 
+                            {% if 'Administrador' in groups_user %}
+                                <div class="col-1 ms-2"> 
+                                    <label for="{{ form.valorCompra.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorCompra.label }}</label>
+                                    {{ form.valorCompra }}
+                                </div>                                 
+                            {% endif %}
                             <div class="col-1 ms-2"> 
                                 <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
-                                {{form.valorUnitario}} 
+                                {{ form.valorUnitario }}
                             </div> 
                             <div class="col-1 ms-2">    
                                 <label for="{{ form.valorTotal.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorTotal.label }}</label>
@@ -160,7 +166,7 @@
                                 <label for="{{ form.dataValidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataValidade.label }}</label>
                                 {{form.dataValidade}} 
                             </div> 
-                            <div class="col-4 ms-2">    
+                            <div class="col-3 ms-2">    
                                 <label for="{{ form.serie.id_for_label }}" class="form-label d-flex align-items-start">{{ form.serie.label }}</label>
                                 {{form.serie}}  
                             </div> 
@@ -169,7 +175,7 @@
                                 {{form.DELETE}}  
                             </div> 
                             
-                            <div id="btnAddRow" class="col mt-3"> 
+                            <div id="btnAddRow" class="col mt-3 me-0"> 
                                 <button class="btn btn-success add-form-row">+</button> 
                             </div>   
                         </div>                      
@@ -235,15 +241,6 @@
         newElement.find('[name$=-local]').each(function() {
             $(this).prop("selectedIndex", 0).val();
         });
-        //newElement.find('[id$=-dataValidade]')each(function(e){
-        //$(selector).on("click", function(){
-        //    $('.mask-date').mask('00/00/0000');  
-            //$('.mask-money').mask("#.##0,00", {reverse: true});
-        //}) 
-        //$(function($){
-        //    $('.mask-date').mask('00/00/0000');  
-        //    $('.mask-money').mask("#.##0,00", {reverse: true});
-        //})
         total++;
         $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
         $(selector).before(newElement);

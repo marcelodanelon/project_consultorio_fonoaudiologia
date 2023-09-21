@@ -35,7 +35,7 @@
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
-        {% if field.name == 'descricao' or field.name == 'valor' or field.name == 'marca' or field.name == 'situacao' %}  
+        {% if field.name == 'descricao' or field.name == 'valor' or field.name == 'marca' or field.name == 'controle' %}  
         <div class="row align-items-center">
         {% endif %} 
           <div class="col"> 
@@ -52,8 +52,8 @@
             {{ field }}
             {{ field.errors }}
           </div>            
-        {% if field.name == 'descricao' or field.name == 'quantidade' or field.name == 'marca' or field.name == 'situacao' %}    
-        </div> <br> 
+        {% if field.name == 'descricao' or field.name == 'quantidade' or field.name == 'grupoInsumo' or field.name == 'situacao' %}    
+        </div> 
         {% endif %}                                 
       {% endfor %}
       <div class="row">
@@ -94,10 +94,10 @@
                           {{ field.quantidade }}
                         </td>
                         <td class="table-cel">
-                          {{ field.valorUnitario|floatformat:2 }}
+                          {{ field.valorUnitario }}
                         </td> 
                         <td class="table-cel">
-                          {{ field.valorTotal|floatformat:2 }}
+                          {{ field.valorTotal }}
                         </td>                      
                     </tr>
                 {% endfor %}

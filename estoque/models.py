@@ -23,10 +23,12 @@ class GrupoInsumoModel(models.Model):
 
 class InsumoModel(models.Model):
     descricao = models.CharField(max_length=50, verbose_name='Descrição')
-    valor = models.FloatField(verbose_name='Valor', null=True, blank=True, default=0.0)
-    quantidade = models.IntegerField(verbose_name='Quantidade', null=True, blank=True, default=0)
+    valor = models.CharField(max_length=15, verbose_name='Valor', null=True, blank=True, default=0.0)
+    quantidade = models.CharField(max_length=15, verbose_name='Quantidade', null=True, blank=True, default=0)
     marca = models.ForeignKey(MarcaModel, verbose_name='Marca', on_delete=models.SET_NULL, null=True)
-    situacao = models.BooleanField(default=True, verbose_name='Situação')
+    grupoInsumo = models.ForeignKey(GrupoInsumoModel, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Grupo do Insumo')
+    controle = models.CharField(max_length=10, choices=[('lote','Lote'),('quantidade','Quantidade')], default=1, verbose_name='Tipo de Controle')
+    situacao = models.CharField(max_length=3, choices=[('sim','Sim'),('nao','Não')], default=1, verbose_name='Situação')
 
     def __str__(self) -> str:
         return self.descricao
@@ -57,6 +59,7 @@ class ItensMovimentacaoInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True, verbose_name='Movimentação')
     insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
     valorUnitario = models.CharField(max_length=10, verbose_name='Valor Unitario', null=True)
+    valorCompra = models.CharField(max_length=10, verbose_name='Valor Compra', blank=True, null=True)
     valorTotal = models.CharField(max_length=10, verbose_name='Valor Total', null=True)
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)

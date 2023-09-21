@@ -15,7 +15,8 @@ def createGrupo(request):
 
     if request.method == 'POST':
         formGrupo = GrupoInsumoForm(request.POST)
-        grupos_selecionados = request.POST.getlist('grupos_selecionados')
+        grupos_selecionados = request.POST.getlist('grupos_selecionados[]')
+
         if formGrupo.is_valid():
             form = formGrupo.save(commit=False)
             form.perfis = grupos_selecionados
@@ -58,7 +59,7 @@ def createGrupo(request):
 def updateGrupo(request, grupo_id):
     grupo = get_object_or_404(GrupoInsumoModel, pk=grupo_id)
     form_action = reverse('estoque:updateGrupo', args=(grupo_id,))
-    grupos_selecionados = []
+    
     if request.method == 'POST':
         grupos_selecionados = request.POST.getlist('grupos_selecionados[]')
         formGrupo = GrupoInsumoForm(request.POST, instance=grupo)

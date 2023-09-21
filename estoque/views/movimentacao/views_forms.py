@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from babel.numbers import format_currency
 from django.http import JsonResponse
 from estoque.forms import MovimentacaoInsumoForm, ItensMovimentacaoInsumoForm, ItensInsumoForm
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, ItensInsumoModel
@@ -40,6 +41,7 @@ def movimentacaoInsumoEntrada(request):
             modelSet = formset.save(commit=False)
             modelSetInsumo = formsetInsumo.save(commit=False)
 
+            # replica para o Itens no cadastro do Insumo
             for item in modelSet:
                 novo_item_insumo = ItensInsumoModel(
                     movimentacao=item.movimentacao,  
@@ -54,16 +56,22 @@ def movimentacaoInsumoEntrada(request):
                 )
                 modelSetInsumo.append(novo_item_insumo)
 
-            print(modelSetInsumo)
             # verifica se há lote existente
             for item in modelSet:
                 try:
                     insumo = ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()
+                    # retira pontos e virgulas e converte em reais
+                    insumo_valorUnitario = float(insumo.valorUnitario.replace(",","").replace(".",""))
+                    insumo_valorUnitario = format_currency(insumo_valorUnitario / 100, 'BRL', locale='pt_BR')
                 except:
                     insumo = None
 
+                # retira pontos e virgulas e converte em reais
+                item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))                
+                item_valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
+
                 # verifica valor unitario divergente
-                if insumo != None and float(item.valorUnitario.replace(",",".")) != float(insumo.valorUnitario.replace(",",".")):
+                if insumo != None and item_valorUnitario != insumo_valorUnitario:
                     messages.error(request, f'Valor Unitário para o {insumo}, diferente da série/lote existente.')
                     success = False
                     break
@@ -78,7 +86,12 @@ def movimentacaoInsumoEntrada(request):
                         ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                         messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                     else:
-                        item.valorUnitario = item.valorUnitario.replace(",",".")
+                        item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))
+                        item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
+                        item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
+                        item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
+                        item_valorCompra = float(item.valorCompra.replace(",","").replace(".",""))
+                        item.valorCompra = format_currency(item_valorCompra / 100, 'BRL', locale='pt_BR')
                         item.local = model.local
                         item.dataEntrada = model.data
                         item.save()
@@ -92,7 +105,10 @@ def movimentacaoInsumoEntrada(request):
                         ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
                         messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                     else:
-                        item.valorUnitario = item.valorUnitario.replace(",",".")
+                        item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))
+                        item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
+                        item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
+                        item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
                         item.local = model.local
                         item.dataEntrada = model.data
                         item.save()
@@ -102,6 +118,7 @@ def movimentacaoInsumoEntrada(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
+        'groups_user': request.user.groups.values_list('name', flat=True),
         'form_action': form_action,
         'formMov': form,
         'formIte': formset,
@@ -118,6 +135,7 @@ def movimentacaoInsumoEntrada(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
+        'groups_user': request.user.groups.values_list('name', flat=True),
         'form_action': form_action,
         'items_saida': items,
         'formMov': formMov,
@@ -181,6 +199,7 @@ def movimentacaoInsumoSaida(request):
             'title': 'Estoque',
             'name_module': 'Estoque',
             'name_screen': 'Movimentação de Insumos',
+            'groups_user': request.user.groups.values_list('name', flat=True),
             'form_action': form_action,
             'formMov': form,
             'formIte': formIte,
@@ -198,6 +217,7 @@ def movimentacaoInsumoSaida(request):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
+        'groups_user': request.user.groups.values_list('name', flat=True),
         'form_action': form_action,
         'items_saida': items,
         'formMov': formMov,
@@ -229,6 +249,7 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
         'title': 'Estoque',
         'name_module': 'Estoque',
         'name_screen': 'Movimentação de Insumos',
+        'groups_user': request.user.groups.values_list('name', flat=True),
         'items_saida': items,
         'formMov': formMov,
         'form_action': form_action,

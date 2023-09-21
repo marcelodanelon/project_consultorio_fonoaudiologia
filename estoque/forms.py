@@ -20,8 +20,14 @@ class InsumoForm(forms.ModelForm):
         self.fields['marca'].widget.attrs.update({
             'class':'form-control dropdown',
         })
+        self.fields['grupoInsumo'].widget.attrs.update({
+            'class':'form-control dropdown',
+        })
+        self.fields['controle'].widget.attrs.update({
+            'class':'form-control dropdown',
+        })
         self.fields['situacao'].widget.attrs.update({
-            'class':'form-check-label',
+            'class':'form-control dropdown',
         })
 
     class Meta:
@@ -90,6 +96,12 @@ class ItensMovimentacaoInsumoForm(forms.ModelForm):
             'required': True,
         })
         self.fields['valorUnitario'].widget.attrs.update({
+            'class': 'form-control mask-money',
+            'required': True,
+            'value': '0,00',
+            'min': "0",
+        })
+        self.fields['valorCompra'].widget.attrs.update({
             'class': 'form-control mask-money',
             'required': True,
             'value': '0,00',
