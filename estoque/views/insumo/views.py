@@ -1,14 +1,28 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from estoque.models import InsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel
 from django.core.paginator import Paginator
+from django.db.models import Sum
 
 @login_required(login_url='home:loginUser')
 def index(request):
+    items_agrupados = ItensInsumoModel.objects.values('insumo__descricao', 'local__name').annotate(total_quantidade=Sum('quantidade')).filter(total_quantidade__gt=0)
+    # for item in items_agrupados:
+    #     print(f'insumo: {item["insumo__descricao"]} - local: {item["local__name"]} - quantidade: {item["total_quantidade"]}')
+    
+    text_estoqueMin = ""
+    insumos = InsumoModel.objects.exclude(quantidadeMin=None)
+    for insumo in insumos:
+        for item in items_agrupados:
+            if insumo.descricao == item["insumo__descricao"]:
+                if int(item["total_quantidade"]) < int(insumo.quantidadeMin):
+                    text_estoqueMin += (f'{item["insumo__descricao"]} abaixo da quantidade minima na unidade: {item["local__name"]}<br>')
+
     context = {
         'name_module': 'Estoque',
         'title': 'Estoque',
+        'text_estoqueMin': text_estoqueMin,
     }
 
     return render(

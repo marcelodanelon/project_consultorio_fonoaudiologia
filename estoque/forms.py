@@ -16,6 +16,11 @@ class InsumoForm(forms.ModelForm):
         })
         self.fields['quantidade'].widget.attrs.update({
             'class':'form-control',
+            'type': 'number',
+        })
+        self.fields['quantidadeMin'].widget.attrs.update({
+            'class':'form-control',
+            'type': 'number',
         })
         self.fields['marca'].widget.attrs.update({
             'class':'form-control dropdown',
@@ -144,7 +149,10 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         self.fields['operacao'].widget.attrs.update({
             'class': 'form-control',
         })
+        self.fields['tipoMovimentacao'].widget.attrs.update({
+            'class': 'form-control',
+        })
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = ('operacao','local','data')
+        fields = ('operacao','local','data','tipoMovimentacao',)

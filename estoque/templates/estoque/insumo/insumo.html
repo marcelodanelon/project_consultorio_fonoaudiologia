@@ -5,6 +5,7 @@
 {% block content %}
   <script>
     $(document).ready(function(){
+      $("#id_local").prop('required', false)
       // buscar dados do localitems, chamando a view
       $("#id_local").change(function(){
         var local = $(this).children("option:selected").val();
@@ -26,12 +27,9 @@
     });
   </script>
   <div class="container" style="padding:1px 16px;">
-    {% if isCreate != 1 %}
-      <label>Unidade</label>
-      {{ formLocal.local }}
-    {% endif %}
-    <br>
-    {% if local != None or isCreate == 1 %}
+    <div class="col-10">
+      <h3>{{name_screen}}</h3>
+    </div>
     <form action="{{form_action}}" method="post" class="form-control">
       {% csrf_token %}
       {% for field in form %}    
@@ -52,10 +50,16 @@
             {{ field }}
             {{ field.errors }}
           </div>            
-        {% if field.name == 'descricao' or field.name == 'quantidade' or field.name == 'grupoInsumo' or field.name == 'situacao' %}    
+        {% if field.name == 'descricao' or field.name == 'quantidadeMin' or field.name == 'grupoInsumo' or field.name == 'situacao' %}    
         </div> 
         {% endif %}                                 
       {% endfor %}
+      <br>
+      {% if isCreate != 1 %}
+      <label>Unidade</label>
+        {{ formLocal.local }}
+      {% endif %}
+      {% if local != None or isCreate == 1 %}
       <div class="row">
         <div class="col-6 text-center">
           <b>Lotes com Saldo</b>
@@ -143,13 +147,13 @@
               </tbody>
           </table>
         </div>
-      </div>
+      </div>        
+    {% endif %}
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
         <button class="btn btn-success me-1" type="submit">Gravar</button>
         <a href="{% url 'estoque:listInsumo' %}" class="btn btn-primary">Voltar</a>
       </div>
-    </form>          
-    {% endif %}
+    </form>  
   </div>
 {% endblock content %}
 

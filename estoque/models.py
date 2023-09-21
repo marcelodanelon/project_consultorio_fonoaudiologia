@@ -25,6 +25,7 @@ class InsumoModel(models.Model):
     descricao = models.CharField(max_length=50, verbose_name='Descrição')
     valor = models.CharField(max_length=15, verbose_name='Valor', null=True, blank=True, default='0.0')
     quantidade = models.CharField(max_length=15, verbose_name='Quantidade', null=True, blank=True, default='0')
+    quantidadeMin = models.CharField(max_length=5, blank=True, null=True, verbose_name='Estoque Mínimo')
     marca = models.ForeignKey(MarcaModel, verbose_name='Marca', on_delete=models.SET_NULL, null=True)
     grupoInsumo = models.ForeignKey(GrupoInsumoModel, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Grupo do Insumo')
     controle = models.CharField(max_length=10, choices=[('lote','Lote'),('quantidade','Quantidade')], default=1, verbose_name='Tipo de Controle')
@@ -37,6 +38,7 @@ class MovimentacaoInsumoModel(models.Model):
     operacao = models.CharField(max_length=10, choices=CHOICES_OPERACAO, default='Entrada', verbose_name='Operação')
     local = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
     data = models.DateField(default=date.today, verbose_name='Data')
+    tipoMovimentacao = models.CharField(max_length=20, choices=[('usoProprio','Uso próprio'),('compra','Compra'),('venda','Venda'),('doacao','Doação')], verbose_name='Tipo de Movimentação', default=2)
 
     def __str__(self) -> str:
         return f'{self.id}'
