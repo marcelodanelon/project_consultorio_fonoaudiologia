@@ -66,7 +66,6 @@
               </div>
             </div>
             </div>
-            <div class="md-overlay"></div>
           {% endfor %}
         {% endif %}          
         {% block content %}{% endblock content %}
@@ -77,16 +76,15 @@
     $(window).on('load', function(e) {
         $('#modal-1').toggleClass("md-show");
     });
-
     const myTimeout = setTimeout(myGreeting, 5000);
-
     function myGreeting() {
       $('#modal-1').toggleClass("md-show", false);
+      console.log('Removendo o elemento #md-container');
+      $('.md-container').remove();
     }
-
     function myStopFunction() {
       clearTimeout(myTimeout);
-    }
+    }    
   </script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>

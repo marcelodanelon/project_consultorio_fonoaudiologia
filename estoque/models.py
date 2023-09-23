@@ -1,5 +1,5 @@
 from django.db import models
-from home.models import LocalModel
+from home.models import LocalModel, ClientModel
 from datetime import date
 
 CHOICES_OPERACAO = [
@@ -8,7 +8,7 @@ CHOICES_OPERACAO = [
 ]
 
 class MarcaModel(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Descrição')
 
     def __str__(self) -> str:
         return self.name
@@ -39,6 +39,7 @@ class MovimentacaoInsumoModel(models.Model):
     local = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
     data = models.DateField(default=date.today, verbose_name='Data')
     tipoMovimentacao = models.CharField(max_length=20, choices=[('usoProprio','Uso próprio'),('compra','Compra'),('venda','Venda'),('doacao','Doação')], verbose_name='Tipo de Movimentação', default=2)
+    eClient = models.ForeignKey(ClientModel, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Usuário')
 
     def __str__(self) -> str:
         return f'{self.id}'

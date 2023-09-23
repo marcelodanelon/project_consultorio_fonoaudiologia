@@ -83,7 +83,6 @@ class ContatosTelefonicosModel(models.Model):
 
     def __str__(self):
         return f'{self.aTelData} - {self.aTelLiga}'
-    
 
 class AnamneseModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)

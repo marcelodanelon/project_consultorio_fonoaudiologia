@@ -137,6 +137,12 @@
             $('#btnGravar').each(function() {
                 $(this).prop("hidden", true);
             });
+        }        
+
+        if ($('#id_operacao').children("option:selected").val() == 'Entrada') {
+            $("#id_tipoMovimentacao option[value='usoProprio']").remove();
+            $("#id_tipoMovimentacao option[value='venda']").remove();
+            $('#id_eClient').parent().prop('hidden', true);
         }
     });
 

@@ -140,6 +140,18 @@
                 $(this).prop("hidden", true);
             });
         }
+
+        $('#id_tipoMovimentacao').on('change', function(){
+            if ($('#id_operacao').children("option:selected").val() == 'Saída') {
+                $("#id_tipoMovimentacao option[value='compra']").remove();
+            }
+            if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda') {
+                $('#id_eClient').parent().prop('hidden', false);
+            }else{
+                $('#id_eClient').parent().prop('hidden', true);
+            }
+        });       
+        $('#id_tipoMovimentacao').trigger('change');
     })
 
     function parsePotentiallyGroupedFloat(stringValue) {

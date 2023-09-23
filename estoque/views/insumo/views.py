@@ -8,10 +8,9 @@ from django.contrib import messages
 
 @login_required(login_url='home:loginUser')
 def index(request):
+    # controle de alerta para estoque minimo
     items_agrupados = ItensInsumoModel.objects.values('insumo__descricao', 'local__name').annotate(total_quantidade=Sum('quantidade')).filter(total_quantidade__gt=0)
-    # for item in items_agrupados:
-    #     print(f'insumo: {item["insumo__descricao"]} - local: {item["local__name"]} - quantidade: {item["total_quantidade"]}')
-    
+
     text_estoqueMin = ""
     insumos = InsumoModel.objects.exclude(quantidadeMin=None)
     for insumo in insumos:
@@ -21,9 +20,19 @@ def index(request):
                     text_estoqueMin += (f'<p>- {item["insumo__descricao"]} abaixo da quantidade minima ({insumo.quantidadeMin}) na unidade: {item["local__name"]}</p>')
     messages.info(request, text_estoqueMin)
 
+    # criação 1º gráfico de entrada e saidas
+    data_points = [
+        { "label": "apple",  "y": 10  },
+        { "label": "orange", "y": 75  },
+        { "label": "banana", "y": 25  },
+        { "label": "mango",  "y": 30  },
+        { "label": "grape",  "y": 28  }
+    ]
+
     context = {
         'name_module': 'Estoque',
         'title': 'Estoque',
+        'data_points':data_points,
         'text_estoqueMin': text_estoqueMin,
     }
 

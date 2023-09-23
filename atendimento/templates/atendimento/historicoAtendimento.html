@@ -46,6 +46,11 @@
                 grid-column-start: 1;
                 grid-column-end: 4;
             }
+
+            .item2 {
+                grid-column-start: 2;
+                grid-column-end: 4;
+            }
         </style>
     {% endblock head_base %}
     <div class="container">
@@ -129,6 +134,7 @@
                 {% endif %}
             </div>
             <div class="grid-item d-flex flex-column bd-highlight">
+                <b>Anamneses</b>
                 {% if anamneses %}
                 <table>
                     <thead>
@@ -163,7 +169,74 @@
                 {% endif %}
             </div>
             <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
+                <b>Contatos Telefonicos</b>
+                {% if telefonemas %}
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data</th>
+                            <th class="table-header">Telefone</th>
+                            <th class="table-header">Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in telefonemas %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.aTelData }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.aTelLiga }}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.aTelObse %}{{ field.aTelObse }}{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
+                {% endif %}
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <b>Saídas de Insumos</b>
+                {% if saidasEstoque %}
+                <table>
+                    <thead>
+                        <tr class="table-row table-row-header">
+                            <th class="table-header">Data</th>
+                            <th class="table-header">Unidade</th>
+                            <th class="table-header">Tipo</th>
+                            <th class="table-header">Insumo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in saidasEstoque %}            
+                            <tr class="table-row">
+                                <td class="table-cel">
+                                    {{ field.data }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.local }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.tipoMovimentacao }}
+                                </td>
+                                <td class="table-cel">
+                                    {{ field.nome_insumo }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
+                {% endif %}
+            </div>
+            <div class="grid-item d-flex flex-column bd-highlight">
+                <b>Agendamentos (em desenvolvimento)</b>
+                {% if agendamentos %}
                 <table>
                     <thead>
                         <tr class="table-row table-row-header">
@@ -192,98 +265,9 @@
                     <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
                 {% endif %}
             </div>
-            <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
-                <table>
-                    <thead>
-                        <tr class="table-row table-row-header">
-                            <th class="table-header">Data 1º Consulta</th>
-                            <th class="table-header">Profissional</th>
-                            <th class="table-header">Unidades</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for field in atendimentos %}            
-                            <tr class="table-row">
-                                <td class="table-cel">
-                                    {{ field.aDataPri }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aProfessional }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aLocal }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
-                {% endif %}
-            </div>
-            <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
-                <table>
-                    <thead>
-                        <tr class="table-row table-row-header">
-                            <th class="table-header">Data 1º Consulta</th>
-                            <th class="table-header">Profissional</th>
-                            <th class="table-header">Unidade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for field in atendimentos %}            
-                            <tr class="table-row">
-                                <td class="table-cel">
-                                    {{ field.aDataPri }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aProfessional }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aLocal }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
-                {% endif %}
-            </div>
-            <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
-                <table>
-                    <thead>
-                        <tr class="table-row table-row-header">
-                            <th class="table-header">Data 1º Consulta</th>
-                            <th class="table-header">Profissional</th>
-                            <th class="table-header">Unidade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for field in atendimentos %}            
-                            <tr class="table-row">
-                                <td class="table-cel">
-                                    {{ field.aDataPri }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aProfessional }}
-                                </td>
-                                <td class="table-cel">
-                                    {{ field.aLocal }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                    <div style="background-color:white;height:100%;display: flex;align-items: center;justify-content: center;">Sem Registros</div>
-                {% endif %}
-            </div>
-            <div class="grid-item d-flex flex-column bd-highlight">
-                {% if atendimentos %}
+            <div class="grid-item d-flex flex-column bd-highlight item2">
+                <b>Audiometrias (em desenvolvimento)</b>
+                {% if audiometrias %}
                 <table>
                     <thead>
                         <tr class="table-row table-row-header">

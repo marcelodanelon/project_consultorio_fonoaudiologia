@@ -7,6 +7,7 @@ from datetime import date
 from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
+from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
 import json
 
 @login_required(login_url='home:loginUser')
@@ -179,12 +180,48 @@ def historicoAtendimento(request):
     client_anamneses = AnamneseModel.objects.none()
     for i in range(client_atendimentos.count()):
         client_anamneses = client_anamneses.union(AnamneseModel.objects.filter(aIDAtend=client_atendimentos[i]))
+    client_telefonemas = ContatosTelefonicosModel.objects.filter(aIDAtend__aClient=client)
 
+    from django.db.models import F
+
+    client_saida = MovimentacaoInsumoModel.objects.exclude(eClient=None).filter(eClient=client)
+
+    # Lista para armazenar os objetos client_saida com o nome do insumo
+    client_saida_com_nome_insumo = []
+
+    for movimentacao in client_saida:
+        # Filtrar os itens de insumo associados a esta movimentação
+        itens_insumo = ItensMovimentacaoInsumoModel.objects.filter(movimentacao=movimentacao)
+        
+        for item in itens_insumo:
+            # Acesse a descrição do insumo associado a este item
+            descricao_insumo = item.insumo.descricao
+            
+            # Crie um objeto client_saida com o nome do insumo e adicione à lista
+            client_saida_com_nome_insumo.append({
+                'movimentacao_id': movimentacao.id,
+                'nome_insumo': descricao_insumo
+            })
+    for client_saida_item in client_saida_com_nome_insumo:
+        print(f'Movimentação ID: {client_saida_item["movimentacao_id"]}, Nome do Insumo: {client_saida_item["nome_insumo"]}')
+    from django.db.models import F, Case, When, Value, CharField
+
+    client_saida = MovimentacaoInsumoModel.objects.exclude(eClient=None).filter(eClient=client)
+
+    # Anote a descrição do insumo na queryset client_saida
+    client_saida = client_saida.annotate(
+        nome_insumo=Case(
+            When(itensmovimentacaoinsumomodel__movimentacao=F('id'), then=F('itensmovimentacaoinsumomodel__insumo__descricao')),
+            default=Value(''), output_field=CharField()
+        )
+    )
     context = {
         'form_atendimento': form_atendimento,
         'atendimentos': client_atendimentos,
+        'telefonemas': client_telefonemas,
         'anamneses': client_anamneses,
-        'name_module': 'Histórico de Atendimentos',
+        'saidasEstoque': client_saida,
+        'name_module': 'Atendimento',
         'title': 'Atendimento',
     }
 

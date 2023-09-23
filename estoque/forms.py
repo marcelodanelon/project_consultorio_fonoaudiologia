@@ -1,5 +1,5 @@
 from django import forms
-from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel
+from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel, MarcaModel
 
 class InsumoForm(forms.ModelForm):
     valor = forms.CharField(disabled = True, required=False)
@@ -53,6 +53,18 @@ class GrupoInsumoForm(forms.ModelForm):
     class Meta:
         model = GrupoInsumoModel
         fields = ('descricao', 'controleDeCompra',)
+
+class MarcaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = MarcaModel
+        fields = ('name',)
 
 class ItensInsumoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -152,7 +164,10 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         self.fields['tipoMovimentacao'].widget.attrs.update({
             'class': 'form-control',
         })
+        self.fields['eClient'].widget.attrs.update({
+            'class': 'form-control',
+        })
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = ('operacao','local','data','tipoMovimentacao',)
+        fields = ('operacao','local','data','tipoMovimentacao','eClient',)

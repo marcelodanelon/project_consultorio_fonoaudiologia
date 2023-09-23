@@ -211,12 +211,19 @@ def movimentacaoInsumoSaida(request):
 
             # verifica se há saldo para saída
             for item in modelSet:
-                insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()                   
-                if insumo.quantidade >= item.quantidade:
-                    success=True
-                else:
-                    success=False
-                    break
+                if success != False:
+                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()                   
+                    if insumo.quantidade >= item.quantidade:
+                        success=True
+                    else:
+                        success=False
+                        break
+
+            # verifica se informou um usuário caso tipo seja venda
+            if model.eClient == None:
+                messages.error(request, 'Usuário de venda não informado!')
+                success = False
+
             # realiza ação e verificação
             if success:
                 form.save()
@@ -230,6 +237,7 @@ def movimentacaoInsumoSaida(request):
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(quantidade=totalQuantidade)
                     ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).update(valorTotal=totalValor)
                     item.save()
+                messages.success(request, f'Saída gravada com sucesso!')
                 return redirect('estoque:index')
             else:
                 messages.error(request, f'Saldo insuficiente para insumo {insumo}!')
@@ -241,7 +249,7 @@ def movimentacaoInsumoSaida(request):
             'groups_user': list(request.user.groups.values_list('name', flat=True)),
             'form_action': form_action,
             'formMov': form,
-            'formIte': formIte,
+            'formIte': formIte(instance=MovimentacaoInsumoModel()),
             'isUpdate': 0,
             'items_saida': items,
             }
