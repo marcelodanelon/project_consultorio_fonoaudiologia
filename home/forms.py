@@ -20,7 +20,7 @@ class LocalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['street'].widget.attrs.update({
             'class':'form-control',
@@ -78,17 +78,17 @@ class ProfessionalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['first_name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['last_name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['born'].widget.attrs.update({
             'class':'form-control',
             'placeholder': 'dd/mm/yyyy',
         })
         self.fields['responsibleName'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['responsiblePhone'].widget.attrs.update({
             'class':'form-control',
@@ -160,17 +160,17 @@ class ClientForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['first_name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['last_name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['born'].widget.attrs.update({
             'class':'form-control mask-date',
             'placeholder': 'dd/mm/yyyy',
         })
         self.fields['responsibleName'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['responsiblePhone'].widget.attrs.update({
             'class':'form-control mask-telefone',

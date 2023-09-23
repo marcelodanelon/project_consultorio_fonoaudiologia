@@ -48,7 +48,7 @@ class LocalModel(models.Model):
     phone1 = PhoneNumberField(verbose_name='Telefone', null=True, blank=True)
     phone2 = PhoneNumberField(verbose_name='Celular', null=True, blank=True)
     CNPJ = models.CharField(max_length=14, verbose_name='CNPJ', null=True, blank=True)
-    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True)
+    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default=1)
 
     def __str__(self) -> str:
         return f'{self.name}'

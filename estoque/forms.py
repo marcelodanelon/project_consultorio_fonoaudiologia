@@ -9,7 +9,7 @@ class InsumoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['descricao'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['valor'].widget.attrs.update({
             'class':'form-control',
@@ -44,7 +44,7 @@ class GrupoInsumoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['descricao'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
         self.fields['controleDeCompra'].widget.attrs.update({
             'class':'form-control',
@@ -59,7 +59,7 @@ class MarcaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['name'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control upperCase',
         })
 
     class Meta:

@@ -52,41 +52,43 @@
   </form>
 </div>
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
-  <script>
-    var SPMaskBehavior = function (val) {
-      return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-    },
-    spOptions = {
-      onKeyPress: function(val, e, field, options) {
-          field.mask(SPMaskBehavior.apply({}, arguments), options);
-        }
-    };
-    $(document).ready(function($){
-      $('.mask-telefone').mask(SPMaskBehavior, spOptions); 
-      $('.mask-date').mask('00/00/0000');  
-      $('.maskfm-cep').mask('00000-000');
-      $('.maskfm-rg').mask('00.000.000-00', {reverse: true});
-      $('.maskfm-cpf').mask('000.000.000-00', {reverse: true});
-      $('#client_form').submit(function(){
-        $('#client_form').find(":input[class*='maskfm']").unmask();
-      })
-
-      $("#id_typeRegister").change(function(){
-        if ($('#id_typeRegister').val()=='completo'){
-          $('#id_born').prop('required', true);
-          $('#id_last_name').prop('required', true);
-        }
-        if ($('#id_typeRegister').val()=='simplificado'){
-          $('#id_born').prop('required', false);
-          $('#id_last_name').prop('required', false);
-        }
-        $('[name=typeregister]').val($('#id_typeRegister').val());
-      });
-
-      $('#id_typeRegister').trigger('change');
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+        field.mask(SPMaskBehavior.apply({}, arguments), options);
+      }
+  };
+  $(document).ready(function($){
+    $('.mask-telefone').mask(SPMaskBehavior, spOptions); 
+    $('.mask-date').mask('00/00/0000');  
+    $('.maskfm-cep').mask('00000-000');
+    $('.maskfm-rg').mask('00.000.000-00', {reverse: true});
+    $('.maskfm-cpf').mask('000.000.000-00', {reverse: true});
+    $('#client_form').submit(function(){
+      $('#client_form').find(":input[class*='maskfm']").unmask();
     })
-  </script>
+
+    $("#id_typeRegister").change(function(){
+      if ($('#id_typeRegister').val()=='completo'){
+        $('#id_born').prop('required', true);
+        $('#id_last_name').prop('required', true);
+      }
+      if ($('#id_typeRegister').val()=='simplificado'){
+        $('#id_born').prop('required', false);
+        $('#id_last_name').prop('required', false);
+      }
+      $('[name=typeregister]').val($('#id_typeRegister').val());
+    });
+
+    $('#id_typeRegister').trigger('change');
+  })
+
+  
+</script>
 {% endblock content %}
 

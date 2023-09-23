@@ -73,13 +73,28 @@
     </div>          
   </main>
   <script>
+    function uppercaseInput(input) {
+      input.value = input.value.toUpperCase();
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      // Seleciona todos os campos de entrada com a classe "upperCase"
+      var upperCaseInputs = document.querySelectorAll("input.upperCase[type='text']");
+      
+      // Adiciona o evento "input" a cada campo de entrada
+      upperCaseInputs.forEach(function(input) {
+        input.addEventListener("input", function() {
+          uppercaseInput(input);
+        });
+      });
+    });
+
     $(window).on('load', function(e) {
         $('#modal-1').toggleClass("md-show");
     });
     const myTimeout = setTimeout(myGreeting, 5000);
     function myGreeting() {
       $('#modal-1').toggleClass("md-show", false);
-      console.log('Removendo o elemento #md-container');
       $('.md-container').remove();
     }
     function myStopFunction() {
@@ -87,13 +102,13 @@
     }    
   </script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script>
-          $('.sub-menu ul').hide();
-          $(".sub-menu a").click(function () {
-          $(this).parent(".sub-menu").children("ul").slideToggle("100");
-          $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
-        });
-        </script>
+  <script>
+    $('.sub-menu ul').hide();
+    $(".sub-menu a").click(function () {
+    $(this).parent(".sub-menu").children("ul").slideToggle("100");
+    $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
+  });
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   {% include 'partials/_consultaCEP.html' %}
 </body>
