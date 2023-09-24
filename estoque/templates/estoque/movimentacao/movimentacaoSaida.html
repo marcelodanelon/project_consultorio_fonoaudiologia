@@ -145,7 +145,7 @@
             if ($('#id_operacao').children("option:selected").val() == 'Saída') {
                 $("#id_tipoMovimentacao option[value='compra']").remove();
             }
-            if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda') {
+            if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
                 $('#id_eClient').parent().prop('hidden', false);
             }else{
                 $('#id_eClient').parent().prop('hidden', true);
