@@ -104,12 +104,13 @@
         <div class="marca-y" style="top: 100%;">110</div>
 
         <!-- Elemento canvas -->
-        <canvas id="canvas" width="500" height="500"></canvas>
+        <canvas id="canvas" width="500" height="500" style="position: relative; z-index: 1;"></canvas>
     </div>
-
+    <br>
     <!-- Botões para selecionar linhas -->
     <button onclick="selecionarLinha('linha1', 'green')">Selecionar Linha 1 (Verde)</button>
     <button onclick="selecionarLinha('linha2', 'blue')">Selecionar Linha 2 (Azul)</button>
+    <button onclick="limparPlano()">Limpar Plano</button>
 
     <script>
         var pontosLinha1 = [];
@@ -129,13 +130,19 @@
             if (linhaAtual === null || corLinhaAtual === null) {
                 return;
             }
-
+        
             var plano = document.getElementById('plano-cartesiano').getBoundingClientRect();
             var x = event.clientX - plano.left;
             var y = event.clientY - plano.top;
-
-            var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+        
+            // Limita a posição do ponto dentro dos limites do plano no eixo x
+            x = Math.max(0, Math.min(x, plano.width));
             
+            // Limita a posição do ponto dentro dos limites do plano no eixo y
+            y = Math.max(0, Math.min(y, plano.height));
+        
+            var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+        
             if (linhaAtual === 'linha1') {
                 pontosLinha1.push(ponto);
                 desenharPontos(pontosLinha1);
@@ -146,6 +153,7 @@
                 desenharLinhas(pontosLinha2);
             }
         }
+        
 
         function desenharPontos(pontos) {
             for (var i = 0; i < pontos.length; i++) {
@@ -168,6 +176,27 @@
                 ctx.moveTo(ponto1.x, ponto1.y);
                 ctx.lineTo(ponto2.x, ponto2.y);
                 ctx.stroke();
+            }
+        }
+
+        function limparPlano() {
+            // Limpa os arrays de pontos
+            pontosLinha1 = [];
+            pontosLinha2 = [];
+
+            // Limpa o canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Limpa as marcações no eixo x
+            var marcacoesX = document.querySelectorAll('.marca-x');
+            for (var i = 0; i < marcacoesX.length; i++) {
+                marcacoesX[i].style.backgroundColor = 'transparent';
+            }
+
+            // Limpa as marcações no eixo y
+            var marcacoesY = document.querySelectorAll('.marca-y');
+            for (var i = 0; i < marcacoesY.length; i++) {
+                marcacoesY[i].style.backgroundColor = 'transparent';
             }
         }
     </script>
