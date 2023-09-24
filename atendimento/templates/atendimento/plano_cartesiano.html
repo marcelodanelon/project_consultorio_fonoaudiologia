@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plano Cartesiano</title>
+    <style>
+        #plano-cartesiano {
+            width: 450px;
+            height: 500px;
+            position: relative;
+            border: 1px solid black;
+        }
+
+        .ponto {
+            width: 5px;
+            height: 5px;
+            background-color: red;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .linha-x, .linha-y {
+            position: absolute;
+            background-color: lightgray;
+        }
+
+        .linha-x {
+            height: 1px;
+            width: 100%;
+        }
+
+        .linha-y {
+            height: 100%;
+            width: 1px;
+        }
+
+        .marca-x {
+            position: absolute;
+            font-size: 12px;
+            transform: translateX(-50%);
+            top: -20px;
+        }
+
+        .marca-y {
+            position: absolute;
+            font-size: 12px;
+            transform: translateY(-50%);
+            left: -30px;
+            right: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plano Cartesiano</h1>
+    <div id="plano-cartesiano" onclick="desenharReta(event)" style="margin-left: 50px;">
+        <!-- Linhas de grade do eixo x -->
+        <div class="linha-x" style="top: 0%;"></div>
+        <div class="linha-x" style="top: 7.69%;"></div>
+        <div class="linha-x" style="top: 15.38%;"></div>
+        <div class="linha-x" style="top: 23.07%;"></div>
+        <div class="linha-x" style="top: 30.76%;"></div>
+        <div class="linha-x" style="top: 38.46%;"></div>
+        <div class="linha-x" style="top: 46.15%;"></div>
+        <div class="linha-x" style="top: 53.84%;"></div>
+        <div class="linha-x" style="top: 61.53%;"></div>
+        <div class="linha-x" style="top: 70%;"></div>
+        <div class="linha-x" style="top: 80%;"></div>
+        <div class="linha-x" style="top: 90%;"></div>
+
+        <!-- Marcas no eixo x -->
+        <div class="marca-x" style="left: 0%;">0</div>
+        <div class="marca-x" style="left: 10%;">250</div>
+        <div class="marca-x" style="left: 20%;">500</div>
+        <div class="marca-x" style="left: 30%;">1K</div>
+        <div class="marca-x" style="left: 40%;">2K</div>
+        <div class="marca-x" style="left: 50%;">3K</div>
+        <div class="marca-x" style="left: 60%;">4K</div>
+        <div class="marca-x" style="left: 70%;">6K</div>
+        <div class="marca-x" style="left: 80%;">8K</div>
+        <div class="marca-x" style="left: 100%;">Hz</div>
+
+        <div class="linha-y" style="left: 10%;"></div>
+        <div class="linha-y" style="left: 20%;"></div>
+        <div class="linha-y" style="left: 30%;"></div>
+        <div class="linha-y" style="left: 40%;"></div>
+        <div class="linha-y" style="left: 50%;"></div>
+        <div class="linha-y" style="left: 60%;"></div>
+        <div class="linha-y" style="left: 70%;"></div>
+        <div class="linha-y" style="left: 80%;"></div>
+
+        <!-- Marcas no eixo y -->
+        <div class="marca-y" style="top: 0%;">-10</div>
+        <div class="marca-y" style="top: 7.69%;">0</div>
+        <div class="marca-y" style="top: 15.38%;">10</div>
+        <div class="marca-y" style="top: 23.07%;">20</div>
+        <div class="marca-y" style="top: 30.76%;">30</div>
+        <div class="marca-y" style="top: 38.46%;">40</div>
+        <div class="marca-y" style="top: 46.15%;">50</div>
+        <div class="marca-y" style="top: 53.84%;">60</div>
+        <div class="marca-y" style="top: 61.53%;">70</div>
+        <div class="marca-y" style="top: 70%;">80</div>
+        <div class="marca-y" style="top: 80%;">90</div>
+        <div class="marca-y" style="top: 90%;">100</div>
+        <div class="marca-y" style="top: 100%;">110</div>
+
+        <!-- Elemento canvas -->
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+
+    <!-- Botões para selecionar linhas -->
+    <button onclick="selecionarLinha('linha1', 'green')">Selecionar Linha 1 (Verde)</button>
+    <button onclick="selecionarLinha('linha2', 'blue')">Selecionar Linha 2 (Azul)</button>
+
+    <script>
+        var pontosLinha1 = [];
+        var pontosLinha2 = [];
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        var linhaAtual = null;
+        var corLinhaAtual = null;
+
+        function selecionarLinha(classe, cor) {
+            linhaAtual = classe;
+            corLinhaAtual = cor;
+        }
+
+        function desenharReta(event) {
+            if (linhaAtual === null || corLinhaAtual === null) {
+                return;
+            }
+
+            var plano = document.getElementById('plano-cartesiano').getBoundingClientRect();
+            var x = event.clientX - plano.left;
+            var y = event.clientY - plano.top;
+
+            var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+            
+            if (linhaAtual === 'linha1') {
+                pontosLinha1.push(ponto);
+                desenharPontos(pontosLinha1);
+                desenharLinhas(pontosLinha1);
+            } else if (linhaAtual === 'linha2') {
+                pontosLinha2.push(ponto);
+                desenharPontos(pontosLinha2);
+                desenharLinhas(pontosLinha2);
+            }
+        }
+
+        function desenharPontos(pontos) {
+            for (var i = 0; i < pontos.length; i++) {
+                var ponto = pontos[i];
+                ctx.fillStyle = ponto.cor;
+                ctx.beginPath();
+                ctx.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function desenharLinhas(pontos) {
+            for (var i = 0; i < pontos.length - 1; i++) {
+                var ponto1 = pontos[i];
+                var ponto2 = pontos[i + 1];
+
+                ctx.strokeStyle = ponto1.cor;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(ponto1.x, ponto1.y);
+                ctx.lineTo(ponto2.x, ponto2.y);
+                ctx.stroke();
+            }
+        }
+    </script>
+</body>
+</html>

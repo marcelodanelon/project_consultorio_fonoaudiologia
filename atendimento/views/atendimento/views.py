@@ -231,27 +231,46 @@ def historicoAtendimento(request):
         context
     )
 
-@login_required(login_url='home:loginUser')
-def audiometria(request):
-    # Suponha que você tenha suas coordenadas x e y em listas separadas.
-    coordenadas_x = [9000, 8000, 6000, 4000, 3000, 2000]
-    coordenadas_y = [70, 50, 40, 30, 40, 50]
+#@login_required(login_url='home:loginUser')
+# def audiometria(request):
+#     # Suponha que você tenha suas coordenadas x e y em listas separadas.
+#     coordenadas_x = [9000, 8000, 6000, 4000, 3000, 2000]
+#     coordenadas_y = [70, 50, 40, 30, 40, 50]
 
-    # Combine as coordenadas em um dicionário
-    data = {'x': coordenadas_x, 'y': coordenadas_y}
+#     # Combine as coordenadas em um dicionário
+#     data = {'x': coordenadas_x, 'y': coordenadas_y}
 
-    # Converta o dicionário em formato JSON
-    data_json = json.dumps(data)
+#     # Converta o dicionário em formato JSON
+#     data_json = json.dumps(data)
 
-    context = {
-        'name_screen' : 'Audiometria',
-        'title': 'Audiometria',
-        'name_module': 'Atendimento',
-        'data_json': data_json,
-    }
+#     context = {
+#         'name_screen' : 'Audiometria',
+#         'title': 'Audiometria',
+#         'name_module': 'Atendimento',
+#         'data_json': data_json,
+#     }
 
-    return render(
-        request, 
-        'atendimento/audiometria.html', 
-        context
-    )
+#     return render(
+#         request, 
+#         'atendimento/audiometria.html', 
+#         context
+#     )
+
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+pontos_em_memoria = []
+
+@csrf_exempt
+def adicionar_ponto(request):
+    if request.method == 'POST':
+        x = request.POST.get('x')
+        y = request.POST.get('y')
+        ponto = {'x': x, 'y': y}
+        pontos_em_memoria.append(ponto)
+        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
+    return HttpResponse(json.dumps({'status': 'error'}), content_type='application/json')
+
+def plano_cartesiano(request):
+    return render(request, 'atendimento/plano_cartesiano.html', {'pontos': pontos_em_memoria})
