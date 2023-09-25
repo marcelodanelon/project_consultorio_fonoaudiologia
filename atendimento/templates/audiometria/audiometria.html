@@ -1,6 +1,6 @@
 {% extends 'global/base.html' %}
 
-{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
+{% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
 
 {% block head_base %}
 <style>
@@ -82,28 +82,32 @@
         {% csrf_token %} 
         <!-- Conteúdo da Primeira Aba -->
         <div id="first" class="tabcontent">
-            {% include 'atendimento/pages_audiometrias/page1_au.html' %}
+            {% include 'audiometria/pages_audiometrias/page1_au.html' %}
         </div>
         <!-- Conteúdo da Segunda Aba -->
         <div id="second" class="tabcontent">
-            {% include 'atendimento/pages_audiometrias/page2_au.html' %} 
+            {% include 'audiometria/pages_audiometrias/page2_au.html' %} 
         </div>        
-        <div style="position: absolute; bottom: 20%; ">        
-            <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
+        <div style="position: absolute; bottom: 20%;">
+            <div style="display: inline-block;">
+                <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
+                <a href="{% url 'atendimento:listAudiometria' %}" class="btn btn-primary">Voltar</a>
     </form>
-            {% if option_delete == 'yes'%}
-            <form action="{% url 'storage:deleteInsumo' insumo.id %}" method="POST">
-                {% csrf_token %}
-                {% if confirmation_delete == 'no' %}
-                <input name="confirmation_delete" type="hidden" value="yes">
-                <button class="btn btn-danger">Confirma?</button>  
-                {% else %}
-                <button class="btn btn-danger">Delete</button> 
-                {% endif %}      
-                <a href="{% url 'estoque:listInsumo' %}" class="btn btn-primary">Voltar</a>
-        </div>  
-            </form> 
-            {% endif %}
+            </div>
+            <div style="display: inline-block;">
+                {% if option_delete == 'yes' %}
+                <form action="{% url 'atendimento:deleteAudiometria' audiometria.id %}" method="POST">
+                    {% csrf_token %}
+                    {% if confirmation_delete == 'no' %}
+                    <input name="confirmation_delete" type="hidden" value="yes">
+                    <button class="btn btn-danger">Confirma?</button>
+                    {% else %}
+                    <button class="btn btn-danger">Delete</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>        
+                {% endif %}
 </div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>

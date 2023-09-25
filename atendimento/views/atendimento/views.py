@@ -2,11 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.urls import reverse
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from datetime import date
-from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm, AudiometriaForm
+from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
@@ -226,31 +224,3 @@ def historicoAtendimento(request):
         'atendimento/historicoAtendimento.html',
         context
     )
-
-@login_required(login_url='home:loginUser')
-def audiometria(request):
-    form_action = reverse('atendimento:audiometria')
-    form = AudiometriaForm()
-    pontos_em_memoria = []
-
-    if request.method == 'POST':
-        form = AudiometriaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request,'Audiometria gravada com sucesso!')
-            return redirect('atendimento:index')
-
-    context = {
-        'pontos': pontos_em_memoria,
-        'form' : form,
-        'name_screen': 'Audiometria',
-        'name_module': 'Atendimento',
-        'form_action': form_action,
-    }
-
-    return render(
-        request, 
-        'atendimento/audiometria.html', 
-        context
-    )
-
