@@ -1,0 +1,184 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
+
+{% block head_base %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock head_base %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+<h3>{{name_screen}}</h3>
+<div style="background-color: white; height: 80%;">
+    <div class="row">
+        <div class="col-5">
+            <div id="myChart"></div>
+        </div>
+        <div class="col-5" style="margin-left: 5%;">
+            <div id="myChart2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ------------------------ Ouvido Esquerdo
+    // Obtenha os dados JSON passados da view
+    var data_json = JSON.parse('{{ data_json|escapejs }}');
+
+    // Configure os dados para o gráfico
+    var trace = {
+        x: data_json.x,
+        y: data_json.y,
+        mode: 'lines+markers',
+        type: 'scatter',
+        name: 'Dados de Y',
+        line: {color: 'rgb(192, 42, 75, 1)'},
+        marker: { size: 8 }
+    };
+
+    var data = [trace];
+
+    var layout = {
+        xaxis: {
+            range: [0, 9000],  // Define o intervalo do eixo x de 0 a 30
+            tickmode: 'linear',  // Configura o modo de ticks para linear
+            tick0: 0,             // Início dos ticks no eixo x
+            dtick: 500,
+            fixedrange: true,
+            side: 'top',
+            linewidth: 1               
+        },
+        yaxis: {
+            range: [110, -10],  // Define o intervalo do eixo y de 0 a 30
+            tickmode: 'linear',  // Configura o modo de ticks para linear
+            tick0: 0,             // Início dos ticks no eixo y
+            dtick: 10,
+            zeroline: false,
+            fixedrange: true             // Espaçamento entre os ticks no eixo y (1 em 1)
+        },
+        title: 'Ouvido Esquerdo',
+        shapes: [
+            {
+                type: 'line',
+                x0: 9000,  // Posição x inicial da linha
+                x1: 9000,  // Posição x final da linha
+                y0: 110,   // Posição y inicial da linha
+                y1: -9000,  // Posição y final da linha
+                line: {
+                    color: 'black',  // Cor da linha
+                    width: 2        // Espessura da linha
+                }
+            },
+            {
+                type: 'line',
+                x0: 0,  // Posição x inicial da linha
+                x1: 9000, // Posição x final da linha
+                y0: 110,  // Posição y inicial da linha (topo)
+                y1: 110,  // Posição y final da linha (topo)
+                line: {
+                    color: 'black',  // Cor da linha
+                    width: 1          // Espessura da linha
+                }
+            }
+        ],
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',   // Fundo do gráfico transparente
+        paper_bgcolor: 'rgba(0, 0, 0, 0)'
+    };
+
+    var config = {
+        displayModeBar: false,  // Para ocultar a barra de ferramentas do gráfico
+        scrollZoom: false,      // Para desabilitar o zoom com scroll do mouse
+    };
+
+    // ------------------------ Ouvido Direito
+    // Obtenha os dados JSON passados da view
+    var data_json = JSON.parse('{{ data_json|escapejs }}');
+
+    // Configure os dados para o gráfico
+    var trace = {
+        x: data_json.x,
+        y: data_json.y,
+        mode: 'lines+markers',
+        type: 'scatter',
+        name: 'Dados de Y',
+        line: {color: 'rgb(192, 42, 75, 1)'},
+        marker: { size: 8 }
+    };
+
+    var data2 = [trace];
+
+    var layout2 = {
+        xaxis: {
+            range: [0, 9000],  // Define o intervalo do eixo x de 0 a 30
+            tickmode: 'linear',  // Configura o modo de ticks para linear
+            tick0: 0,             // Início dos ticks no eixo x
+            dtick: 500,
+            fixedrange: true,
+            side: 'top',
+            linewidth: 1               
+        },
+        yaxis: {
+            range: [110, -10],  // Define o intervalo do eixo y de 0 a 30
+            tickmode: 'linear',  // Configura o modo de ticks para linear
+            tick0: 0,             // Início dos ticks no eixo y
+            dtick: 10,
+            zeroline: false,
+            fixedrange: true             // Espaçamento entre os ticks no eixo y (1 em 1)
+        },
+        title: 'Ouvido Direito',
+        shapes: [
+            {
+                type: 'line',
+                x0: 9000,  // Posição x inicial da linha
+                x1: 9000,  // Posição x final da linha
+                y0: 110,   // Posição y inicial da linha
+                y1: -9000,  // Posição y final da linha
+                line: {
+                    color: 'black',  // Cor da linha
+                    width: 2        // Espessura da linha
+                }
+            },
+            {
+                type: 'line',
+                x0: 0,  // Posição x inicial da linha
+                x1: 9000, // Posição x final da linha
+                y0: 110,  // Posição y inicial da linha (topo)
+                y1: 110,  // Posição y final da linha (topo)
+                line: {
+                    color: 'black',  // Cor da linha
+                    width: 1          // Espessura da linha
+                }
+            }
+        ],
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',   // Fundo do gráfico transparente
+        paper_bgcolor: 'rgba(0, 0, 0, 0)'
+    };
+
+    var config2 = {
+        displayModeBar: false,  // Para ocultar a barra de ferramentas do gráfico
+        scrollZoom: false,      // Para desabilitar o zoom com scroll do mouse
+    };
+
+    // Renderize o gráfico usando Plotly
+    Plotly.newPlot('myChart', data, layout, config);
+    Plotly.newPlot('myChart2', data2, layout2, config2);
+
+    // Aumenta o tamanho do gráfico programaticamente
+    var newWidth = 700; // Nova largura em pixels
+    var newHeight = 500; // Nova altura em pixels
+
+    Plotly.relayout('myChart', {
+        width: newWidth,
+        height: newHeight
+    });
+    Plotly.relayout('myChart2', {
+        width: newWidth,
+        height: newHeight
+    });
+
+
+</script>
+</div>
+{% endblock content %}

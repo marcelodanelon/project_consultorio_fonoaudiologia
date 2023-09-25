@@ -1,4 +1,4 @@
-from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
+from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
 from django import forms
 
 class AtendimentoForm(forms.ModelForm):
@@ -306,3 +306,101 @@ class AnamneseForm(forms.ModelForm):
     class Meta:
         model = AnamneseModel
         fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
+
+class AudiometriaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['aClient'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auData'].widget.attrs.update({
+            'class':'form-control mask-date',
+        })
+        self.fields['auProfessional'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auLocal'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auAudio'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auCalib'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMedSo'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMVaOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMVoOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMVaOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMVoOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMosPoOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMosdBOe'].widget.attrs.update({
+            'class':'form-control',
+        })        
+        self.fields['auDisPoOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auDisdBOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auSTROe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auLDVOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMascOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auSpaceOe'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMosPoOd'].widget.attrs.update({
+            'class':'form-control',
+        })        
+        self.fields['auMosdBOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auDisPoOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auDisdBOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auSTROd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auLDVOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auMascOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auSpaceOd'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['auObser'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = AudiometriaModel
+        fields = ('aClient','auData','auProfessional','auLocal',
+                  'auAudio','auCalib','auMedSo','auMVaOe','auMVoOe',
+                  'auMVaOd','auMVoOd','auMosPoOe','auMosdBOe','auDisPoOe',
+                  'auDisdBOe','auSTROe','auLDVOe','auMascOe','auSpaceOe',
+                  'auMosPoOd','auMosdBOd','auDisPoOd','auDisdBOd','auSTROd',
+                  'auLDVOd','auMascOd','auSpaceOd','auObser')

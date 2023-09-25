@@ -94,3 +94,35 @@ class AnamneseModel(models.Model):
     def __str__(self) -> str:
         return f'ID: {self.pk} - Data: {self.aDataAna} - IDAtend: {self.aIDAtend}'
     
+class AudiometriaModel(models.Model):
+    aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.PROTECT, null=True)
+    auData = models.DateField(default=date.today(), verbose_name='Data')
+    auProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
+    auLocal = models.ForeignKey(LocalModel, verbose_name="Unidade", on_delete=models.SET_NULL, null=True)
+    auAudio = models.CharField(max_length=50, blank=True, null=True, verbose_name='Audiômetro')
+    auCalib = models.DateField(default=date.today(), blank=True, null=True, verbose_name='Calibração')
+    auMedSo = models.CharField(max_length=50, blank=True, null=True, verbose_name='Médico Solicitante')
+    auMVaOe = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VA (OE)')
+    auMVoOe = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VO (OE)')
+    auMVaOd = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VA (OD)')
+    auMVoOd = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VO (OD)')
+    auMosPoOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='%')
+    auMosdBOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auDisPoOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='%')
+    auDisdBOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auSTROe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auLDVOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auMascOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auSpaceOe = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auMosPoOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='%')
+    auMosdBOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auDisPoOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='%')
+    auDisdBOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auSTROd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auLDVOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auMascOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auSpaceOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
+    auObser = models.CharField(max_length=60, blank=True, null=True, verbose_name='Observações')
+
+    def __str__(self) -> str:
+        return f'{self.id} Data: {self.auData} Cliente: {self.aClient}'

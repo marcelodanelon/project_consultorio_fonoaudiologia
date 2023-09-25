@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.urls import reverse
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from datetime import date
-from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm
+from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm, AudiometriaForm
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
-import json
 
 @login_required(login_url='home:loginUser')
 def index(request):
@@ -186,18 +187,14 @@ def historicoAtendimento(request):
 
     client_saida = MovimentacaoInsumoModel.objects.exclude(eClient=None).filter(eClient=client)
 
-    # Lista para armazenar os objetos client_saida com o nome do insumo
+
     client_saida_com_nome_insumo = []
 
     for movimentacao in client_saida:
-        # Filtrar os itens de insumo associados a esta movimentação
         itens_insumo = ItensMovimentacaoInsumoModel.objects.filter(movimentacao=movimentacao)
         
         for item in itens_insumo:
-            # Acesse a descrição do insumo associado a este item
             descricao_insumo = item.insumo.descricao
-            
-            # Crie um objeto client_saida com o nome do insumo e adicione à lista
             client_saida_com_nome_insumo.append({
                 'movimentacao_id': movimentacao.id,
                 'nome_insumo': descricao_insumo
@@ -208,7 +205,6 @@ def historicoAtendimento(request):
 
     client_saida = MovimentacaoInsumoModel.objects.exclude(eClient=None).filter(eClient=client)
 
-    # Anote a descrição do insumo na queryset client_saida
     client_saida = client_saida.annotate(
         nome_insumo=Case(
             When(itensmovimentacaoinsumomodel__movimentacao=F('id'), then=F('itensmovimentacaoinsumomodel__insumo__descricao')),
@@ -231,46 +227,20 @@ def historicoAtendimento(request):
         context
     )
 
-#@login_required(login_url='home:loginUser')
-# def audiometria(request):
-#     # Suponha que você tenha suas coordenadas x e y em listas separadas.
-#     coordenadas_x = [9000, 8000, 6000, 4000, 3000, 2000]
-#     coordenadas_y = [70, 50, 40, 30, 40, 50]
+@login_required(login_url='home:loginUser')
+def audiometria(request):
+    form = AudiometriaForm()
+    pontos_em_memoria = []
 
-#     # Combine as coordenadas em um dicionário
-#     data = {'x': coordenadas_x, 'y': coordenadas_y}
+    context = {
+        'pontos': pontos_em_memoria,
+        'form' : form,
+    }
 
-#     # Converta o dicionário em formato JSON
-#     data_json = json.dumps(data)
+    pontos_em_memoria = []
+    return render(
+        request, 
+        'atendimento/audiometria.html', 
+        context
+    )
 
-#     context = {
-#         'name_screen' : 'Audiometria',
-#         'title': 'Audiometria',
-#         'name_module': 'Atendimento',
-#         'data_json': data_json,
-#     }
-
-#     return render(
-#         request, 
-#         'atendimento/audiometria.html', 
-#         context
-#     )
-
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-
-pontos_em_memoria = []
-
-@csrf_exempt
-def adicionar_ponto(request):
-    if request.method == 'POST':
-        x = request.POST.get('x')
-        y = request.POST.get('y')
-        ponto = {'x': x, 'y': y}
-        pontos_em_memoria.append(ponto)
-        return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json')
-    return HttpResponse(json.dumps({'status': 'error'}), content_type='application/json')
-
-def plano_cartesiano(request):
-    return render(request, 'atendimento/plano_cartesiano.html', {'pontos': pontos_em_memoria})
