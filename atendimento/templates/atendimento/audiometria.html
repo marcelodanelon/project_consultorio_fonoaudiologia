@@ -1,211 +1,305 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Plano Cartesiano</title>
-    <style>
-        #plano-cartesiano {
-            width: 450px;
-            height: 500px;
-            position: relative;
-            border: 1px solid black;
-        }
+{% extends 'global/base.html' %}
 
-        .ponto {
-            width: 5px;
-            height: 5px;
-            background-color: red;
-            position: absolute;
-            border-radius: 50%;
-        }
+{% block nav_lateral %}{% include 'partials/_nav_home.html' %}{% endblock nav_lateral %}
 
-        .linha-x, .linha-y {
-            position: absolute;
-            background-color: lightgray;
-        }
+{% block head_base %}
+<style>
+    #plano-cartesiano {
+        width: 300px;
+        height: 350px;
+        position: relative;
+        border: 1px solid black;
+    }
 
-        .linha-x {
-            height: 1px;
-            width: 100%;
-        }
+    #plano-cartesiano2 {
+        width: 300px;
+        height: 350px;
+        position: relative;
+        border: 1px solid black;
+    }
 
-        .linha-y {
-            height: 100%;
-            width: 1px;
-        }
+    .ponto {
+        width: 5px;
+        height: 5px;
+        background-color: red;
+        position: absolute;
+        border-radius: 50%;
+    }
 
-        .marca-x {
-            position: absolute;
-            font-size: 12px;
-            transform: translateX(-50%);
-            top: -20px;
-        }
+    .linha-x, .linha-y {
+        position: absolute;
+        background-color: lightgray;
+    }
 
-        .marca-y {
-            position: absolute;
-            font-size: 12px;
-            transform: translateY(-50%);
-            left: -30px;
-            right: 100%;
-        }
-    </style>
-</head>
-<body>
-    <h1>Plano Cartesiano</h1>
-    <div id="plano-cartesiano" onclick="desenharReta(event)" style="margin-left: 50px;">
-        <!-- Linhas de grade do eixo x -->
-        <div class="linha-x" style="top: 0%;"></div>
-        <div class="linha-x" style="top: 7.69%;"></div>
-        <div class="linha-x" style="top: 15.38%;"></div>
-        <div class="linha-x" style="top: 23.07%;"></div>
-        <div class="linha-x" style="top: 30.76%;"></div>
-        <div class="linha-x" style="top: 38.46%;"></div>
-        <div class="linha-x" style="top: 46.15%;"></div>
-        <div class="linha-x" style="top: 53.84%;"></div>
-        <div class="linha-x" style="top: 61.53%;"></div>
-        <div class="linha-x" style="top: 70%;"></div>
-        <div class="linha-x" style="top: 80%;"></div>
-        <div class="linha-x" style="top: 90%;"></div>
+    .linha-x {
+        height: 1px;
+        width: 100%;
+    }
 
-        <!-- Marcas no eixo x -->
-        <div class="marca-x" style="left: 0%;">0</div>
-        <div class="marca-x" style="left: 10%;">250</div>
-        <div class="marca-x" style="left: 20%;">500</div>
-        <div class="marca-x" style="left: 30%;">1K</div>
-        <div class="marca-x" style="left: 40%;">2K</div>
-        <div class="marca-x" style="left: 50%;">3K</div>
-        <div class="marca-x" style="left: 60%;">4K</div>
-        <div class="marca-x" style="left: 70%;">6K</div>
-        <div class="marca-x" style="left: 80%;">8K</div>
-        <div class="marca-x" style="left: 100%;">Hz</div>
+    .linha-y {
+        height: 100%;
+        width: 1px;
+    }
 
-        <div class="linha-y" style="left: 10%;"></div>
-        <div class="linha-y" style="left: 20%;"></div>
-        <div class="linha-y" style="left: 30%;"></div>
-        <div class="linha-y" style="left: 40%;"></div>
-        <div class="linha-y" style="left: 50%;"></div>
-        <div class="linha-y" style="left: 60%;"></div>
-        <div class="linha-y" style="left: 70%;"></div>
-        <div class="linha-y" style="left: 80%;"></div>
+    .marca-x {
+        position: absolute;
+        font-size: 12px;
+        transform: translateX(-50%);
+        top: -20px;
+    }
 
-        <!-- Marcas no eixo y -->
-        <div class="marca-y" style="top: 0%;">-10</div>
-        <div class="marca-y" style="top: 7.69%;">0</div>
-        <div class="marca-y" style="top: 15.38%;">10</div>
-        <div class="marca-y" style="top: 23.07%;">20</div>
-        <div class="marca-y" style="top: 30.76%;">30</div>
-        <div class="marca-y" style="top: 38.46%;">40</div>
-        <div class="marca-y" style="top: 46.15%;">50</div>
-        <div class="marca-y" style="top: 53.84%;">60</div>
-        <div class="marca-y" style="top: 61.53%;">70</div>
-        <div class="marca-y" style="top: 70%;">80</div>
-        <div class="marca-y" style="top: 80%;">90</div>
-        <div class="marca-y" style="top: 90%;">100</div>
-        <div class="marca-y" style="top: 100%;">110</div>
-
-        <!-- Elemento canvas -->
-        <canvas id="canvas" width="500" height="500" style="position: relative; z-index: 1;"></canvas>
+    .marca-y {
+        position: absolute;
+        font-size: 12px;
+        transform: translateY(-50%);
+        left: -30px;
+        right: 100%;
+    }
+</style>
+{% endblock head_base %}
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<div class="container" style="padding:1px 16px;">
+    <h3>{{name_screen}}</h3>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'first')" id="defaultOpen">Dados Iniciais</button>
+        <button class="tablinks" onclick="openTab(event, 'second')">Desfecho</button>
     </div>
-    <br>
-    <!-- Botões para selecionar linhas -->
-    <button onclick="selecionarLinha('linha1', 'green')">Selecionar Linha 1 (Verde)</button>
-    <button onclick="selecionarLinha('linha2', 'blue')">Selecionar Linha 2 (Azul)</button>
-    <button onclick="limparPlano()">Limpar Plano</button>
-    <br><br>
+    <form action="{{form_action}}" method="post" class="container-all form-horizontal" style="height:75%">
+        {% csrf_token %} 
+        <!-- Conteúdo da Primeira Aba -->
+        <div id="first" class="tabcontent">
+            {% include 'atendimento/pages_audiometrias/page1_au.html' %}
+        </div>
+        <!-- Conteúdo da Segunda Aba -->
+        <div id="second" class="tabcontent">
+            {% include 'atendimento/pages_audiometrias/page2_au.html' %} 
+        </div>        
+        <div style="position: absolute; bottom: 20%; ">        
+            <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
+    </form>
+            {% if option_delete == 'yes'%}
+            <form action="{% url 'storage:deleteInsumo' insumo.id %}" method="POST">
+                {% csrf_token %}
+                {% if confirmation_delete == 'no' %}
+                <input name="confirmation_delete" type="hidden" value="yes">
+                <button class="btn btn-danger">Confirma?</button>  
+                {% else %}
+                <button class="btn btn-danger">Delete</button> 
+                {% endif %}      
+                <a href="{% url 'estoque:listInsumo' %}" class="btn btn-primary">Voltar</a>
+        </div>  
+            </form> 
+            {% endif %}
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+    var pontosLinha1 = [];
+    var pontosLinha2 = [];
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
 
-    {% for field in form %}
-        {{field.label}}
-        {{field}} <br>
-    {% endfor %}
+    var linhaAtual = null;
+    var corLinhaAtual = null;
 
-    <script>
-        var pontosLinha1 = [];
-        var pontosLinha2 = [];
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
+    function selecionarLinha(classe, cor) {
+        linhaAtual = classe;
+        corLinhaAtual = cor;
+    }
 
-        var linhaAtual = null;
-        var corLinhaAtual = null;
+    function desenharReta(event) {
+        if (linhaAtual === null || corLinhaAtual === null) {
+            return;
+        }
+    
+        var plano = document.getElementById('plano-cartesiano').getBoundingClientRect();
+        var x = event.clientX - plano.left;
+        var y = event.clientY - plano.top;
+    
+        // Limita a posição do ponto dentro dos limites do plano no eixo x
+        x = Math.max(0, Math.min(x, plano.width));
+        
+        // Limita a posição do ponto dentro dos limites do plano no eixo y
+        y = Math.max(0, Math.min(y, plano.height));
+    
+        var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+    
+        if (linhaAtual === 'linha1') {
+            pontosLinha1.push(ponto);
+            desenharPontos(pontosLinha1);
+            desenharLinhas(pontosLinha1);
+        } else if (linhaAtual === 'linha2') {
+            pontosLinha2.push(ponto);
+            desenharPontos(pontosLinha2);
+            desenharLinhas(pontosLinha2);
+        }
+    }    
 
-        function selecionarLinha(classe, cor) {
-            linhaAtual = classe;
-            corLinhaAtual = cor;
+    function desenharPontos(pontos) {
+        for (var i = 0; i < pontos.length; i++) {
+            var ponto = pontos[i];
+            ctx.fillStyle = ponto.cor;
+            ctx.beginPath();
+            ctx.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function desenharLinhas(pontos) {
+        for (var i = 0; i < pontos.length - 1; i++) {
+            var ponto1 = pontos[i];
+            var ponto2 = pontos[i + 1];
+
+            ctx.strokeStyle = ponto1.cor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(ponto1.x, ponto1.y);
+            ctx.lineTo(ponto2.x, ponto2.y);
+            ctx.stroke();
+        }
+    }
+
+    function limparPlano() {
+        // Limpa os arrays de pontos
+        pontosLinha1 = [];
+        pontosLinha2 = [];
+
+        // Limpa o canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Limpa as marcações no eixo x
+        var marcacoesX = document.querySelectorAll('.marca-x');
+        for (var i = 0; i < marcacoesX.length; i++) {
+            marcacoesX[i].style.backgroundColor = 'transparent';
         }
 
-        function desenharReta(event) {
-            if (linhaAtual === null || corLinhaAtual === null) {
-                return;
-            }
-        
-            var plano = document.getElementById('plano-cartesiano').getBoundingClientRect();
-            var x = event.clientX - plano.left;
-            var y = event.clientY - plano.top;
-        
-            // Limita a posição do ponto dentro dos limites do plano no eixo x
-            x = Math.max(0, Math.min(x, plano.width));
-            
-            // Limita a posição do ponto dentro dos limites do plano no eixo y
-            y = Math.max(0, Math.min(y, plano.height));
-        
-            var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
-        
-            if (linhaAtual === 'linha1') {
-                pontosLinha1.push(ponto);
-                desenharPontos(pontosLinha1);
-                desenharLinhas(pontosLinha1);
-            } else if (linhaAtual === 'linha2') {
-                pontosLinha2.push(ponto);
-                desenharPontos(pontosLinha2);
-                desenharLinhas(pontosLinha2);
-            }
+        // Limpa as marcações no eixo y
+        var marcacoesY = document.querySelectorAll('.marca-y');
+        for (var i = 0; i < marcacoesY.length; i++) {
+            marcacoesY[i].style.backgroundColor = 'transparent';
         }
+    }
+
+    var pontosLinha3 = [];
+    var pontosLinha4 = [];
+    var canvas2 = document.getElementById('canvas2');
+    var ctx2 = canvas2.getContext('2d');
+
+    var linhaAtual2 = null;
+    var corLinhaAtual2 = null;
+
+    function selecionarLinha2(classe, cor) {
+        linhaAtual2 = classe;
+        corLinhaAtual2 = cor;
+        console.log(linhaAtual2)
+        console.log(corLinhaAtual2)
+    }
+
+    function desenharReta2(event) {
+        if (linhaAtual2 === null || corLinhaAtual2 === null) {
+            return;
+        }
+    
+        var plano2 = document.getElementById('plano-cartesiano2').getBoundingClientRect();
+        var x = event.clientX - plano2.left;
+        var y = event.clientY - plano2.top;
+    
+        // Limita a posição do ponto dentro dos limites do plano no eixo x
+        x = Math.max(0, Math.min(x, plano2.width));
         
+        // Limita a posição do ponto dentro dos limites do plano no eixo y
+        y = Math.max(0, Math.min(y, plano2.height));
+    
+        var ponto2 = { x: x, y: y, cor: corLinhaAtual2, classe: linhaAtual2 };
+    
+        if (linhaAtual2 === 'linha1') {
+            pontosLinha3.push(ponto2);
+            desenharPontos2(pontosLinha3);
+            desenharLinhas2(pontosLinha3);
+        } else if (linhaAtual2 === 'linha2') {
+            pontosLinha4.push(ponto2);
+            desenharPontos2(pontosLinha4);
+            desenharLinhas2(pontosLinha4);
+        }
+    }   
+    
+    function desenharPontos2(pontos) {
+        for (var i = 0; i < pontos.length; i++) {
+            var ponto = pontos[i];
+            ctx2.fillStyle = ponto.cor;
+            ctx2.beginPath();
+            ctx2.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
+            ctx2.fill();
+        }
+    }
 
-        function desenharPontos(pontos) {
-            for (var i = 0; i < pontos.length; i++) {
-                var ponto = pontos[i];
-                ctx.fillStyle = ponto.cor;
-                ctx.beginPath();
-                ctx.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-            }
+    function desenharLinhas2(pontos) {
+        for (var i = 0; i < pontos.length - 1; i++) {
+            var ponto1 = pontos[i];
+            var ponto2 = pontos[i + 1];
+
+            ctx2.strokeStyle = ponto1.cor;
+            ctx2.lineWidth = 2;
+            ctx2.beginPath();
+            ctx2.moveTo(ponto1.x, ponto1.y);
+            ctx2.lineTo(ponto2.x, ponto2.y);
+            ctx2.stroke();
+        }
+    }
+
+    function limparPlano2() {
+        // Limpa os arrays de pontos
+        pontosLinha3 = [];
+        pontosLinha4 = [];
+
+        // Limpa o canvas
+        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+        // Limpa as marcações no eixo x
+        var marcacoesX = document.querySelectorAll('.marca-x');
+        for (var i = 0; i < marcacoesX.length; i++) {
+            marcacoesX[i].style.backgroundColor = 'transparent';
         }
 
-        function desenharLinhas(pontos) {
-            for (var i = 0; i < pontos.length - 1; i++) {
-                var ponto1 = pontos[i];
-                var ponto2 = pontos[i + 1];
-
-                ctx.strokeStyle = ponto1.cor;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(ponto1.x, ponto1.y);
-                ctx.lineTo(ponto2.x, ponto2.y);
-                ctx.stroke();
-            }
+        // Limpa as marcações no eixo y
+        var marcacoesY = document.querySelectorAll('.marca-y');
+        for (var i = 0; i < marcacoesY.length; i++) {
+            marcacoesY[i].style.backgroundColor = 'transparent';
         }
+    }
 
-        function limparPlano() {
-            // Limpa os arrays de pontos
-            pontosLinha1 = [];
-            pontosLinha2 = [];
+    $(document).ready(function($){
+        $('.mask-date').mask('00/00/0000');  
+    });
 
-            // Limpa o canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Limpa as marcações no eixo x
-            var marcacoesX = document.querySelectorAll('.marca-x');
-            for (var i = 0; i < marcacoesX.length; i++) {
-                marcacoesX[i].style.backgroundColor = 'transparent';
-            }
-
-            // Limpa as marcações no eixo y
-            var marcacoesY = document.querySelectorAll('.marca-y');
-            for (var i = 0; i < marcacoesY.length; i++) {
-                marcacoesY[i].style.backgroundColor = 'transparent';
-            }
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
         }
-    </script>
-</body>
-</html>
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    document.getElementById("defaultOpen").click();
+</script>
+{% endblock content %}

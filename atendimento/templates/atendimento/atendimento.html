@@ -113,37 +113,25 @@
 
       <div style="position: absolute; bottom: 20%; ">        
         <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
-    </form>
-          {% if option_delete == 'yes'%}
-          <form action="{% url 'storage:deleteInsumo' insumo.id %}" method="POST">
-              {% csrf_token %}
-              {% if confirmation_delete == 'no' %}
-                <input name="confirmation_delete" type="hidden" value="yes">
-                <button class="btn btn-danger">Confirma?</button>  
-              {% else %}
-                <button class="btn btn-danger">Delete</button> 
-              {% endif %}      
-              <a href="{% url 'storage:listInsumo' %}" class="btn btn-primary">Voltar</a>
-      </div>  
-          </form> 
-          {% endif %}  
+      </div>
+    </form>        
   </div>
-  <script>
-    function openTab(evt, tabName) {
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-      document.getElementById(tabName).style.display = "block";
-      evt.currentTarget.className += " active";
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
     }
-    document.getElementById("defaultOpen").click();
-  </script>
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+</script>
   
 {% endblock content %}
 

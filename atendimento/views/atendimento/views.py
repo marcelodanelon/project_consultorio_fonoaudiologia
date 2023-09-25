@@ -229,15 +229,25 @@ def historicoAtendimento(request):
 
 @login_required(login_url='home:loginUser')
 def audiometria(request):
+    form_action = reverse('atendimento:audiometria')
     form = AudiometriaForm()
     pontos_em_memoria = []
+
+    if request.method == 'POST':
+        form = AudiometriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Audiometria gravada com sucesso!')
+            return redirect('atendimento:index')
 
     context = {
         'pontos': pontos_em_memoria,
         'form' : form,
+        'name_screen': 'Audiometria',
+        'name_module': 'Atendimento',
+        'form_action': form_action,
     }
 
-    pontos_em_memoria = []
     return render(
         request, 
         'atendimento/audiometria.html', 

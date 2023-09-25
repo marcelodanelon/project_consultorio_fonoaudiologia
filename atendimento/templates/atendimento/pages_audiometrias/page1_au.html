@@ -1,0 +1,179 @@
+<div class="row align-items-center">
+    <div class="col">
+        {{form.aClient.label}}{{form.aClient}}
+    </div>
+    <div class="col">
+        {{form.auData.label}}{{form.auData}}
+    </div>
+    <div class="col">
+        {{form.auProfessional.label}}{{form.auProfessional}}
+    </div>
+    <div class="col">
+        {{form.auLocal.label}}{{form.auLocal}}
+    </div>
+</div>
+<div class="row align-items-center">
+    <div class="col">
+        {{form.auAudio.label}}{{form.auAudio}}
+    </div>
+    <div class="col">
+        {{form.auCalib.label}}{{form.auCalib}}
+    </div>
+    <div class="col">
+        {{form.auMedSo.label}}{{form.auMedSo}}
+    </div>
+</div>
+<br><br>
+<div class="row align-items-center">
+    <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <b>Ouvido Esquerdo</b><br>
+        <div class="row">
+            <div class="col-3">
+                <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
+                    <a class="btn btn-success" onclick="selecionarLinha('linha1', 'green')">Linha 1</a>
+                    <br>
+                    <a class="btn btn-danger" onclick="selecionarLinha('linha2', 'red')">Linha 2</a>
+                    <br>
+                    <a class="btn btn-primary" onclick="limparPlano()">Limpar</a>
+                    <br>
+                    {{ form.auMVaOe.label }}{{ form.auMVaOe }}
+                    <br>
+                    {{ form.auMVaOe.label }}{{ form.auMVaOe }}
+                </div>
+            </div>                
+            <div class="col-3">
+                <div id="plano-cartesiano" onclick="desenharReta(event)" style="margin-left: 50px;">
+                    <!-- Linhas de grade do eixo x -->
+                    <div class="linha-x" style="top: 0%;"></div>
+                    <div class="linha-x" style="top: 7.69%;"></div>
+                    <div class="linha-x" style="top: 15.38%;"></div>
+                    <div class="linha-x" style="top: 23.07%;"></div>
+                    <div class="linha-x" style="top: 30.76%;"></div>
+                    <div class="linha-x" style="top: 38.46%;"></div>
+                    <div class="linha-x" style="top: 46.15%;"></div>
+                    <div class="linha-x" style="top: 53.84%;"></div>
+                    <div class="linha-x" style="top: 61.53%;"></div>
+                    <div class="linha-x" style="top: 70%;"></div>
+                    <div class="linha-x" style="top: 80%;"></div>
+                    <div class="linha-x" style="top: 90%;"></div>
+
+                    <!-- Marcas no eixo x -->
+                    <div class="marca-x" style="left: 0%;">0</div>
+                    <div class="marca-x" style="left: 10%;">250</div>
+                    <div class="marca-x" style="left: 20%;">500</div>
+                    <div class="marca-x" style="left: 30%;">1K</div>
+                    <div class="marca-x" style="left: 40%;">2K</div>
+                    <div class="marca-x" style="left: 50%;">3K</div>
+                    <div class="marca-x" style="left: 60%;">4K</div>
+                    <div class="marca-x" style="left: 70%;">6K</div>
+                    <div class="marca-x" style="left: 80%;">8K</div>
+                    <div class="marca-x" style="left: 100%;">Hz</div>
+
+                    <div class="linha-y" style="left: 10%;"></div>
+                    <div class="linha-y" style="left: 20%;"></div>
+                    <div class="linha-y" style="left: 30%;"></div>
+                    <div class="linha-y" style="left: 40%;"></div>
+                    <div class="linha-y" style="left: 50%;"></div>
+                    <div class="linha-y" style="left: 60%;"></div>
+                    <div class="linha-y" style="left: 70%;"></div>
+                    <div class="linha-y" style="left: 80%;"></div>
+
+                    <!-- Marcas no eixo y -->
+                    <div class="marca-y" style="top: 0%;">-10</div>
+                    <div class="marca-y" style="top: 7.69%;">0</div>
+                    <div class="marca-y" style="top: 15.38%;">10</div>
+                    <div class="marca-y" style="top: 23.07%;">20</div>
+                    <div class="marca-y" style="top: 30.76%;">30</div>
+                    <div class="marca-y" style="top: 38.46%;">40</div>
+                    <div class="marca-y" style="top: 46.15%;">50</div>
+                    <div class="marca-y" style="top: 53.84%;">60</div>
+                    <div class="marca-y" style="top: 61.53%;">70</div>
+                    <div class="marca-y" style="top: 70%;">80</div>
+                    <div class="marca-y" style="top: 80%;">90</div>
+                    <div class="marca-y" style="top: 90%;">100</div>
+                    <div class="marca-y" style="top: 100%;">110</div>
+
+                    <!-- Elemento canvas -->
+                    <canvas id="canvas" width="300" height="350" style="position: relative; z-index: 1;"></canvas>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <b>Ouvido Direito</b><br>
+        <div class="row">
+            <div class="col-3">
+                <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
+                    <a class="btn btn-success" onclick="selecionarLinha2('linha1', 'green')">Linha 1</a>
+                    <br>
+                    <a class="btn btn-danger" onclick="selecionarLinha2('linha2', 'red')">Linha 2</a>
+                    <br>
+                    <a class="btn btn-primary" onclick="limparPlano2()">Limpar</a>
+                    <br>
+                    {{ form.auMVaOd.label }}{{ form.auMVaOd }}
+                    <br>
+                    {{ form.auMVaOd.label }}{{ form.auMVaOd }}
+                </div>
+            </div>                
+            <div class="col-3">
+                <div id="plano-cartesiano2" onclick="desenharReta2(event)" style="margin-left: 50px;">
+                    <!-- Linhas de grade do eixo x -->
+                    <div class="linha-x" style="top: 0%;"></div>
+                    <div class="linha-x" style="top: 7.69%;"></div>
+                    <div class="linha-x" style="top: 15.38%;"></div>
+                    <div class="linha-x" style="top: 23.07%;"></div>
+                    <div class="linha-x" style="top: 30.76%;"></div>
+                    <div class="linha-x" style="top: 38.46%;"></div>
+                    <div class="linha-x" style="top: 46.15%;"></div>
+                    <div class="linha-x" style="top: 53.84%;"></div>
+                    <div class="linha-x" style="top: 61.53%;"></div>
+                    <div class="linha-x" style="top: 70%;"></div>
+                    <div class="linha-x" style="top: 80%;"></div>
+                    <div class="linha-x" style="top: 90%;"></div>
+
+                    <!-- Marcas no eixo x -->
+                    <div class="marca-x" style="left: 0%;">0</div>
+                    <div class="marca-x" style="left: 10%;">250</div>
+                    <div class="marca-x" style="left: 20%;">500</div>
+                    <div class="marca-x" style="left: 30%;">1K</div>
+                    <div class="marca-x" style="left: 40%;">2K</div>
+                    <div class="marca-x" style="left: 50%;">3K</div>
+                    <div class="marca-x" style="left: 60%;">4K</div>
+                    <div class="marca-x" style="left: 70%;">6K</div>
+                    <div class="marca-x" style="left: 80%;">8K</div>
+                    <div class="marca-x" style="left: 100%;">Hz</div>
+
+                    <div class="linha-y" style="left: 10%;"></div>
+                    <div class="linha-y" style="left: 20%;"></div>
+                    <div class="linha-y" style="left: 30%;"></div>
+                    <div class="linha-y" style="left: 40%;"></div>
+                    <div class="linha-y" style="left: 50%;"></div>
+                    <div class="linha-y" style="left: 60%;"></div>
+                    <div class="linha-y" style="left: 70%;"></div>
+                    <div class="linha-y" style="left: 80%;"></div>
+
+                    <!-- Marcas no eixo y -->
+                    <div class="marca-y" style="top: 0%;">-10</div>
+                    <div class="marca-y" style="top: 7.69%;">0</div>
+                    <div class="marca-y" style="top: 15.38%;">10</div>
+                    <div class="marca-y" style="top: 23.07%;">20</div>
+                    <div class="marca-y" style="top: 30.76%;">30</div>
+                    <div class="marca-y" style="top: 38.46%;">40</div>
+                    <div class="marca-y" style="top: 46.15%;">50</div>
+                    <div class="marca-y" style="top: 53.84%;">60</div>
+                    <div class="marca-y" style="top: 61.53%;">70</div>
+                    <div class="marca-y" style="top: 70%;">80</div>
+                    <div class="marca-y" style="top: 80%;">90</div>
+                    <div class="marca-y" style="top: 90%;">100</div>
+                    <div class="marca-y" style="top: 100%;">110</div>
+
+                    <!-- Elemento canvas -->
+                    <canvas id="canvas2" width="300" height="350" style="position: relative; z-index: 1;"></canvas>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>    
+</div>

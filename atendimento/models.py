@@ -96,11 +96,11 @@ class AnamneseModel(models.Model):
     
 class AudiometriaModel(models.Model):
     aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.PROTECT, null=True)
-    auData = models.DateField(default=date.today(), verbose_name='Data')
+    auData = models.DateField(default=date.today, verbose_name='Data')
     auProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
     auLocal = models.ForeignKey(LocalModel, verbose_name="Unidade", on_delete=models.SET_NULL, null=True)
     auAudio = models.CharField(max_length=50, blank=True, null=True, verbose_name='Audiômetro')
-    auCalib = models.DateField(default=date.today(), blank=True, null=True, verbose_name='Calibração')
+    auCalib = models.DateField(blank=True, null=True, verbose_name='Calibração')
     auMedSo = models.CharField(max_length=50, blank=True, null=True, verbose_name='Médico Solicitante')
     auMVaOe = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VA (OE)')
     auMVoOe = models.CharField(max_length=30, blank=True, null=True, verbose_name='MASC. VO (OE)')
@@ -122,7 +122,7 @@ class AudiometriaModel(models.Model):
     auLDVOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
     auMascOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
     auSpaceOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
-    auObser = models.CharField(max_length=60, blank=True, null=True, verbose_name='Observações')
+    auObser = models.TextField(blank=True, null=True, verbose_name='Observações')
 
     def __str__(self) -> str:
         return f'{self.id} Data: {self.auData} Cliente: {self.aClient}'

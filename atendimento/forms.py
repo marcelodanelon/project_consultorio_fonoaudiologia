@@ -327,7 +327,7 @@ class AudiometriaForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['auCalib'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-date',
         })
         self.fields['auMedSo'].widget.attrs.update({
             'class':'form-control',
