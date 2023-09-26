@@ -69,7 +69,6 @@
                 data: $("#search").serialize(),    
                 success: function (data){
                     data_items = data.results 
-                    console.log(data_items)
                 },                 
             });
         };
@@ -87,16 +86,23 @@
                     );
                 }
             }
+            
+            var div_Items = mySelect.parent().parent().find('#div_myItems');
+            if (mySelect.val()==''){
+                div_Items.prop('hidden', true);
+            } else{
+                div_Items.prop('hidden', false);
+            }
             $(mySelect).trigger( "change" );
         });  
 
         var up = $('#isUpdate').val();
-
         //ação ao selecionar lote do insumo
         $(document).on('change', '[id=myItems]', function(e){
             var disponivel = $(this).parent().parent().find('[id=disponivel]');
             var valorUnitario = $(this).parent().parent().find('[id$=-valorUnitario]');
             var valorTotal = $(this).parent().parent().find('[id$=-valorTotal]');
+            var divSerie = $(this).parent().parent().find('[id=div_serie]');
             var serie = $(this).parent().parent().find('[id$=-serie]');
             serie.val($(this).val());
             for (const key in items_estoque.responseJSON.results){
@@ -104,10 +110,26 @@
                     disponivel.val(items_estoque.responseJSON.results[key].quantidade);
                     valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
                     valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
+                    serie.prop('required', true)
                     if (up == 0){
                         serie.val(items_estoque.responseJSON.results[key].serie);
                     }
+                    break
+                } else if (items_estoque.responseJSON.results[key].serie==null) {
+                    disponivel.val(items_estoque.responseJSON.results[key].quantidade);
+                    valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
+                    valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
+                    serie.prop('required', false)
+                    break
                 }
+                
+            }
+
+            var selectVar = $(this).val()
+            if (selectVar == null){
+                disponivel.val(0);
+                valorUnitario.val(0.0);
+                valorTotal.val(0.0);
             }
         });  
 
@@ -210,7 +232,7 @@
                                 <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                                 {{form.insumo}} 
                             </div> 
-                            <div class="col-4 ms-2"> 
+                            <div class="col-4 ms-2" id="div_myItems"> 
                                 <label class="form-label d-flex align-items-start">Serie/Lote</label>
                                 <select id='myItems' class="form-control required">                                    
                                 </select> 
@@ -252,9 +274,11 @@
                                 {{form.DELETE}}  
                             </div> 
                             
-                            <div id="btnAddRow" class="col mt-3"> 
-                                <button class="btn btn-success add-form-row">+</button> 
-                            </div>   
+                            <div class="col mt-3">
+                                <div class="text-end"> <!-- Use a classe text-end para alinhar à direita -->
+                                    <button id="btnAddRow" class="btn btn-success add-form-row">+</button>
+                                </div>
+                            </div>    
                         </div>                      
                     </div>
                 </div>

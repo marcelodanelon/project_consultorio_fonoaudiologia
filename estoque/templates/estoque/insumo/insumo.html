@@ -24,6 +24,19 @@
           $(this).attr('selected', true);
         }
       });
+
+      // caso haja quantidade positiva, bloquear alteração do tipo de controle (LOTE/QUANTIDADE)
+      var quantidadeInsumo = $('#id_quantidade').val();
+      var local = $('#id_local').val();
+      if (quantidadeInsumo > 0 || local == ''){
+        $('#id_controle').prop('disabled', true);
+        $('#id_situacao').prop('disabled', true);
+      }  
+
+      $('#btnGravar').on('click', function(){
+        $('#id_controle').prop('disabled', false);
+        $('#id_situacao').prop('disabled', false);
+      });
     });
   </script>
   <div class="container" style="padding:1px 16px;">
@@ -150,7 +163,7 @@
       </div>        
     {% endif %}
       <div class="form-content d-flex flex-row bd-highlight mb-3">        
-        <button class="btn btn-success me-1" type="submit">Gravar</button>
+        <button class="btn btn-success me-1" id="btnGravar" type="submit">Gravar</button>
         <a href="{% url 'estoque:listInsumo' %}" class="btn btn-primary">Voltar</a>
       </div>
     </form>  

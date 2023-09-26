@@ -4,8 +4,9 @@ from django.forms import inlineformset_factory
 from django.urls import reverse
 from django.contrib import messages
 from datetime import date
+from django.db.models import F, Case, When, Value, CharField
 from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm
-from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel
+from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
 
@@ -199,7 +200,6 @@ def historicoAtendimento(request):
             })
     for client_saida_item in client_saida_com_nome_insumo:
         print(f'Movimentação ID: {client_saida_item["movimentacao_id"]}, Nome do Insumo: {client_saida_item["nome_insumo"]}')
-    from django.db.models import F, Case, When, Value, CharField
 
     client_saida = MovimentacaoInsumoModel.objects.exclude(eClient=None).filter(eClient=client)
 
@@ -209,12 +209,16 @@ def historicoAtendimento(request):
             default=Value(''), output_field=CharField()
         )
     )
+
+    client_audiometria = AudiometriaModel.objects.filter(aClient=client)
+
     context = {
         'form_atendimento': form_atendimento,
         'atendimentos': client_atendimentos,
         'telefonemas': client_telefonemas,
         'anamneses': client_anamneses,
         'saidasEstoque': client_saida,
+        'audiometrias': client_audiometria,
         'name_module': 'Atendimento',
         'title': 'Atendimento',
     }

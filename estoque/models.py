@@ -28,7 +28,7 @@ class InsumoModel(models.Model):
     quantidadeMin = models.CharField(max_length=5, blank=True, null=True, verbose_name='Estoque Mínimo')
     marca = models.ForeignKey(MarcaModel, verbose_name='Marca', on_delete=models.SET_NULL, null=True)
     grupoInsumo = models.ForeignKey(GrupoInsumoModel, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Grupo do Insumo')
-    controle = models.CharField(max_length=10, choices=[('lote','Lote'),('quantidade','Quantidade')], default=1, verbose_name='Tipo de Controle')
+    controle = models.CharField(max_length=10, choices=[('lote','Lote'),('quantidade','Quantidade')], default='lote', verbose_name='Tipo de Controle')
     situacao = models.CharField(max_length=3, choices=[('sim','Sim'),('nao','Não')], default=1, verbose_name='Situação')
 
     def __str__(self) -> str:
@@ -52,7 +52,7 @@ class ItensInsumoModel(models.Model):
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
-    serie = models.CharField(max_length=20, null=True, verbose_name='Serie/Lote')
+    serie = models.CharField(max_length=20, blank=True, null=True, verbose_name='Serie/Lote')
     local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True, default='UNIDADE')
 
     def __str__(self) -> str:
@@ -67,7 +67,7 @@ class ItensMovimentacaoInsumoModel(models.Model):
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
-    serie = models.CharField(max_length=20, null=True, verbose_name='Serie/Lote')
+    serie = models.CharField(max_length=20, blank=True, null=True, verbose_name='Serie/Lote')
     local = models.ForeignKey(LocalModel, verbose_name='Unidade', on_delete=models.SET_NULL, null=True, default='UNIDADE')
 
     def __str__(self) -> str:

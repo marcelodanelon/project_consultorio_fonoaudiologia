@@ -55,6 +55,7 @@
                     success: function (data){
                         data_items = data.results 
                         var jsonDataInsumo = JSON.parse(data.results);
+
                         // pegando o grupo do insumo
                         var grupo = jsonDataInsumo[0].fields.grupoInsumo;
                         if(grupo!=null){
@@ -112,6 +113,16 @@
             } else {
                 var valorCompra = $(this).parent().parent().find('#div_valorCompra');
                 valorCompra.prop('hidden', true);
+            }
+
+            var controle = JSON.parse(items_insumo.responseJSON.results)[0].fields.controle
+            var serie = $(this).parent().parent().find('[id$=-serie]');
+            if (controle == 'quantidade'){
+                serie.prop('required', false)
+                serie.prop('readonly', true)
+            } else{
+                serie.prop('required', true)
+                serie.prop('readonly', false)
             }
         });  
 
@@ -230,7 +241,7 @@
                                 <label for="{{ form.dataValidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataValidade.label }}</label>
                                 {{form.dataValidade}} 
                             </div> 
-                            <div class="col-3 ms-2">    
+                            <div class="col-3 ms-2" id="serie_div">    
                                 <label for="{{ form.serie.id_for_label }}" class="form-label d-flex align-items-start">{{ form.serie.label }}</label>
                                 {{form.serie}}  
                             </div> 
@@ -321,7 +332,7 @@
         var total = parseInt($('#id_' + prefix + '_set-TOTAL_FORMS').val());
         if (total > 1){
             var divFind = btn.parents('.form-row');
-            var elementFind = divFind.find("input[name$='serie']");
+            var elementFind = divFind.find("input[name$='-serie']");
             var numberElement = elementFind.attr('name').replace(/[^0-9]/g,'')
             document.getElementById("id_" + prefix + "_set-" + numberElement + "-DELETE").checked = true;
 

@@ -17,7 +17,7 @@ def listAudiometria(request):
     context = {
             'page_obj': page_obj,
             'title':'Cadastro',
-            'name_module': 'Estoque',
+            'name_module': 'Atendimento',
             'form_action': form_action,
     }
 

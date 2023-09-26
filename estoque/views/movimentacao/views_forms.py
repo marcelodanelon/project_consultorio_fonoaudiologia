@@ -61,6 +61,8 @@ def movimentacaoInsumoEntrada(request):
         form = MovimentacaoInsumoForm(request.POST, request.FILES, instance=modelMov)
         formset = formIte(request.POST, request.FILES, instance=modelMov)
         formsetInsumo = formIteInsumo(request.POST, request.FILES, instance=modelMov)
+        print(form.errors)
+        print(formset.errors)
 
         if formset.is_valid() and form.is_valid():
             success = True
@@ -212,7 +214,8 @@ def movimentacaoInsumoSaida(request):
             # verifica se há saldo para saída
             for item in modelSet:
                 if success != False:
-                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).get()                   
+                    print(item.serie)
+                    insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(local=item.local).filter(serie=item.serie).get()                   
                     if insumo.quantidade >= item.quantidade:
                         success=True
                     else:
@@ -220,7 +223,7 @@ def movimentacaoInsumoSaida(request):
                         break
 
             # verifica se informou um usuário caso tipo seja venda
-            if model.eClient == None:
+            if model.eClient == None and model.tipoMovimentacao == 'venda':
                 messages.error(request, 'Usuário de venda não informado!')
                 success = False
 

@@ -266,27 +266,55 @@
                 {% endif %}
             </div>
             <div class="grid-item d-flex flex-column bd-highlight item2">
-                <b>Audiometrias (em desenvolvimento)</b>
+                <b>Audiometrias</b>
                 {% if audiometrias %}
                 <table>
                     <thead>
                         <tr class="table-row table-row-header">
-                            <th class="table-header">Data 1º Consulta</th>
+                            <th class="table-header">Data</th>
                             <th class="table-header">Profissional</th>
                             <th class="table-header">Unidade</th>
+                            <th class="table-header">Audiômetro</th>
+                            <th class="table-header">Calibração</th>
+                            <th class="table-header">Médico solicitante</th>
+                            <th class="table-header">MASC. VA (OE)</th>
+                            <th class="table-header">MASC. VO (OE)</th>
+                            <th class="table-header">MASC. VA (OD)</th>
+                            <th class="table-header">MASC. VO (OD)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for field in atendimentos %}            
+                        {% for field in audiometrias %}            
                             <tr class="table-row">
                                 <td class="table-cel">
-                                    {{ field.aDataPri }}
+                                    {{ field.auData }}
                                 </td>
                                 <td class="table-cel">
-                                    {{ field.aProfessional }}
+                                    {{ field.auProfessional }}
                                 </td>
                                 <td class="table-cel">
-                                    {{ field.aLocal }}
+                                    {{ field.auLocal }}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auAudio %}{{ field.auAudio }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auCalib %}{{ field.auCalib }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auMedSo %}{{ field.auMedSo }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auMVaOe %}{{ field.auMVaOe }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auMVoOe %}{{ field.auMVoOe }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auMVaOd %}{{ field.auMVaOd }}{% endif %}
+                                </td>
+                                <td class="table-cel">
+                                    {% if field.auMVoOd %}{{ field.auMVoOd }}{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
