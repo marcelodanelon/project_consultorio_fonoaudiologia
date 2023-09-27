@@ -87,8 +87,8 @@ def movimentacaoInsumoEntrada(request):
         form = MovimentacaoInsumoForm(request.POST, request.FILES, instance=modelMov)
         formset = formIte(request.POST, request.FILES, instance=modelMov)
         formsetInsumo = formIteInsumo(request.POST, request.FILES, instance=modelMov)
-        print(form.errors)
-        print(formset.errors)
+        # print(form.errors)
+        # print(formset.errors)
 
         if formset.is_valid() and form.is_valid():
             success = True
@@ -126,12 +126,11 @@ def movimentacaoInsumoEntrada(request):
                     print(e)
 
                 # retira pontos e virgulas e converte em reais
-                item_valorUnitario = float(item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())                
+                item_valorUnitario = float(item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())           
                 item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
 
                 # verifica valor unitario divergente
                 if insumo != None and item_valorUnitario != insumo_valorUnitario:
-                    print(item_valorUnitario, insumo_valorUnitario)
                     messages.error(request, f'Valor Unitário para o {insumo}, diferente da série/lote existente.')
                     success = False
                     break
@@ -155,6 +154,7 @@ def movimentacaoInsumoEntrada(request):
                         item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
                         item_valorCompra = float(item.valorCompra.replace(",","").replace(".",""))
                         item.valorCompra = format_currency(item_valorCompra / 100, 'BRL', locale='pt_BR')
+                        item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
                         item.save()
 
                 for item in modelSetInsumo:
@@ -173,7 +173,9 @@ def movimentacaoInsumoEntrada(request):
                         item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
                         item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
                         item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
+                        item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
                         item.save()
+                messages.success(request, 'Movimentação gravada com sucesso!')
                 return redirect('estoque:index')
 
         context = {

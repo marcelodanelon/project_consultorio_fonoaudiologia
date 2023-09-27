@@ -371,5 +371,16 @@
         deleteForm('itensinsumomodel', $(this));
         return false;
     });
+    $(document).ready(function() {
+        // Aplicar a máscara de dinheiro quando o campo perde o foco
+        $('.mask-money').on('blur', function() {
+            var valor = $(this).val();
+            // Verificar se o valor tem apenas um número
+            if (/^\d+$/.test(valor)) {
+                // Converter para 2 casas decimais com a máscara
+                $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
+            }
+        });
+    });
 </script>
 {% endblock content %}
