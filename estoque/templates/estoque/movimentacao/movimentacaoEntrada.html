@@ -23,8 +23,12 @@
             var local = $(this).children("option:selected").val();
             if(local!=''){
               window.location.replace("{% url 'estoque:movimentacaoInsumoEntrada' %}?searchLocal=" + local);
+            }else{
+                $('#id_tipoMovimentacao').prop('disabled', true)
+                $('#id_data').prop('disabled', true)
             }
         });
+        
         //obter valor parametro searchLocal (control select)
         var url_string = window.location.href; 
         var url = new URL(url_string);
@@ -34,6 +38,15 @@
             $(this).attr('selected', true);
           }
         });
+
+        //verifica se há um local selecionado, caso contrário bloqueia campos
+        if (paramValue){
+            $('#id_tipoMovimentacao').prop('disabled', false)
+            $('#id_data').prop('disabled', false)
+        }else{
+            $('#id_tipoMovimentacao').prop('disabled', true)
+            $('#id_data').prop('disabled', true)
+        }
 
         var conditionRow = $('.form-row:not(:first)');
         conditionRow.find('.btn.add-form-row')

@@ -28,7 +28,33 @@ def getJSONinsumo(request):
             return JsonResponse(data={'results': None})
     else:
         return JsonResponse(data={'results': None})
-    
+
+@login_required(login_url='home:loginUser')
+def getJSONclient(request):
+    if request.GET.get('searchClient'):
+        q = int(request.GET.get('searchClient'))
+        tipoMov = request.GET.get('tipoMovimentacao')
+        mensagem = ""
+        if tipoMov == 'doacao':
+            try:
+                verificandoDoacoes = MovimentacaoInsumoModel.objects.filter(tipoMovimentacao='doacao').filter(eClient=q).last()
+                data = verificandoDoacoes.data.strftime('%d/%m/%Y')
+                if verificandoDoacoes:
+                    mensagem = f"Última data de doação em {data} com os itens: "
+                    itensDaDoacao = ItensMovimentacaoInsumoModel.objects.filter(movimentacao=verificandoDoacoes.pk)
+                    for item in itensDaDoacao:
+                        mensagem += f'{item.insumo} '
+            except:
+                mensagem = ""
+        model = MovimentacaoInsumoModel.objects.filter(eClient=q).first()
+        if model:
+            model_data = serializers.serialize('json', [model])
+            return JsonResponse(data={'results': model_data, 'mensagem': mensagem}, safe=False)
+        else:
+            return JsonResponse(data={'results': None, 'mensagem': mensagem})
+    else:
+        return JsonResponse(data={'results': None})
+
 @login_required(login_url='home:loginUser')
 def getJSONgrupo(request):
     if request.GET.get('searchGrupo'):
@@ -214,7 +240,6 @@ def movimentacaoInsumoSaida(request):
             # verifica se há saldo para saída
             for item in modelSet:
                 if success != False:
-                    print(item.serie)
                     insumo = ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(local=item.local).filter(serie=item.serie).get()                   
                     if insumo.quantidade >= item.quantidade:
                         success=True

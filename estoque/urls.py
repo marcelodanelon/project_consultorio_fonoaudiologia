@@ -29,4 +29,5 @@ urlpatterns = [
     path('getJSONitem/', movimentacao.getJSONitem, name='getJSONitem'),
     path('getJSONinsumo/', movimentacao.getJSONinsumo, name='getJSONinsumo'),
     path('getJSONgrupo/', movimentacao.getJSONgrupo, name='getJSONgrupo'),
+    path('getJSONclient/', movimentacao.getJSONclient, name='getJSONclient'),
 ]

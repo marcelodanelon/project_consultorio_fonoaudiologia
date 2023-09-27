@@ -22,9 +22,13 @@
         $("#id_local").change(function(){
             var local = $(this).children("option:selected").val();
             if(local!=''){
-              window.location.replace("{% url 'estoque:movimentacaoInsumoSaida' %}?searchLocal=" + local);
+                window.location.replace("{% url 'estoque:movimentacaoInsumoSaida' %}?searchLocal=" + local);
+            }else{
+                $('#id_tipoMovimentacao').prop('disabled', true)
+                $('#id_data').prop('disabled', true)
             }
         });
+
         //obter valor parametro searchLocal (control select)
         var url_string = window.location.href; 
         var url = new URL(url_string);
@@ -34,6 +38,15 @@
             $(this).attr('selected', true);
           }
         });
+
+        //verifica se há um local selecionado, caso contrário bloqueia campos
+        if (paramValue){
+            $('#id_tipoMovimentacao').prop('disabled', false)
+            $('#id_data').prop('disabled', false)
+        }else{
+            $('#id_tipoMovimentacao').prop('disabled', true)
+            $('#id_data').prop('disabled', true)
+        }
 
         var conditionRow = $('.form-row:not(:first)');
         conditionRow.find('.btn.add-form-row')
@@ -59,10 +72,40 @@
             }
         });
 
-        var items_estoque;
+        //ação ao selecionar cliente
+        var itens_cliente;
+        var mensagem;
+        $(document).on('change', '#id_eClient', function(e){
+            var cliente = $("#id_eClient").children("option:selected").val();
+            var tipoMovimentacao = $("#id_tipoMovimentacao").children("option:selected").val();
+            
+            if (cliente !== '') {
+                var ajaxPromise = $.ajax({
+                    url: "{% url 'estoque:getJSONclient' %}?searchClient=" + cliente + "&tipoMovimentacao=" + tipoMovimentacao,
+                    type: "get",
+                    data: $("#search").serialize(),
+                });
+                
+                ajaxPromise.done(function (data) {
+                    itens_cliente = data.results;
+                    mensagem = data.mensagem;
+                    if(mensagem){
+                        $('#message').text(mensagem)
+                    } else{
+                        $('#message').text('')
+                    }
+                });
+                
+                ajaxPromise.fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error("Erro na requisição AJAX: " + textStatus, errorThrown);
+                });
+            }
+        });
+
+        var itens_estoque;
         var local = $("#id_local").children("option:selected").val();
         if(local!=''){
-            items_estoque = $.ajax({
+            itens_estoque = $.ajax({
                 url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   
                 type: "get",     
                 async: false,  
@@ -79,10 +122,10 @@
             var insumo = $(this).parent().parent().find('[id$=-insumo]').val();
             var mySelect = $(this).parent().parent().find('[id=myItems]');
             mySelect.empty();
-            for (const key in items_estoque.responseJSON.results){
-                if(items_estoque.responseJSON.results[key].local_id==local && items_estoque.responseJSON.results[key].insumo_id==insumo){
+            for (const key in itens_estoque.responseJSON.results){
+                if(itens_estoque.responseJSON.results[key].local_id==local && itens_estoque.responseJSON.results[key].insumo_id==insumo){
                     mySelect.append(
-                        $('<option></option>').val(items_estoque.responseJSON.results[key].serie).html('Serie/Lote: ' + items_estoque.responseJSON.results[key].serie)
+                        $('<option></option>').val(itens_estoque.responseJSON.results[key].serie).html('Serie/Lote: ' + itens_estoque.responseJSON.results[key].serie)
                     );
                 }
             }
@@ -105,20 +148,20 @@
             var divSerie = $(this).parent().parent().find('[id=div_serie]');
             var serie = $(this).parent().parent().find('[id$=-serie]');
             serie.val($(this).val());
-            for (const key in items_estoque.responseJSON.results){
-                if(items_estoque.responseJSON.results[key].serie==serie.val()){
-                    disponivel.val(items_estoque.responseJSON.results[key].quantidade);
-                    valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
-                    valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
+            for (const key in itens_estoque.responseJSON.results){
+                if(itens_estoque.responseJSON.results[key].serie==serie.val()){
+                    disponivel.val(itens_estoque.responseJSON.results[key].quantidade);
+                    valorUnitario.val(itens_estoque.responseJSON.results[key].valorUnitario);
+                    valorTotal.val(itens_estoque.responseJSON.results[key].valorTotal);
                     serie.prop('required', true)
                     if (up == 0){
-                        serie.val(items_estoque.responseJSON.results[key].serie);
+                        serie.val(itens_estoque.responseJSON.results[key].serie);
                     }
                     break
-                } else if (items_estoque.responseJSON.results[key].serie==null) {
-                    disponivel.val(items_estoque.responseJSON.results[key].quantidade);
-                    valorUnitario.val(items_estoque.responseJSON.results[key].valorUnitario);
-                    valorTotal.val(items_estoque.responseJSON.results[key].valorTotal);
+                } else if (itens_estoque.responseJSON.results[key].serie==null) {
+                    disponivel.val(itens_estoque.responseJSON.results[key].quantidade);
+                    valorUnitario.val(itens_estoque.responseJSON.results[key].valorUnitario);
+                    valorTotal.val(itens_estoque.responseJSON.results[key].valorTotal);
                     serie.prop('required', false)
                     break
                 }
@@ -133,6 +176,21 @@
             }
         });  
 
+        //ação ao selecionar tipo de movimentacao
+        $('#id_tipoMovimentacao').on('change', function(){
+            if ($('#id_operacao').children("option:selected").val() == 'Saída') {
+                $("#id_tipoMovimentacao option[value='compra']").remove();
+            }
+            if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
+                $('#id_eClient').parent().prop('hidden', false);
+            }else{
+                $('#id_eClient').parent().prop('hidden', true);
+            }
+            $('#id_eClient').trigger('change');
+        });       
+        $('#id_tipoMovimentacao').trigger('change');
+
+        //ação ao enviar Formulario
         $('#search').on('submit', function() {
             $('[id$=-insumo]').prop('disabled', false);
         });
@@ -162,18 +220,6 @@
                 $(this).prop("hidden", true);
             });
         }
-
-        $('#id_tipoMovimentacao').on('change', function(){
-            if ($('#id_operacao').children("option:selected").val() == 'Saída') {
-                $("#id_tipoMovimentacao option[value='compra']").remove();
-            }
-            if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
-                $('#id_eClient').parent().prop('hidden', false);
-            }else{
-                $('#id_eClient').parent().prop('hidden', true);
-            }
-        });       
-        $('#id_tipoMovimentacao').trigger('change');
     })
 
     function parsePotentiallyGroupedFloat(stringValue) {
@@ -204,9 +250,17 @@
 
 {% block content %}
 <div class="container" style="padding:1px 16px;">
-    <h3>{{name_screen}}</h3>
+    <div class="row">
+        <div class="col-6">
+            <h3>{{name_screen}}</h3> 
+        </div>
+        <div class="col mt-3">
+            <div class="text-end">
+                <h5 id="message" style="color: #007BFF; font-family: 'Arial', sans-serif; font-size: 18px;"></h5>
+            </div>
+        </div>
+    </div>
     <form action="{{form_action}}" method="post" class="container-all form-horizontal" id="search">
-        {% csrf_token %}
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
         <div class="row align-items-center">
             {% for field in formMov %}
@@ -275,7 +329,7 @@
                             </div> 
                             
                             <div class="col mt-3">
-                                <div class="text-end"> <!-- Use a classe text-end para alinhar à direita -->
+                                <div class="text-end"> 
                                     <button id="btnAddRow" class="btn btn-success add-form-row">+</button>
                                 </div>
                             </div>    
@@ -348,15 +402,6 @@
         newElement.find('[id=disponivel]').each(function() {
             $(this).val(0);
         });
-        //newElement.find('[id$=-dataValidade]')each(function(e){
-        //$(selector).on("click", function(){
-        //    $('.mask-date').mask('00/00/0000');  
-            //$('.mask-money').mask("#.##0,00", {reverse: true});
-        //}) 
-        //$(function($){
-        //    $('.mask-date').mask('00/00/0000');  
-        //    $('.mask-money').mask("#.##0,00", {reverse: true});
-        //})
         total++;
         $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
         $(selector).before(newElement);
