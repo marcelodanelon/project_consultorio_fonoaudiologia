@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.urls import reverse
+from django.http import JsonResponse
+from django.core import serializers
 from django.contrib import messages
 from datetime import date
 from django.db.models import F, Case, When, Value, CharField
@@ -9,6 +11,13 @@ from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicos
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
+
+@login_required(login_url='home:loginUser')
+def getJSONclient(request):
+    if request.GET.get('searchClient'):
+        q = request.GET.get('searchClient')
+        model = list(ClientModel.objects.filter(first_name__contains=q).values('id', 'first_name','last_name', 'born', 'document1'))
+        return JsonResponse(data={'results': model})
 
 @login_required(login_url='home:loginUser')
 def index(request):

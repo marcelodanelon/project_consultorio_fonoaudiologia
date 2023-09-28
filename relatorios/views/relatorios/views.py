@@ -117,6 +117,8 @@ def rel_movimentacao_insumos(request):
                         campo = 'Valor Total'
                     elif campo == 'quantidade':
                         campo = 'Quantidade'
+                    elif campo == 'valorCompra':
+                        campo = 'Valor Compra'
                     elif campo == 'serie':
                         campo = 'Série/Lote'
                     elif campo == 'operacao':

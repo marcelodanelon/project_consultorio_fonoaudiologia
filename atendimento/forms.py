@@ -1,13 +1,18 @@
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
 from django import forms
+from home.models import ClientModel
+from django.db.models import F
 
 class AtendimentoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['aClient'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control custom-select2',
         })
+        self.fields['aClient'].queryset = ClientModel.objects.annotate(
+            client_first_name=F('first_name')
+        ).order_by('first_name')
         self.fields['aProfessional'].widget.attrs.update({
             'class':'form-control',
         })
@@ -314,6 +319,9 @@ class AudiometriaForm(forms.ModelForm):
         self.fields['aClient'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['aClient'].queryset = ClientModel.objects.annotate(
+            client_first_name=F('first_name')
+        ).order_by('first_name')
         self.fields['auData'].widget.attrs.update({
             'class':'form-control mask-date',
         })

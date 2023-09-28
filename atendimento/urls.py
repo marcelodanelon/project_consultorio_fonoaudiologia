@@ -13,4 +13,6 @@ urlpatterns = [
     path('atendimento/searchAudiometria/', audiometria.searchAudiometria, name='searchAudiometria'),
     path('atendimento/<int:audiometria_id>/updateAudiometria/', audiometria.updateAudiometria, name='updateAudiometria'),
     path('atendimento/<int:audiometria_id>/deleteAudiometria/', audiometria.deleteAudiometria, name='deleteAudiometria'),
+
+    path('atendimento/getJSONclient/', atendimento.getJSONclient, name='getJSONclient'),
 ]

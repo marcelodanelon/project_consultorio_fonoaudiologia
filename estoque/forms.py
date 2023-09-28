@@ -1,5 +1,7 @@
 from django import forms
 from estoque.models import InsumoModel, ItensInsumoModel, ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel, GrupoInsumoModel, MarcaModel
+from home.models import ClientModel
+from django.db.models import F
 
 class InsumoForm(forms.ModelForm):
     valor = forms.CharField(disabled = True, required=False)
@@ -167,6 +169,9 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         self.fields['eClient'].widget.attrs.update({
             'class': 'form-control',
         })
+        self.fields['eClient'].queryset = ClientModel.objects.annotate(
+            client_first_name=F('first_name')
+        ).order_by('first_name')
 
     class Meta:
         model = MovimentacaoInsumoModel
