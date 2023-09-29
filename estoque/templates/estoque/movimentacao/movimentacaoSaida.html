@@ -182,9 +182,9 @@
                 $("#id_tipoMovimentacao option[value='compra']").remove();
             }
             if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
-                $('#id_eClient').parent().prop('hidden', false);
+                $('#id_eClient').parent().parent().prop('hidden', false);
             }else{
-                $('#id_eClient').parent().prop('hidden', true);
+                $('#id_eClient').parent().parent().prop('hidden', true);
             }
             $('#id_eClient').trigger('change');
         });       
@@ -262,18 +262,38 @@
     </div>
     <form action="{{form_action}}" method="post" class="container-all form-horizontal" id="search">
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
-        <div class="row align-items-center">
-            {% for field in formMov %}
-                <div class="col"> 
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
-                    {{ field }}
-                </div>  
-            {% endfor %}
-        </div> <br>
-
-
+        {% for field in formMov %}
+            {% if field.name == 'operacao' or field.name == 'eClient' %}  
+                <div class="row align-items-center">
+            {% endif %}      
+                {% if field.name == 'eClient' %}
+                    <div class="col">                 
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
+                        <div class="input-group">
+                            <div style="width: 300px !important;">
+                                <input type="text" class="form-control" placeholder="Digite um nome" id="input_aClient" name="input_aClient">
+                            </div>
+                            {{field}}
+                            <div class="input-group-append">
+                                <button id="searchButtonCliente" class="btn btn-outline-secondary" type="button" title="Buscar">🔎</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button id="newSearchButtonCliente" class="btn btn-outline-secondary" type="button" title="Nova Busca">🪄</button>
+                            </div>
+                        </div>
+                    </div> 
+                {% else %}
+                    <div class="col"> 
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label> <br>
+                        {{ field }}
+                    </div>  
+                {% endif %}
+            {% if field.name == 'tipoMovimentacao' or field.name == 'eClient' %}    
+                </div> <br>
+            {% endif %}
+        {% endfor %}
         {% comment "insumo" %}Formulario Item{% endcomment %}
-        <div style="width: 100%;height: 600px;overflow-y: auto;">
+        <div style="width: 100%;height: 500px;overflow-y: auto;">
             {{formIte.management_form}}
             {% for form in formIte %} 
                 <div class="form-row ps-3 pe-3 pt-2">
@@ -452,6 +472,51 @@
                 $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
             }
         });
+
+        var client_select = $('#id_eClient');
+
+        // condições para liberações de input e limpeza do campo select clientes
+        var url_string = window.location.href; 
+        var url = new URL(url_string);
+        var afterLocalitionClient = url.searchParams.get("searchClient");
+        if (!afterLocalitionClient){
+            client_select.empty();
+            $('#searchButtonCliente').prop("disabled", false);
+            $('#input_aClient').prop("disabled", false);
+        }else{
+            $('#input_aClient').prop("disabled", true);
+        }
+        
+        $('#searchButtonCliente').on('click', function(){
+            var clientes;
+            var cliente = $("#input_aClient").val();
+            if(cliente!=''){
+                clientes = $.ajax({
+                    url: "{% url 'atendimento:getJSONclient' %}?searchClient=" + cliente,   
+                    type: "get",     
+                    async: false,  
+                    data: $("#search").serialize(),    
+                    success: function (data){
+                        data_clients = data.results 
+                    },                 
+                });
+            };
+            if(clientes){
+                $('#id_eClient').prop("disabled", false);
+            }
+            client_select.empty();
+            var defaultOption = $('<option></option>').val('null').html('Selecione um cliente ...').prop('selected', true);
+            client_select.append(defaultOption);
+            for (const key in clientes.responseJSON.results){
+                client_select.append(
+                    $('<option></option>').val(clientes.responseJSON.results[key].id).html(clientes.responseJSON.results[key].first_name + " " + clientes.responseJSON.results[key].last_name)
+                );
+            }
+        })
+
+        $('#newSearchButtonCliente').on('click', function(){
+            window.location.replace("{% url 'estoque:movimentacaoInsumoSaida' %}");
+        })
     });
 </script>
 {% endblock content %}

@@ -1,7 +1,21 @@
 <div class="row align-items-center">
-    <div class="col">
-        {{form.aClient.label}}{{form.aClient}}
-    </div>
+    <div class="col">                 
+        <label for="{{ field.id_for_label }}" class="form-label">{{form.aClient.label}}</label>
+        <div class="input-group">
+            <div style="width: 300px !important;">
+                <input type="text" class="form-control" placeholder="Digite um nome" id="input_aClient" name="input_aClient">
+            </div>
+            {{form.aClient}}
+            <div class="input-group-append">
+                <button id="searchButtonCliente" class="btn btn-outline-secondary" type="button" title="Buscar">🔎</button>
+            </div>
+            <div class="input-group-append">
+                <button id="newSearchButtonCliente" class="btn btn-outline-secondary" type="button" title="Nova Busca">🪄</button>
+            </div>
+        </div>
+    </div> 
+</div>
+<div class="row align-items-center">
     <div class="col">
         {{form.auData.label}}{{form.auData}}
     </div>
@@ -177,3 +191,64 @@
         </div>
     </div>    
 </div>
+<script>
+    $(document).ready(function($){
+        var client_select = $('#id_aClient');
+    
+        // condições para liberações de input e limpeza do campo select clientes
+        var url_string = window.location.href; 
+        var url = new URL(url_string);
+        var afterLocalitionClient = url.searchParams.get("searchClient");
+        if (!afterLocalitionClient){
+            client_select.empty();
+            var elements = document.querySelectorAll("input, select, checkbox, button, textarea");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].setAttribute("disabled", true);
+            }
+            $('#searchButtonCliente').prop("disabled", false);
+            $('#input_aClient').prop("disabled", false);
+        }else{
+            $('#input_aClient').prop("disabled", true);
+        }
+        
+        $('#searchButtonCliente').on('click', function(){
+            var clientes;
+            var cliente = $("#input_aClient").val();
+            if(cliente!=''){
+                clientes = $.ajax({
+                    url: "{% url 'atendimento:getJSONclient' %}?searchClient=" + cliente,   
+                    type: "get",     
+                    async: false,  
+                    data: $("#search").serialize(),    
+                    success: function (data){
+                        data_clients = data.results 
+                    },                 
+                });
+            };
+            if(clientes){
+                $('#id_aClient').prop("disabled", false);
+            }
+            client_select.empty();
+            var defaultOption = $('<option></option>').val('null').html('Selecione um cliente ...').prop('selected', true);
+            client_select.append(defaultOption);
+            for (const key in clientes.responseJSON.results){
+                client_select.append(
+                    $('<option></option>').val(clientes.responseJSON.results[key].id).html(clientes.responseJSON.results[key].first_name + " " + clientes.responseJSON.results[key].last_name)
+                );
+            }
+        })
+    
+        $('#newSearchButtonCliente').on('click', function(){
+            window.location.replace("{% url 'atendimento:audiometria' %}");
+        })
+
+        $('#id_aClient').on('change', function(){
+            var elements = document.querySelectorAll("input, select, checkbox, button, textarea");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].removeAttribute("disabled");
+            }
+            $('#input_aClient').prop('disabled', true)
+            $('#searchButtonCliente').prop('disabled', true)
+        })
+    })
+</script>

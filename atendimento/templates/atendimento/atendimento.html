@@ -52,12 +52,6 @@
       .removeClass('add-form-row').addClass('remove-form-row')
       .html('-');
 
-      var conditionRow = $('.form-row-tel:not(:first)');
-      conditionRow.find('.btn.add-form-row-tel')
-      .removeClass('btn-success').addClass('btn-danger')
-      .removeClass('add-form-row-tel').addClass('remove-form-row-tel')
-      .html('-');
-
       $('#id_aDemanda').prop('disabled', false);
       if ($('[name=updateAtendimento]').val() == 1){
         $('#id_aDemanda').prop('disabled', true);
