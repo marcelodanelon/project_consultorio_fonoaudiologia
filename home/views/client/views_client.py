@@ -15,14 +15,6 @@ def isDate(var):
 
 @login_required(login_url='home:loginUser')
 def index(request):
-    # data_points = [
-    #     { "label": "apple",  "y": 10  },
-    #     { "label": "orange", "y": 75  },
-    #     { "label": "banana", "y": 25  },
-    #     { "label": "mango",  "y": 30  },
-    #     { "label": "grape",  "y": 28  }
-    # ]
-
     # Busca de aniversariantes do dia e idade
     mes_atual=date.today().month
     data_atual=date.today().day
@@ -70,7 +62,11 @@ def index(request):
     count = len(data_cidades)
     for i in range(count):
         clients_db = ClientModel.objects.filter(city=data_cidades[i])
-        data_points2.append({'label': data_cidades[i], "y": clients_db.count()})
+        if not clients_db != None:
+            data_points2.append({'label': 'Sem registros', "y": 0})
+            break
+        else:
+            data_points2.append({'label': data_cidades[i], "y": clients_db.count()})
 
     # Criação terceiro gráfico clientes e sua situação
     data_points3 = []
@@ -78,13 +74,6 @@ def index(request):
     clients_Inativo = ClientModel.objects.filter(status=2)
     data_points3.append({'label': 'Ativos', "y": clients_Ativo.count()})
     data_points3.append({'label': 'Inativos', "y": clients_Inativo.count()})
-
-    # count = int(ProfessionalModel.objects.all().count())
-    # professionals = list(ProfessionalModel.objects.all())
-    # data_points = []
-    # for i in range(count):
-    #     professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
-    #     data_points.append({'label': str(professional.first().aProfessional), "y": professional.count()})
 
     context = {
         'title': 'Home',

@@ -37,7 +37,7 @@ def rel_movimentacao_insumos(request):
                             messages.error(request, f'A data "{valor}" não é válida no formato "dd/mm/yyyy"')
                             return render(
                                 request, 
-                                'relatorios/relatorio.html', 
+                                'relatorios/rel_movimentacao.html', 
                                 {'form': form,'name_module': 'Relatórios',},
                             )
                         query &= Q(**{campo: valor})
@@ -59,7 +59,7 @@ def rel_movimentacao_insumos(request):
                         messages.error(request, translated_error_message)
                         return render(
                             request, 
-                            'relatorios/relatorio.html', 
+                            'relatorios/rel_movimentacao.html', 
                             {'form': form, 'name_module': 'Relatórios',},
                         )
 
@@ -192,7 +192,7 @@ def rel_movimentacao_insumos(request):
 
             return render(
                 request, 
-                'relatorios/relatorio.html', 
+                'relatorios/rel_movimentacao.html', 
                 context,
             )
 
@@ -203,6 +203,6 @@ def rel_movimentacao_insumos(request):
 
     return render(
         request, 
-        'relatorios/relatorio.html', 
+        'relatorios/rel_movimentacao.html', 
         context,
     )

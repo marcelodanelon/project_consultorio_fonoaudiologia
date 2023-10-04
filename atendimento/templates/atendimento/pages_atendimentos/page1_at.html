@@ -147,5 +147,7 @@ $(document).ready(function($){
     $('#newSearchButtonCliente').on('click', function(){
         window.location.replace("{% url 'atendimento:atendimento' %}");
     })
+
+    $('.navbar-toggler').prop("disabled", false);
 })
 </script>

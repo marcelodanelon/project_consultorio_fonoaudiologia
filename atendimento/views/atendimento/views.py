@@ -27,7 +27,11 @@ def index(request):
     data_points1 = []
     for i in range(count):
         professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
-        data_points1.append({'label': str(professional.first().aProfessional), "y": professional.count()})
+        if not professional != None:
+            data_points1.append({'label': 'Sem registros', "y": 0})
+            break
+        else:
+            data_points1.append({'label': str(professional.first().aProfessional), "y": professional.count()})
 
     # Criação segundo gráfico por Unidade
     count = int(LocalModel.objects.all().count())
@@ -35,7 +39,11 @@ def index(request):
     data_points2 = []
     for i in range(count):
         local = AtendimentoModel.objects.filter(aLocal=locais[i])
-        data_points2.append({'label': locais[i].name, "y": local.count()})
+        if not local != None:
+            data_points2.append({'label': 'Sem registros', "y": 0})
+            break
+        else:
+            data_points2.append({'label': locais[i].name, "y": local.count()})
 
     # Criação terceiro gráfico por mês no ano atual (Anamnese)
     data_meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -45,7 +53,7 @@ def index(request):
         if meses.count() != 0:
             data_points3.append({'label': data_meses[i], "y": meses.count()})
 
-    # Criação terceiro gráfico por mês no ano atual (1º Atendimento)
+    # Criação quarto gráfico por mês no ano atual (1º Atendimento)
     data_points4 = []
     for i in range(12):
         meses = AtendimentoModel.objects.filter(aDataPri__month=i).filter(aDataPri__year=date.today().year)
