@@ -10,12 +10,47 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{% static 'global/css/style_modal.css' %}">
     {% block head_base %}{% endblock head_base %}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+    <script>
+      $(document).ready(function($){
+        var SPMaskBehavior = function (val) {
+          return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        spOptions = {
+          onKeyPress: function(val, e, field, options) {
+              field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        };
+        var mask = "HH:MM",
+          pattern = {
+            'translation': {
+                'H': {
+                    pattern: /[0-23]/
+                },
+                'M': {
+                    pattern: /[0-59]/
+                }
+            }
+        };
+        $('.mask-date').mask('00/00/0000');  
+        $('.mask-telefone').mask(SPMaskBehavior, spOptions);
+        $(".mask-hour").mask(mask, pattern);
+        $(document).on("focus", ".mask-date", function() {
+          $(this).mask('00/00/0000');
+        });
+        $(document).on("focus", ".mask-telefone", function() {
+          $('.mask-telefone').mask(SPMaskBehavior, spOptions);
+        });
+      })
+    </script>
   </head>
 <body style="background-color: rgb(245, 245, 255);">
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <div class="collapse nav_barhorizontal" id="navbarToggleExternalContent">
       <div class="bg-dark p-4">
         <a href="{% url 'home:index' %}">Home</a>
+        <a href="{% url 'agendamento:index' %}">Agendamento</a>
         <a href="{% url 'atendimento:index' %}">Atendimento</a>
         <a href="{% url 'estoque:index' %}">Estoque</a>
         <a href="{% url 'relatorios:rel_movimentacao_insumos' %}">Relatórios</a>

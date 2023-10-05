@@ -6,8 +6,8 @@ app_name = 'agendamento'
 urlpatterns = [
     path('agendamento/', agenda.index, name='index'),
 
-    # path('listInsumo/', insumo.listInsumo, name='listInsumo'),
+    path('listAgenda/', agenda.listAgenda, name='listAgenda'),
     path('createAgenda/', agenda.createAgenda, name='createAgenda'),
-    # path('searchInsumo/', insumo.searchInsumo, name='searchInsumo'),
-    # path('<int:insumo_id>/updateInsumo/', insumo.updateInsumo, name='updateInsumo'),
+    path('searchAgenda/', agenda.searchAgenda, name='searchAgenda'),
+    path('<int:agenda_id>/updateAgenda/', agenda.updateAgenda, name='updateAgenda'),
 ]

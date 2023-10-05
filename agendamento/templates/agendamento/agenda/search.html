@@ -1,0 +1,60 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_agendamento.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+    <div class="d-flex justify-content-between">
+        <h3>Agendas</h3> <a href="{% url 'agendamento:createAgenda' %}" class="btn btn-primary">Cadastrar</a>
+    </div>
+    <br>
+<div class="responsive-table">
+    <form action="{% url 'agendamento:searchAgenda' %}" method="get">
+        <input class="form-control" type="text" name="q" placeholder="Digite um nome">
+    </form>
+    <table class="clients-table">
+        <thead>
+            <tr class="table-row table-row-header">
+                <th class="table-header">ID</th>
+                <th class="table-header">Profissional</th>
+                <th class="table-header">Local</th>
+                <th class="table-header">Data Início</th>
+                <th class="table-header">Data Final</th>
+                <th class="table-header">Horário Início</th>
+                <th class="table-header">Horário Final</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agenda in page_obj %}
+                <tr class="table-row">
+                    <td class="table-cel">
+                        <a href="{% url 'agendamento:updateAgenda' agenda.id %}" class="table-link">
+                            {{ agenda.id }}
+                        </a>
+                    </td>
+                    <td class="table-cel">
+                            {{ agenda.aProfessional }}
+                    </td>  
+                    <td class="table-cel">
+                        {{ agenda.aLocal }}
+                    </td>    
+                    <td class="table-cel">
+                        {{ agenda.agDatIni }}
+                    </td>  
+                    <td class="table-cel">
+                        {{ agenda.agDatFim }}
+                    </td> 
+                    <td class="table-cel">
+                        {{ agenda.agHorIni }}
+                    </td>  
+                    <td class="table-cel">
+                        {{ agenda.agHorFim }}
+                    </td>                  
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/_pagination.html' %}   
+</div>
+{% endblock content %}
