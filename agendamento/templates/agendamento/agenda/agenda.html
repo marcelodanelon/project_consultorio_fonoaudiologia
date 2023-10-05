@@ -1,0 +1,22 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_agendamento.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+  <div class="col-10">
+    <h3>{{name_screen}}</h3>
+  </div>
+  <form action="{{form_action}}" method="post" class="form-control" id="form_grupo">
+    {% csrf_token %}   
+    {% for field in form %}
+    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+      {{field}}
+    {% endfor %}
+    <div class="form-content d-flex flex-row bd-highlight mb-3">        
+      <button class="btn btn-success me-1" type="submit">Gravar</button>
+      <a href="{% url 'agendamento:index' %}" class="btn btn-primary">Voltar</a>
+    </div>
+  </form> 
+</div>
+{% endblock content %}
