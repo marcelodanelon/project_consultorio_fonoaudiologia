@@ -5,6 +5,7 @@ app_name = 'atendimento'
 
 urlpatterns = [
     path('atendimento/', atendimento.index ,name='index'),
+
     path('atendimento/atendimento/', atendimento.atendimento ,name='atendimento'),
     path('atendimento/historico/', atendimento.historicoAtendimento ,name='historicoAtendimento'),
 

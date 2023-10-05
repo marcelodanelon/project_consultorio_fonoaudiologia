@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'estoque',
     'atendimento',
     'relatorios',
+    'agendamento',
 ]
 
 MIDDLEWARE = [
