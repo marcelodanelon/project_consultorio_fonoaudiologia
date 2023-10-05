@@ -1,0 +1,98 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_agendamento.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+  <div class="col-10">
+    <h3>{{name_screen}}</h3>
+  </div>
+  <form action="{{form_action}}" method="post" class="form-control" id="form_grupo">
+    {% csrf_token %}   
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.aClient.id_for_label }}" class="form-label">{{ form.aClient.label }}</label>
+        {{form.aClient}}
+      </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.aProfessional.id_for_label }}" class="form-label">{{ form.aProfessional.label }}</label>
+        {{form.aProfessional}}
+      </div>
+      <div class="col">
+        <label for="{{ form.aLocal.id_for_label }}" class="form-label">{{ form.aLocal.label }}</label>
+        {{form.aLocal}}
+      </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.agDataAg.id_for_label }}" class="form-label">{{ form.agDataAg.label }}</label>
+        {{form.agDataAg}}
+      </div>
+      <div class="col">
+        <label for="{{ form.agHoraAg.id_for_label }}" class="form-label">{{ form.agHoraAg.label }}</label>
+        {{form.agHoraAg}}
+      </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.agObserv.id_for_label }}" class="form-label">{{ form.agObserv.label }}</label>
+        {{form.agObserv}}
+      </div>
+    </div><br>
+    <div class="form-content d-flex flex-row bd-highlight mb-3">        
+      <button class="btn btn-success me-1" type="submit">Gravar</button>
+      <a href="{% url 'agendamento:listAgenda' %}" class="btn btn-primary">Voltar</a>
+    </div>
+  </form> 
+  <div hidden id="div-updateAgendamento">{{updateAgendamento}}</div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+<script>
+$(document).ready(function() {
+  $('#id_agTipAge').on('change', function(){
+    if ($('#id_agTipAge').val()=='quantidadeTempo'){
+      $('#id_agQtdTem').prop('readonly', false)
+      $('#id_agQtdTem').prop('required', true)
+    }else{
+      $('#id_agQtdTem').prop('readonly', true)
+      $('#id_agQtdTem').prop('required', false)
+    }
+  })
+  if($('#div-updateAgendamento').text()==1){
+    var elements = document.querySelectorAll("input, select, checkbox, button, textarea");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].setAttribute("disabled", true);
+    }
+  }
+  $('.navbar-toggler').prop("disabled", false);
+
+  const datasPermitidas = ["2023-10-10", "2023-10-15", "2023-10-20"];
+  let flatpickrInstance = null;
+  $(document).on('focus', '.calendar', function() {
+    const inputElement = this;
+    if (!flatpickrInstance) {
+      flatpickrInstance = flatpickr(inputElement, {
+          dateFormat: "d/m/Y",
+          locale: "pt",
+          enableTime: false,
+          enable: datasPermitidas.map(date => new Date(date)),
+          onClose: function(selectedDates, dateStr, instance) {
+              instance.destroy();
+              flatpickrInstance = null;
+              const form = inputElement.form;
+              const currentIndex = Array.from(form.elements).indexOf(inputElement);
+              if (form.elements[currentIndex + 1]) {
+                  form.elements[currentIndex + 1].focus();
+              }
+          }
+      });
+    }
+  });
+});
+</script>
+{% endblock content %}

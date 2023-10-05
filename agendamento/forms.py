@@ -40,3 +40,32 @@ class AgendaForm(forms.ModelForm):
     class Meta:
         model = AgendaModel
         fields = '__all__'
+
+class AgendamentoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['aProfessional'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aLocal'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aClient'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['agDataAg'].widget.attrs.update({
+            'class':'form-control calendar',
+            'style':'background-color: #fff; color: #000;',
+        })
+        self.fields['agHoraAg'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['agObserv'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = AgendamentoModel
+        fields = '__all__'
+
