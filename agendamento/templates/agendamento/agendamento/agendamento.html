@@ -54,26 +54,35 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
 <script>
-  function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal) {
-    const horarios = [];
-    const horaInicio = new Date(`2000-01-01T${horarioInicial}`);
-    const horaFim = new Date(`2000-01-01T${horaFinal}`);
+function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal) {
+  const horarios = [];
+  const horaInicio = new Date(`2000-01-01T${horarioInicial}`);
+  const horaFim = new Date(`2000-01-01T${horaFinal}`);
+  
+  let novoHorario = new Date(horaInicio);
+
+  // Loop para calcular os horários dentro do intervalo
+  while (novoHorario <= horaFim) {
+    const hora = novoHorario.getHours().toString().padStart(2, '0');
+    const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
+    horarios.push(`${hora}:${minutos}`);
     
-    let novoHorario = new Date(horaInicio);
-  
-    // Loop para calcular os horários dentro do intervalo
-    while (novoHorario <= horaFim) {
-      const hora = novoHorario.getHours().toString().padStart(2, '0');
-      const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
-      horarios.push(`${hora}:${minutos}`);
-      
-      // Adicionar o intervalo de minutos ao horário
-      novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
-    }
-  
-    return horarios;
+    // Adicionar o intervalo de minutos ao horário
+    novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
   }
-  
+
+  return horarios;
+}
+function calcularVagasComQuantidade(quantidade, horaInicial, intervaloEmMinutos) {
+  const vagas = [];
+  const horaInicio = new Date(`2000-01-01T${horaInicial}`);
+  for (let i = 0; i < quantidade; i++) {
+      const hora = horaInicio.getHours().toString().padStart(2, '0');
+      const minutos = horaInicio.getMinutes().toString().padStart(2, '0');
+      vagas.push(`${hora}:${minutos}`);
+  }
+  return vagas;
+}
 $(document).ready(function() {
   $('#id_agTipAge').on('change', function(){
     if ($('#id_agTipAge').val()=='quantidadeTempo'){
@@ -154,7 +163,7 @@ $(document).ready(function() {
           disponibilidades.push(disponibilidade);
       }
     }
-    console.log(disponibilidades)
+    //console.log(disponibilidades)
   });
   
   $('#id_aProfessional').on('change', function(){
@@ -174,15 +183,12 @@ $(document).ready(function() {
           disable: [
             function(date) {
               const selectedDate = date.toISOString().split('T')[0];
-
               const isUnavailableDate = datasSemVagas.includes(selectedDate);
 
-              // Verificar se a data está dentro de algum intervalo de disponibilidade
               const isWithinAvailableDates = disponibilidades.some(disponibilidade => {
                 const dataMinima = new Date(disponibilidade.dataMinima);
                 const dataMaxima = new Date(disponibilidade.dataMaxima);
 
-                // Adicionar 1 dia à data máxima para incluir também esse dia
                 dataMaxima.setDate(dataMaxima.getDate() + 1);
 
                 const isWithinDateRange = dataMinima <= date && date < dataMaxima;
@@ -209,7 +215,9 @@ $(document).ready(function() {
                       horario_select.empty();
                       const horaInicial = datas_disponiveis.responseJSON.results[0].agHorIni;
                       const horaFinal = datas_disponiveis.responseJSON.results[0].agHorFim;
+                      var tipoAgenda = data.results[0].tipoAgenda;
                       for (const key in data_items) {
+                        if (tipoAgenda=='quantidadeTempo'){
                           const horarioDisponivel = data_items[key];
                           const quantidadeDisponivel = horarioDisponivel.quantidade;
                           const intervaloEmMinutos = horarioDisponivel.tempo;
@@ -220,6 +228,16 @@ $(document).ready(function() {
                                   $('<option></option>').val(horario).html(horario)
                               );
                           });
+                        } else {
+                          const horarioDisponivel = data_items[key];
+                          const quantidade = horarioDisponivel.quantidade;
+                          const vagas = calcularVagasComQuantidade(quantidade, horaInicial);
+                          vagas.forEach(function(horario) {
+                              horario_select.append(
+                                  $('<option></option>').val(horario).html(horario)
+                              );
+                          });
+                        }
                       }
                   },                 
                 });

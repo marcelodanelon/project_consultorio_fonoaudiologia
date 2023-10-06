@@ -15,7 +15,7 @@ def createAgenda(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Agenda criada com sucesso!')
-            return redirect('agendamento:index')
+            return redirect('agendamento:listAgenda')
 
     context = {
         'form': form,

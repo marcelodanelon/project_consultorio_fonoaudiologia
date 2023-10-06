@@ -37,9 +37,6 @@ def getJSONhorarios(request):
                     tipoAgenda = agenda.agTipAge
                     dados_horarios.append({'agenda':agenda.pk,'quantidade': quantidade, 'tipoAgenda': tipoAgenda, 'tempo': tempo})
                     break                   
-            else:
-                print('sem horarios')
-        print(dados_horarios)
 
         return JsonResponse(data={'results': dados_horarios})
 
