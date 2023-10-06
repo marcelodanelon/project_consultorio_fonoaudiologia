@@ -10,8 +10,8 @@ class AgendaModel(models.Model):
     agHorIni = models.TimeField(verbose_name='Horário Início')
     agHorFim = models.TimeField(verbose_name='Horário Final')
     agTipAge = models.CharField(max_length=30 ,verbose_name='Tipo de Agenda', choices=(['quantidade','Quantidade'],['quantidadeTempo','Quantidade por tempo']), default='quantidade')
-    agQtdTot = models.IntegerField(verbose_name='Quantidade')
-    agQtdTem = models.IntegerField(verbose_name='Tempo')
+    agQtdTot = models.IntegerField(verbose_name='Quantidade', blank=True, null=True)
+    agQtdTem = models.IntegerField(verbose_name='Tempo', blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.id} - Profissional: {self.aProfessional}'
@@ -23,6 +23,7 @@ class AgendamentoModel(models.Model):
     agDataAg = models.DateField(verbose_name='Data Agendamento')
     agHoraAg = models.TimeField(verbose_name='Horário Agendamento')
     agObserv = models.TextField(verbose_name='Observações', blank=True, null=True)
+    agAgenda = models.ForeignKey(AgendaModel, on_delete=models.PROTECT, verbose_name='agenda', default=1)
 
     def __str__(self) -> str:
         return f'{self.id} Cliente: {self.aClient} Data: {self.agDataAg} - {self.agHoraAg}'

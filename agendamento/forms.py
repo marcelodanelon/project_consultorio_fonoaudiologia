@@ -67,5 +67,5 @@ class AgendamentoForm(forms.ModelForm):
 
     class Meta:
         model = AgendamentoModel
-        fields = '__all__'
+        fields = 'aProfessional', 'aLocal', 'aClient', 'agDataAg', 'agHoraAg', 'agObserv'
 

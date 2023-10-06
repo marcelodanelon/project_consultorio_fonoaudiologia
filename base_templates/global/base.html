@@ -22,20 +22,27 @@
               field.mask(SPMaskBehavior.apply({}, arguments), options);
             }
         };
-        var mask = "HH:MM",
-          pattern = {
-            'translation': {
-                'H': {
-                    pattern: /[0-23]/
-                },
-                'M': {
-                    pattern: /[0-59]/
+        var mask = "Hh:Mm",
+            pattern = {
+                'translation': {
+                    'H': {
+                        pattern: /[0-2]/
+                    },
+                    'h': {
+                        pattern: /[0-9]/
+                    },
+                    'M': {
+                        pattern: /[0-5]/
+                    },
+                    'm': {
+                        pattern: /[0-9]/
+                    }
                 }
-            }
-        };
+            };
+
+        $(".mask-hour").mask(mask, pattern);
         $('.mask-date').mask('00/00/0000');  
         $('.mask-telefone').mask(SPMaskBehavior, spOptions);
-        $(".mask-hour").mask(mask, pattern);
         $(document).on("focus", ".mask-date", function() {
           $(this).mask('00/00/0000');
         });

@@ -32,7 +32,8 @@
       </div>
       <div class="col">
         <label for="{{ form.agHoraAg.id_for_label }}" class="form-label">{{ form.agHoraAg.label }}</label>
-        {{form.agHoraAg}}
+        <select name="agHoraAg" class="form-control" required id="id_agHoraAg">        
+        </select>
       </div>
     </div><br>
     <div class="row align-items-center">
@@ -53,6 +54,26 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
 <script>
+  function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal) {
+    const horarios = [];
+    const horaInicio = new Date(`2000-01-01T${horarioInicial}`);
+    const horaFim = new Date(`2000-01-01T${horaFinal}`);
+    
+    let novoHorario = new Date(horaInicio);
+  
+    // Loop para calcular os horários dentro do intervalo
+    while (novoHorario <= horaFim) {
+      const hora = novoHorario.getHours().toString().padStart(2, '0');
+      const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
+      horarios.push(`${hora}:${minutos}`);
+      
+      // Adicionar o intervalo de minutos ao horário
+      novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
+    }
+  
+    return horarios;
+  }
+  
 $(document).ready(function() {
   $('#id_agTipAge').on('change', function(){
     if ($('#id_agTipAge').val()=='quantidadeTempo'){
@@ -71,7 +92,76 @@ $(document).ready(function() {
   }
   $('.navbar-toggler').prop("disabled", false);
 
-  const datasPermitidas = ["2023-10-10", "2023-10-15", "2023-10-20"];
+  // bloqueando campos de data e horario, obrigando o preenchimento de cliente, local e profissional para seleção
+  $('#id_agDataAg').prop('disabled', true)
+  $('#id_agDataAg').prop('style', '')
+  $('#id_agHoraAg').prop('disabled', true)
+
+  // consultando dados da agenda com ajax
+  var datas_disponiveis;
+  var horarios_disponiveis;
+  var local;
+  var profissional;
+  let datasSemVagas = [];
+  let disponibilidades = [];
+  let dataMinima = ["0001-01-01"];
+  let dataMaxima = ["0001-01-01"];
+  let horaInicial = "";
+  let horaFinal = "";
+  $('#id_aLocal').on('change', function(){
+    $('#id_agDataAg').val('')
+    $('#id_agHoraAg').val('')
+    $('#id_agHoraAg').empty();
+
+    local = $("#id_aLocal").children("option:selected").val();
+    profissional = $("#id_aProfessional").children("option:selected").val();
+
+    //desbloqueando campos de data e horario caso campos cliente, local e profissional selecionados
+    if(local!='' && profissional!=''){
+      $('#id_agDataAg').prop('disabled', false)
+      $('#id_agDataAg').prop('style', 'background-color: #fff; color: #000;')
+      $('#id_agHoraAg').prop('disabled', false)
+    }
+
+    // buscando datas minima e maxima para calendario
+    if(local!='' && profissional!=''){
+      datas_disponiveis = $.ajax({
+          url: "{% url 'agendamento:getJSONdatas' %}?local=" + local + "&profissional=" + profissional,   
+          type: "get",     
+          async: false,  
+          data: $("#search").serialize(),    
+          success: function (data){
+              data_items = data.results 
+          },                 
+      });
+    };
+    disponibilidades = []
+    if (datas_disponiveis && datas_disponiveis.responseJSON.results.length > 0) {
+      const datasDisponiveis = datas_disponiveis.responseJSON.results;  
+      for (const key in datasDisponiveis) {
+          const dataMinima = datasDisponiveis[key].agDatIni;
+          const dataMaxima = datasDisponiveis[key].agDatFim;
+          const horaInicial = datasDisponiveis[key].agHorIni;
+          const horaFinal = datasDisponiveis[key].agHorFim;
+  
+          const disponibilidade = {
+              dataMinima: dataMinima,
+              dataMaxima: dataMaxima,
+              horaInicial: horaInicial,
+              horaFinal: horaFinal
+          };
+  
+          disponibilidades.push(disponibilidade);
+      }
+    }
+    console.log(disponibilidades)
+  });
+  
+  $('#id_aProfessional').on('change', function(){
+    $('#id_aLocal').trigger('change');
+  });
+
+  // configurando o picker(calendário)
   let flatpickrInstance = null;
   $(document).on('focus', '.calendar', function() {
     const inputElement = this;
@@ -79,17 +169,62 @@ $(document).ready(function() {
       flatpickrInstance = flatpickr(inputElement, {
           dateFormat: "d/m/Y",
           locale: "pt",
+          minDate: "today",
           enableTime: false,
-          enable: datasPermitidas.map(date => new Date(date)),
+          disable: [
+            function(date) {
+              const selectedDate = date.toISOString().split('T')[0];
+
+              const isUnavailableDate = datasSemVagas.includes(selectedDate);
+
+              // Verificar se a data está dentro de algum intervalo de disponibilidade
+              const isWithinAvailableDates = disponibilidades.some(disponibilidade => {
+                const dataMinima = new Date(disponibilidade.dataMinima);
+                const dataMaxima = new Date(disponibilidade.dataMaxima);
+
+                // Adicionar 1 dia à data máxima para incluir também esse dia
+                dataMaxima.setDate(dataMaxima.getDate() + 1);
+
+                const isWithinDateRange = dataMinima <= date && date < dataMaxima;
+                return isWithinDateRange;
+              });
+
+              return isUnavailableDate || !isWithinAvailableDates;
+            }
+          ],
           onClose: function(selectedDates, dateStr, instance) {
               instance.destroy();
               flatpickrInstance = null;
               const form = inputElement.form;
               const currentIndex = Array.from(form.elements).indexOf(inputElement);
-              if (form.elements[currentIndex + 1]) {
-                  form.elements[currentIndex + 1].focus();
+              if(dateStr){
+                horarios_disponiveis = $.ajax({
+                    url: "{% url 'agendamento:getJSONhorarios' %}?local=" + local + "&profissional=" + profissional + "&data=" + dateStr,   
+                    type: "get",     
+                    async: false,  
+                    data: $("#search").serialize(),    
+                    success: function (data) {
+                      data_items = data.results;
+                      const horario_select = $('#id_agHoraAg');
+                      horario_select.empty();
+                      const horaInicial = datas_disponiveis.responseJSON.results[0].agHorIni;
+                      const horaFinal = datas_disponiveis.responseJSON.results[0].agHorFim;
+                      for (const key in data_items) {
+                          const horarioDisponivel = data_items[key];
+                          const quantidadeDisponivel = horarioDisponivel.quantidade;
+                          const intervaloEmMinutos = horarioDisponivel.tempo;
+                          const horarios = calcularHorarios(horaInicial, intervaloEmMinutos, horaFinal);
+                          
+                          horarios.forEach(function (horario) {
+                              horario_select.append(
+                                  $('<option></option>').val(horario).html(horario)
+                              );
+                          });
+                      }
+                  },                 
+                });
               }
-          }
+          },
       });
     }
   });

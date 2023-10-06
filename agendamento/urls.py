@@ -15,4 +15,7 @@ urlpatterns = [
     path('createAgendamento/', agendamento.createAgendamento, name='createAgendamento'),
     # path('searchAgendamento/', agendamento.searchAgendamento, name='searchAgendamento'),
     # path('<int:agendamento_id>/updateAgendamento/', agendamento.updateAgendamento, name='updateAgendamento'),
+
+    path('agendamento/getJSONdatas/', agendamento.getJSONdatas, name='getJSONdatas'),
+    path('agendamento/getJSONhorarios/', agendamento.getJSONhorarios, name='getJSONhorarios'),
 ]

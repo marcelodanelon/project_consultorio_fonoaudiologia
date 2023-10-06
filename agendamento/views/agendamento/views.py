@@ -3,6 +3,46 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from agendamento.models import AgendaModel
+from django.http import JsonResponse
+from datetime import datetime
+
+@login_required(login_url='home:loginUser')
+def getJSONdatas(request):
+    if request.GET.get('local') and request.GET.get('profissional'):
+        local = int(request.GET.get('local'))
+        profissional = int(request.GET.get('profissional'))
+        model = list(AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).values())
+        return JsonResponse(data={'results': model})
+
+@login_required(login_url='home:loginUser')
+def getJSONhorarios(request):
+    if request.GET.get('local') and request.GET.get('profissional') and request.GET.get('data'):
+        local = int(request.GET.get('local'))
+        profissional = int(request.GET.get('profissional'))
+        data_str = request.GET.get('data')
+        data = datetime.strptime(data_str, '%d/%m/%Y').date()  
+
+        agendas = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional)
+        dados_horarios = []
+        for agenda in agendas:
+            if  data >= agenda.agDatIni and data <= agenda.agDatFim:
+                if agenda.agTipAge == 'quantidade':
+                    quantidade = agenda.agQtdTot
+                    tipoAgenda = agenda.agTipAge
+                    dados_horarios.append({'agenda':agenda.pk,'quantidade': quantidade, 'tipoAgenda': tipoAgenda})
+                    break
+                else:
+                    quantidade = agenda.agQtdTot
+                    tempo = agenda.agQtdTem
+                    tipoAgenda = agenda.agTipAge
+                    dados_horarios.append({'agenda':agenda.pk,'quantidade': quantidade, 'tipoAgenda': tipoAgenda, 'tempo': tempo})
+                    break                   
+            else:
+                print('sem horarios')
+        print(dados_horarios)
+
+        return JsonResponse(data={'results': dados_horarios})
+
 
 @login_required(login_url='home:loginUser')
 def index(request):

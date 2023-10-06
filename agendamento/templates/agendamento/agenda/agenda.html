@@ -64,9 +64,13 @@ $(document).ready(function() {
     if ($('#id_agTipAge').val()=='quantidadeTempo'){
       $('#id_agQtdTem').prop('readonly', false)
       $('#id_agQtdTem').prop('required', true)
+      $('#id_agQtdTot').prop('readonly', true)
+      $('#id_agQtdTot').prop('required', false)
     }else{
       $('#id_agQtdTem').prop('readonly', true)
       $('#id_agQtdTem').prop('required', false)
+      $('#id_agQtdTot').prop('readonly', false)
+      $('#id_agQtdTot').prop('required', true)
     }
   })
   if($('#div-updateAgendamento').text()==1){
