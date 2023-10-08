@@ -2,17 +2,41 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from agendamento.models import AgendaModel
+from agendamento.models import AgendaModel, AgendamentoModel
 from django.http import JsonResponse
 from datetime import datetime
+from django.db.models import Count
 
 @login_required(login_url='home:loginUser')
 def getJSONdatas(request):
     if request.GET.get('local') and request.GET.get('profissional'):
         local = int(request.GET.get('local'))
         profissional = int(request.GET.get('profissional'))
-        model = list(AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).values())
-        return JsonResponse(data={'results': model})
+        model = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).values()
+        agendamentos_com_vagas = []  # Lista para armazenar os resultados temporários com vagasRestantes
+
+        for i in model:
+            agenda_id = i['id']
+            agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda_id).values('agDataAg').annotate(total=Count('agDataAg'))
+            for item in agendadosQtdTotal:
+                data_agenda = item['agDataAg']
+                total_registros = item['total']
+                if i['agTipAge'] == 'quantidade':
+                    vagas = i['agQtdTot']
+                    vagas_restantes = vagas - total_registros 
+                    i['vagasRestantes'] = vagas_restantes 
+
+                    info_dict = {
+                        'Agenda': agenda_id,
+                        'Data': data_agenda,
+                        'Total': vagas,
+                        'Utilizado': total_registros,
+                        'Restantes': vagas_restantes
+                    }
+
+                    agendamentos_com_vagas.append(info_dict)
+        model = list(model)
+        return JsonResponse(data={'results': model,'agendamentos_com_vagas': agendamentos_com_vagas})
 
 @login_required(login_url='home:loginUser')
 def getJSONhorarios(request):
@@ -21,6 +45,7 @@ def getJSONhorarios(request):
         profissional = int(request.GET.get('profissional'))
         data_str = request.GET.get('data')
         data = datetime.strptime(data_str, '%d/%m/%Y').date()  
+        agenda = int(request.GET.get('agenda'))
 
         agendas = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional)
         dados_horarios = []
@@ -29,6 +54,9 @@ def getJSONhorarios(request):
                 if agenda.agTipAge == 'quantidade':
                     quantidade = agenda.agQtdTot
                     tipoAgenda = agenda.agTipAge
+                    # agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda).filter(agDataAg=data)
+                    # agendadosQtdTotal = agendadosQtdTotal.count()
+                    # quantidade = quantidade - agendadosQtdTotal
                     dados_horarios.append({'agenda':agenda.pk,'quantidade': quantidade, 'tipoAgenda': tipoAgenda})
                     break
                 else:

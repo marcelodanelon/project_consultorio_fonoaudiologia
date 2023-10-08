@@ -42,6 +42,12 @@
         {{form.agObserv}}
       </div>
     </div><br>
+    <div id="div-agAgenda" class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.agAgenda.id_for_label }}" class="form-label">{{ form.agAgenda.label }}</label>
+        {{form.agAgenda}}
+      </div>
+    </div><br>
     <div class="form-content d-flex flex-row bd-highlight mb-3">        
       <button class="btn btn-success me-1" type="submit">Gravar</button>
       <a href="{% url 'agendamento:listAgenda' %}" class="btn btn-primary">Voltar</a>
@@ -83,7 +89,10 @@ function calcularVagasComQuantidade(quantidade, horaInicial, intervaloEmMinutos)
   }
   return vagas;
 }
+
 $(document).ready(function() {
+  $('#id_agAgenda').val('')
+
   $('#id_agTipAge').on('change', function(){
     if ($('#id_agTipAge').val()=='quantidadeTempo'){
       $('#id_agQtdTem').prop('readonly', false)
@@ -200,12 +209,16 @@ $(document).ready(function() {
           ],
           onClose: function(selectedDates, dateStr, instance) {
               instance.destroy();
+              var agenda = datas_disponiveis.responseJSON.results[0].id;
+              $('#id_agHoraAg').focus();
+              $('#id_agAgenda').find('option[value="' + agenda + '"]').prop('selected', true);
               flatpickrInstance = null;
               const form = inputElement.form;
               const currentIndex = Array.from(form.elements).indexOf(inputElement);
               if(dateStr){
+                form.elements[currentIndex + 1].focus();
                 horarios_disponiveis = $.ajax({
-                    url: "{% url 'agendamento:getJSONhorarios' %}?local=" + local + "&profissional=" + profissional + "&data=" + dateStr,   
+                    url: "{% url 'agendamento:getJSONhorarios' %}?local=" + local + "&profissional=" + profissional + "&data=" + dateStr + "&agenda=" + agenda,   
                     type: "get",     
                     async: false,  
                     data: $("#search").serialize(),    

@@ -64,8 +64,12 @@ class AgendamentoForm(forms.ModelForm):
         self.fields['agObserv'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['agAgenda'].widget.attrs.update({
+            'class':'form-control',
+            'readonly': True,
+        })
 
     class Meta:
         model = AgendamentoModel
-        fields = 'aProfessional', 'aLocal', 'aClient', 'agDataAg', 'agHoraAg', 'agObserv'
+        fields = '__all__'
 

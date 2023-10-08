@@ -23,7 +23,7 @@ class AgendamentoModel(models.Model):
     agDataAg = models.DateField(verbose_name='Data Agendamento')
     agHoraAg = models.TimeField(verbose_name='Horário Agendamento')
     agObserv = models.TextField(verbose_name='Observações', blank=True, null=True)
-    agAgenda = models.ForeignKey(AgendaModel, on_delete=models.PROTECT, verbose_name='agenda', default=1)
+    agAgenda = models.ForeignKey(AgendaModel, on_delete=models.PROTECT, verbose_name='Agenda', default=1)
 
     def __str__(self) -> str:
         return f'{self.id} Cliente: {self.aClient} Data: {self.agDataAg} - {self.agHoraAg}'

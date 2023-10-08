@@ -32,7 +32,7 @@ def createAgenda(request):
             if agendas_conflitantes.exists():
                 messages.error(request, 'Agenda com período já existente!')
             else:
-                ##model.save()
+                model.save()
                 messages.success(request, 'Agenda criada com sucesso!')
                 return redirect('agendamento:listAgenda')
 
