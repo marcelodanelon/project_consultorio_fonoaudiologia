@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from agendamento.models import AgendaModel, AgendamentoModel
 from django.http import JsonResponse
-from datetime import datetime
+from datetime import datetime, date
 from django.db.models import Count
 
 @login_required(login_url='home:loginUser')
@@ -12,16 +12,16 @@ def getJSONdatas(request):
     if request.GET.get('local') and request.GET.get('profissional'):
         local = int(request.GET.get('local'))
         profissional = int(request.GET.get('profissional'))
-        model = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).values()
-        agendamentos_com_vagas = []  # Lista para armazenar os resultados temporários com vagasRestantes
+        model = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).filter(agDatFim__gte=date.today()).values()
+        agendamentos_com_vagas = [] 
 
         for i in model:
-            agenda_id = i['id']
-            agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda_id).values('agDataAg').annotate(total=Count('agDataAg'))
-            for item in agendadosQtdTotal:
-                data_agenda = item['agDataAg']
-                total_registros = item['total']
-                if i['agTipAge'] == 'quantidade':
+            if i['agTipAge'] == 'quantidade':
+                agenda_id = i['id']
+                agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda_id).values('agDataAg').annotate(total=Count('agDataAg'))
+                for item in agendadosQtdTotal:
+                    data_agenda = item['agDataAg']
+                    total_registros = item['total']                
                     vagas = i['agQtdTot']
                     vagas_restantes = vagas - total_registros 
                     i['vagasRestantes'] = vagas_restantes 
@@ -36,7 +36,7 @@ def getJSONdatas(request):
 
                     agendamentos_com_vagas.append(info_dict)
         model = list(model)
-        return JsonResponse(data={'results': model,'agendamentos_com_vagas': agendamentos_com_vagas})
+        return JsonResponse(data={'results': model,'agendamentos': agendamentos_com_vagas})
 
 @login_required(login_url='home:loginUser')
 def getJSONhorarios(request):

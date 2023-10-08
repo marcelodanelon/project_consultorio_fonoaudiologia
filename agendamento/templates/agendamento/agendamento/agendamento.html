@@ -59,6 +59,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
 function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal) {
   const horarios = [];
@@ -122,6 +123,8 @@ $(document).ready(function() {
   var profissional;
   let datasSemVagas = [];
   let disponibilidades = [];
+  let agendamentos_items = [];
+  let datasSemVagas_db = [];
   let dataMinima = ["0001-01-01"];
   let dataMaxima = ["0001-01-01"];
   let horaInicial = "";
@@ -150,6 +153,7 @@ $(document).ready(function() {
           data: $("#search").serialize(),    
           success: function (data){
               data_items = data.results 
+              agendamentos_items = data.agendamentos
           },                 
       });
     };
@@ -173,8 +177,15 @@ $(document).ready(function() {
       }
     }
     //console.log(disponibilidades)
+    //console.log(agendamentos_items)
+    agendamentos_items.forEach(item => {
+      if (item.Restantes === 0) {
+        datasSemVagas_db.push(item.Data);
+      }
+    });
+    //console.log(agendamentos_items)
   });
-  
+
   $('#id_aProfessional').on('change', function(){
     $('#id_aLocal').trigger('change');
   });
@@ -192,7 +203,7 @@ $(document).ready(function() {
           disable: [
             function(date) {
               const selectedDate = date.toISOString().split('T')[0];
-              const isUnavailableDate = datasSemVagas.includes(selectedDate);
+              const isUnavailableDate = datasSemVagas.includes(selectedDate) || datasSemVagas_db.includes(selectedDate);
 
               const isWithinAvailableDates = disponibilidades.some(disponibilidade => {
                 const dataMinima = new Date(disponibilidade.dataMinima);
@@ -229,6 +240,7 @@ $(document).ready(function() {
                       const horaInicial = datas_disponiveis.responseJSON.results[0].agHorIni;
                       const horaFinal = datas_disponiveis.responseJSON.results[0].agHorFim;
                       var tipoAgenda = data.results[0].tipoAgenda;
+                      const formattedDateStr = moment(dateStr, 'DD/MM/YYYY').format('YYYY-MM-DD');
                       for (const key in data_items) {
                         if (tipoAgenda=='quantidadeTempo'){
                           const horarioDisponivel = data_items[key];
@@ -242,14 +254,33 @@ $(document).ready(function() {
                               );
                           });
                         } else {
-                          const horarioDisponivel = data_items[key];
-                          const quantidade = horarioDisponivel.quantidade;
-                          const vagas = calcularVagasComQuantidade(quantidade, horaInicial);
-                          vagas.forEach(function(horario) {
-                              horario_select.append(
-                                  $('<option></option>').val(horario).html(horario)
-                              );
-                          });
+                          let existAgendamento = null;
+                          for (const key in agendamentos_items)
+                            if (agendamentos_items[key].Data == formattedDateStr){
+                              existAgendamento = true;
+                              agendamentoSelecionado = agendamentos_items[key]
+                            }
+                          if (existAgendamento) {
+                              const horarioDisponivel = data_items[key];
+                              const quantidade = horarioDisponivel.quantidade; 
+                              const restantes = agendamentoSelecionado.Restantes;
+                              const horarios = calcularVagasComQuantidade(restantes, horaInicial);
+                      
+                              horarios.forEach(function(horario) {
+                                  horario_select.append(
+                                      $('<option></option>').val(horario).html(horario)
+                                  );
+                              });
+                          } else {
+                              const horarioDisponivel = data_items[key];
+                              const quantidade = horarioDisponivel.quantidade;
+                              const vagas = calcularVagasComQuantidade(quantidade, horaInicial);
+                              vagas.forEach(function(horario) {
+                                  horario_select.append(
+                                      $('<option></option>').val(horario).html(horario)
+                                  );
+                              });
+                          }
                         }
                       }
                   },                 
