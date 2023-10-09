@@ -61,23 +61,42 @@
 <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
-function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal) {
+function calcularHorarios(horarioInicial, intervaloMinutos, horaFinal, bloqueios) {
+  if(bloqueios){
+    for (let i = 0; i < bloqueios.length; i++) {
+        bloqueios[i] = bloqueios[i].slice(0, -3);
+    }
+  }
   const horarios = [];
   const horaInicio = new Date(`2000-01-01T${horarioInicial}`);
   const horaFim = new Date(`2000-01-01T${horaFinal}`);
   
   let novoHorario = new Date(horaInicio);
+  if (bloqueios) {
+    while (novoHorario <= horaFim) {
+      const hora = novoHorario.getHours().toString().padStart(2, '0');
+      const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
+      const horarioFormatado = `${hora}:${minutos}`;
 
-  // Loop para calcular os horários dentro do intervalo
-  while (novoHorario <= horaFim) {
-    const hora = novoHorario.getHours().toString().padStart(2, '0');
-    const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
-    horarios.push(`${hora}:${minutos}`);
-    
-    // Adicionar o intervalo de minutos ao horário
-    novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
+      // Verifique se o horário está na lista de bloqueios
+      if (!bloqueios.includes(horarioFormatado)) {
+          horarios.push(horarioFormatado);
+      }
+
+      // Adicionar o intervalo de minutos ao horário
+      novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
+    }
+  }else{
+    // Loop para calcular os horários dentro do intervalo
+    while (novoHorario <= horaFim) {
+      const hora = novoHorario.getHours().toString().padStart(2, '0');
+      const minutos = novoHorario.getMinutes().toString().padStart(2, '0');
+      horarios.push(`${hora}:${minutos}`);
+      
+      // Adicionar o intervalo de minutos ao horário
+      novoHorario.setMinutes(novoHorario.getMinutes() + intervaloMinutos);
+    }
   }
-
   return horarios;
 }
 function calcularVagasComQuantidade(quantidade, horaInicial, intervaloEmMinutos) {
@@ -154,11 +173,11 @@ $(document).ready(function() {
           success: function (data){
               data_items = data.results 
               agendamentos_items = data.agendamentos
-          },                 
+          },             
       });
     };
     disponibilidades = []
-    if (datas_disponiveis && datas_disponiveis.responseJSON.results.length > 0) {
+    if (datas_disponiveis && datas_disponiveis.responseJSON && datas_disponiveis.responseJSON.hasOwnProperty('results')) {
       const datasDisponiveis = datas_disponiveis.responseJSON.results;  
       for (const key in datasDisponiveis) {
           const dataMinima = datasDisponiveis[key].agDatIni;
@@ -220,7 +239,9 @@ $(document).ready(function() {
           ],
           onClose: function(selectedDates, dateStr, instance) {
               instance.destroy();
-              var agenda = datas_disponiveis.responseJSON.results[0].id;
+              if (datas_disponiveis && datas_disponiveis.responseJSON && datas_disponiveis.responseJSON.hasOwnProperty('results')) {
+                var agenda = datas_disponiveis.responseJSON.results[0].id;
+              }
               $('#id_agHoraAg').focus();
               $('#id_agAgenda').find('option[value="' + agenda + '"]').prop('selected', true);
               flatpickrInstance = null;
@@ -243,16 +264,34 @@ $(document).ready(function() {
                       const formattedDateStr = moment(dateStr, 'DD/MM/YYYY').format('YYYY-MM-DD');
                       for (const key in data_items) {
                         if (tipoAgenda=='quantidadeTempo'){
-                          const horarioDisponivel = data_items[key];
-                          const quantidadeDisponivel = horarioDisponivel.quantidade;
-                          const intervaloEmMinutos = horarioDisponivel.tempo;
-                          const horarios = calcularHorarios(horaInicial, intervaloEmMinutos, horaFinal);
-                          
-                          horarios.forEach(function (horario) {
-                              horario_select.append(
-                                  $('<option></option>').val(horario).html(horario)
-                              );
-                          });
+                          let existAgendamento = null;
+                          let horariosBloqueios = [];
+                          for (const key in agendamentos_items)
+                            if (agendamentos_items[key].Data == formattedDateStr){
+                              existAgendamento = true;
+                              horariosBloqueios.push(agendamentos_items[key].Hora);
+                          }
+                          if (existAgendamento) {
+                            const horarioDisponivel = data_items[key];
+                            const intervaloEmMinutos = horarioDisponivel.tempo;
+                            const horarios = calcularHorarios(horaInicial, intervaloEmMinutos, horaFinal, horariosBloqueios);
+                            
+                            horarios.forEach(function (horario) {
+                                horario_select.append(
+                                    $('<option></option>').val(horario).html(horario)
+                                );
+                            });
+                          }else{
+                            const horarioDisponivel = data_items[key];
+                            const intervaloEmMinutos = horarioDisponivel.tempo;
+                            const horarios = calcularHorarios(horaInicial, intervaloEmMinutos, horaFinal);
+                            
+                            horarios.forEach(function (horario) {
+                                horario_select.append(
+                                    $('<option></option>').val(horario).html(horario)
+                                );
+                            });
+                          }
                         } else {
                           let existAgendamento = null;
                           for (const key in agendamentos_items)
@@ -261,25 +300,25 @@ $(document).ready(function() {
                               agendamentoSelecionado = agendamentos_items[key]
                             }
                           if (existAgendamento) {
-                              const horarioDisponivel = data_items[key];
-                              const quantidade = horarioDisponivel.quantidade; 
-                              const restantes = agendamentoSelecionado.Restantes;
-                              const horarios = calcularVagasComQuantidade(restantes, horaInicial);
-                      
-                              horarios.forEach(function(horario) {
-                                  horario_select.append(
-                                      $('<option></option>').val(horario).html(horario)
-                                  );
-                              });
+                            const horarioDisponivel = data_items[key];
+                            const quantidade = horarioDisponivel.quantidade; 
+                            const restantes = agendamentoSelecionado.Restantes;
+                            const horarios = calcularVagasComQuantidade(restantes, horaInicial);
+                    
+                            horarios.forEach(function(horario) {
+                                horario_select.append(
+                                    $('<option></option>').val(horario).html(horario)
+                                );
+                            });
                           } else {
-                              const horarioDisponivel = data_items[key];
-                              const quantidade = horarioDisponivel.quantidade;
-                              const vagas = calcularVagasComQuantidade(quantidade, horaInicial);
-                              vagas.forEach(function(horario) {
-                                  horario_select.append(
-                                      $('<option></option>').val(horario).html(horario)
-                                  );
-                              });
+                            const horarioDisponivel = data_items[key];
+                            const quantidade = horarioDisponivel.quantidade;
+                            const vagas = calcularVagasComQuantidade(quantidade, horaInicial);
+                            vagas.forEach(function(horario) {
+                                horario_select.append(
+                                    $('<option></option>').val(horario).html(horario)
+                                );
+                            });
                           }
                         }
                       }

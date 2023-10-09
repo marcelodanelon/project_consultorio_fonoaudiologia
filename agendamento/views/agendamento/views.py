@@ -16,8 +16,8 @@ def getJSONdatas(request):
         agendamentos_com_vagas = [] 
 
         for i in model:
-            if i['agTipAge'] == 'quantidade':
-                agenda_id = i['id']
+            agenda_id = i['id']
+            if i['agTipAge'] == 'quantidade':                
                 agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda_id).values('agDataAg').annotate(total=Count('agDataAg'))
                 for item in agendadosQtdTotal:
                     data_agenda = item['agDataAg']
@@ -33,10 +33,25 @@ def getJSONdatas(request):
                         'Utilizado': total_registros,
                         'Restantes': vagas_restantes
                     }
-
                     agendamentos_com_vagas.append(info_dict)
-        model = list(model)
-        return JsonResponse(data={'results': model,'agendamentos': agendamentos_com_vagas})
+                model = list(model)
+                return JsonResponse(data={'results': model,'agendamentos': agendamentos_com_vagas})
+            else:
+                agendadosQtdTempo = AgendamentoModel.objects.filter(agAgenda=agenda_id).values('agDataAg','agHoraAg')
+                for item in agendadosQtdTempo:
+                    data_agenda = item['agDataAg']
+                    hora_agenda = item['agHoraAg']
+
+                    info_dict = {
+                        'Agenda': agenda_id,
+                        'Data': data_agenda,
+                        'Hora': hora_agenda
+                    }
+                    agendamentos_com_vagas.append(info_dict)
+                print(agendamentos_com_vagas)
+                model = list(model)
+                return JsonResponse(data={'results': model,'agendamentos': agendamentos_com_vagas})            
+        
 
 @login_required(login_url='home:loginUser')
 def getJSONhorarios(request):
