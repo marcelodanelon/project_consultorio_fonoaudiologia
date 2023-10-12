@@ -44,12 +44,11 @@
     </div><br>
     <div id="div-agAgenda" class="row align-items-center">
       <div class="col">
-        <label for="{{ form.agAgenda.id_for_label }}" class="form-label">{{ form.agAgenda.label }}</label>
-        {{form.agAgenda}}
+        <input hidden type="text" id="id_agAgenda" name="agAgenda">
       </div>
     </div><br>
     <div class="form-content d-flex flex-row bd-highlight mb-3">        
-      <button class="btn btn-success me-1" type="submit">Gravar</button>
+      <button id="btn-form" class="btn btn-success me-1" type="submit">Gravar</button>
       <a href="{% url 'agendamento:listAgenda' %}" class="btn btn-primary">Voltar</a>
     </div>
   </form> 
@@ -243,7 +242,7 @@ $(document).ready(function() {
                 var agenda = datas_disponiveis.responseJSON.results[0].id;
               }
               $('#id_agHoraAg').focus();
-              $('#id_agAgenda').find('option[value="' + agenda + '"]').prop('selected', true);
+              $('#id_agAgenda').val(agenda)
               flatpickrInstance = null;
               const form = inputElement.form;
               const currentIndex = Array.from(form.elements).indexOf(inputElement);
@@ -329,6 +328,13 @@ $(document).ready(function() {
       });
     }
   });
+
+  $('#btn-form').on('click', function(){
+    if (datas_disponiveis && datas_disponiveis.responseJSON && datas_disponiveis.responseJSON.hasOwnProperty('results')) {
+      var agenda = datas_disponiveis.responseJSON.results[0].id;
+    }
+    $('#id_agAgenda').val(agenda)
+  })
 });
 </script>
 {% endblock content %}

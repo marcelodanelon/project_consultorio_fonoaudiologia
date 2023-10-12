@@ -11,6 +11,7 @@ from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicos
 from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
+from agendamento.models import AgendamentoModel
 
 @login_required(login_url='home:loginUser')
 def getJSONclient(request):
@@ -229,6 +230,10 @@ def historicoAtendimento(request):
 
     client_audiometria = AudiometriaModel.objects.filter(aClient=client)
 
+    client_agendamentos = AgendamentoModel.objects.filter(aClient=client)
+    for i in client_agendamentos:
+        i.agDataAg = i.agDataAg.strftime("%d/%m/%Y")
+
     context = {
         'form_atendimento': form_atendimento,
         'atendimentos': client_atendimentos,
@@ -236,6 +241,7 @@ def historicoAtendimento(request):
         'anamneses': client_anamneses,
         'saidasEstoque': client_saida,
         'audiometrias': client_audiometria,
+        'agendamentos': client_agendamentos,
         'name_module': 'Atendimento',
         'title': 'Atendimento',
     }

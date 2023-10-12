@@ -66,7 +66,7 @@ class AgendamentoForm(forms.ModelForm):
         })
         self.fields['agAgenda'].widget.attrs.update({
             'class':'form-control',
-            'readonly': True,
+            'hidden': True,
         })
 
     class Meta:
