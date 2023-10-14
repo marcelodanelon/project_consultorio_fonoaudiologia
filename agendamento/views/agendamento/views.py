@@ -52,7 +52,6 @@ def getJSONdatas(request):
                 model = list(model)
                 return JsonResponse(data={'results': model,'agendamentos': agendamentos_com_vagas})            
         
-
 @login_required(login_url='home:loginUser')
 def getJSONhorarios(request):
     if request.GET.get('local') and request.GET.get('profissional') and request.GET.get('data'):
@@ -83,27 +82,13 @@ def getJSONhorarios(request):
 
         return JsonResponse(data={'results': dados_horarios})
 
-
 @login_required(login_url='home:loginUser')
-def index(request):
+def listAgendamento(request):
+    form_action = reverse('agendamento:createAgendamento')
 
-    context = {
-        'name_module': 'Agendamento',
-    }
+    agendamentos = AgendamentoModel.objects.all().order_by('id')
 
-    return render(
-        request,
-        "agendamento/index.html",
-        context
-    )
-
-@login_required(login_url='home:loginUser')
-def listAgenda(request):
-    form_action = reverse('agendamento:createAgenda')
-
-    agendas = AgendaModel.objects.all().order_by('id')
-
-    paginator = Paginator(agendas, 14)
+    paginator = Paginator(agendamentos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -116,21 +101,21 @@ def listAgenda(request):
 
     return render(
         request,
-        'agendamento/agenda/search.html',
+        'agendamento/agendamento/search.html',
         context
     )
 
 @login_required(login_url='home:loginUser')
-def searchAgenda(request):
-    search_agenda = request.GET.get('q','').strip()
+def searchAgendamento(request):
+    search_agendamento = request.GET.get('q','').strip()
 
-    if search_agenda == "":
-        return redirect('agendamento:listAgenda')
+    if search_agendamento == "":
+        return redirect('agendamento:listAgendamento')
 
-    if search_agenda.isdigit():
-        agendas = search_agenda.objects.filter(id=int(search_agenda)).order_by('id')
+    if search_agendamento.isdigit():
+        agendamentos = search_agendamento.objects.filter(id=int(search_agendamento)).order_by('id')
 
-    paginator = Paginator(agendas, 14)
+    paginator = Paginator(agendamentos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -142,6 +127,6 @@ def searchAgenda(request):
 
     return render(
         request,
-        'agendamento/agenda/search.html',
+        'agendamento/agendamento/search.html',
         context
     )

@@ -15,7 +15,7 @@ def createAgendamento(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Agendamento gravado com sucesso!')
-            return redirect('agendamento:index')
+            return redirect('agendamento:listAgendamento')
 
     context = {
         'form': form,
@@ -31,44 +31,78 @@ def createAgendamento(request):
         context
     )
 
-# @login_required(login_url='home:loginUser')
-# def updateAgenda(request, agenda_id):
-#     agenda = get_object_or_404(AgendamentoModel, pk=agenda_id)
-#     form_action = reverse('agendamento:updateAgenda', args=(agenda_id,))
+@login_required(login_url='home:loginUser')
+def updateAgendamento(request, agendamento_id):
+    agendamento = get_object_or_404(AgendamentoModel, pk=agendamento_id)
+    form_action = reverse('agendamento:updateAgendamento', args=(agendamento_id,))
     
-#     if request.method == 'POST':
-#         formMarca = AgendamentoForm(request.POST, instance=agenda)
-#         if formMarca.is_valid():
-#             formMarca.save()
-#             messages.success(request, 'Agenda atualizada com sucesso!')
-#             return redirect('agendamento:listAgenda')
+    if request.method == 'POST':
+        formAgendamento = AgendamentoForm(request.POST, instance=agendamento)
+        if formAgendamento.is_valid():
+            formAgendamento.save()
+            messages.success(request, 'Agendamento atualizado com sucesso!')
+            return redirect('agendamento:listAgendamento')
 
-#         context = {
-#             'form' : AgendamentoForm(instance=agenda),
-#             'form_action': form_action,
-#             'title':'Cadastro',
-#             'name_screen': 'Consulta',
-#             'name_module': 'Agendamento',
-#             'updateAgendamento': 1,
-#         }
+        context = {
+            'form' : AgendamentoForm(instance=agendamento),
+            'form_action': form_action,
+            'title':'Cadastro',
+            'name_screen': 'Consulta',
+            'name_module': 'Agendamento',
+            'updateAgendamento': 1,
+        }
 
-#         return render(
-#             request,
-#             'agendamento/agenda/agenda.html',
-#             context
-#         )
+        return render(
+            request,
+            'agendamento/agendamento/agendamento.html',
+            context
+        )
+    
+    print(agendamento)
 
-#     context = {
-#         'form' : AgendamentoForm(instance=agenda),
-#         'form_action': form_action,
-#         'title':'Cadastro',
-#         'name_screen': 'Consulta',
-#         'name_module': 'Agendamento',
-#         'updateAgendamento': 1,
-#     }
+    context = {
+        'form' : AgendamentoForm(instance=agendamento),
+        'form_action': form_action,
+        'title':'Cadastro',
+        'name_screen': 'Consulta',
+        'name_module': 'Agendamento',
+        'option_delete': 'yes',
+        'agendamento': agendamento,
+        'updateAgendamento': 1,
+    }
 
-#     return render(
-#         request,
-#         'agendamento/agenda/agenda.html',
-#         context
-#     )
+    return render(
+        request,
+        'agendamento/agendamento/agendamento.html',
+        context
+    )
+
+@login_required(login_url='home:loginUser')
+def deleteAgendamento(request, agendamento_id):
+    agendamento = get_object_or_404(AgendamentoModel, pk=agendamento_id)
+    form_action = reverse('agendamento:deleteAgendamento', args=(agendamento_id,))
+
+    confirmation = request.POST.get('confirmation_delete', 'no')
+
+    if confirmation == 'yes':
+        agendamento.delete()
+        messages.success(request, 'Agendamento deletado com sucesso!')
+        return redirect ('agendamento:listAgendamento')
+
+    context = {
+        'form': AgendamentoForm(instance=agendamento),
+        'title':'Cadastro',
+        'name_screen': 'Atualizar',
+        'name_module': 'Home',
+        'option_delete': 'yes',
+        'updateAgendamento': 1,
+        'agendamento': agendamento,
+        'confirmation_delete': confirmation,
+        'form_action': form_action,
+    }
+
+    return render(
+        request,
+        'agendamento/agendamento/agendamento.html',
+        context
+    )
