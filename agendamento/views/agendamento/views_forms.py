@@ -16,7 +16,7 @@ def createAgendamento(request):
             form.save()
             messages.success(request, 'Agendamento gravado com sucesso!')
             return redirect('agendamento:listAgendamento')
-
+        
     context = {
         'form': form,
         'name_screen': 'Agendamento',
@@ -67,6 +67,7 @@ def updateAgendamento(request, agendamento_id):
         'name_screen': 'Consulta',
         'name_module': 'Agendamento',
         'option_delete': 'yes',
+        'horario_agendamento': str(agendamento.agHoraAg),
         'agendamento': agendamento,
         'updateAgendamento': 1,
     }

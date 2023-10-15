@@ -2,13 +2,39 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from agendamento.models import AgendaModel
+from agendamento.models import AgendaModel, AgendamentoModel
+from home.models import ProfessionalModel, LocalModel
 
 @login_required(login_url='home:loginUser')
 def index(request):
+    # Criação primeiro gráfico por Agendamento e profissional
+    count = int(ProfessionalModel.objects.all().count())
+    professionals = list(ProfessionalModel.objects.all())
+    data_points1 = []
+    for i in range(count):
+        professional = AgendamentoModel.objects.filter(aProfessional=professionals[i])
+        if not professional != None:
+            data_points1.append({'label': 'Sem registros', "y": 0})
+            break
+        else:
+            data_points1.append({'label': str(professional.first().aProfessional), "y": professional.count()})
+
+    # Criação segundo gráfico por Agendamento e unidade
+    count = int(LocalModel.objects.all().count())
+    locais = list(LocalModel.objects.all())
+    data_points2 = []
+    for i in range(count):
+        local = AgendamentoModel.objects.filter(aLocal=locais[i])
+        if not local != None:
+            data_points2.append({'label': 'Sem registros', "y": 0})
+            break
+        else:
+            data_points2.append({'label': str(local.first().aLocal), "y": local.count()})
 
     context = {
         'name_module': 'Agendamento',
+        'data_points' : data_points1,
+        'data_points2' : data_points2,
     }
 
     return render(

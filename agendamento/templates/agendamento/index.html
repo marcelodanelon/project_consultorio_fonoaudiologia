@@ -2,6 +2,90 @@
 
 {% block nav_lateral %}{% include 'partials/_nav_agendamento.html' %}{% endblock nav_lateral %}
 
+{% block head_base %}
+{% load static %}
+<script src="{% static 'global/partials/canvasjs.min.js' %}"></script>
+<script>
+    window.onload = function () {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            theme: "light2", // "light2", "dark1", "dark2"
+            animationEnabled: true, // change to true		
+            title:{
+                text: "Agendamentos por Profissional"
+            },
+            axisX:{
+              interval: 1
+            },
+            data: [
+            {
+                // Change type to "bar", "area", "spline", "pie",etc.
+                type: "column",
+                dataPoints: {{ data_points | safe }},
+            }
+            ]
+        });
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Agendamentos por Unidade"
+          },
+          axisX:{
+            interval: 1
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "bar",
+              dataPoints: {{ data_points2 | safe }},
+          }
+          ]
+        });
+        //var chart3 = new CanvasJS.Chart("chartContainer3", {
+        //  theme: "light2", // "light2", "dark1", "dark2"
+        //  animationEnabled: true, // change to true		
+        //  title:{
+        //      text: "Consumo médio de Insumos (mensal)"
+        //  },
+        //  data: [
+        //  {
+        //      // Change type to "bar", "area", "spline", "pie",etc.
+        //      type: "column",
+        //      name: "Entradas",
+        //      showInLegend: true,
+        //      dataPoints: {{ data_points3 | safe }},
+        //  },
+        //  {
+        //    // Change type to "bar", "area", "spline", "pie",etc.
+        //    type: "column",
+        //    name: "Saídas",
+        //    showInLegend: true,
+        //    dataPoints: {{ data_points4 | safe }},
+        //  },
+        //  ]
+        //});
+        //var chart4 = new CanvasJS.Chart("chartContainer4", {
+        //  theme: "light2", // "light2", "dark1", "dark2"
+        //  animationEnabled: true, // change to true		
+        //  title:{
+        //      text: "Atendimentos(1º Atend.) por Mês"
+        //  },
+        //  data: [
+        //  {
+        //      // Change type to "bar", "area", "spline", "pie",etc.
+        //      type: "area",
+        //      dataPoints: {{ data_points4 | safe }},
+        //  }
+        //  ]
+        //});
+        chart1.render();
+        chart2.render();
+        //chart3.render();
+        //chart4.render();
+    }
+</script>
+{% endblock head_base %}
+
 {% block content %}
 <div class="container" style="padding:1px 16px;">
     <div class="row" style="z-index: -1;">

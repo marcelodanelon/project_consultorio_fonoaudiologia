@@ -48,7 +48,7 @@
       </div>
     </div><br>
     <div class="form-content d-flex flex-row bd-highlight mb-3">        
-      <button class="btn btn-success me-1" type="submit">Gravar</button>
+      <button id="btn-form" class="btn btn-success me-1" type="submit">Gravar</button>
   </form>
         {% if option_delete == 'yes'%}
         <form action="{% url 'agendamento:deleteAgendamento' agendamento.id %}" method="POST">
@@ -64,7 +64,6 @@
         </form> 
         {% endif %} 
   <div hidden id="div-updateAgendamento">{{updateAgendamento}}</div>
-  <div hidden id="div-horarioUpdate">{{form.agHoraAg}}</div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -137,13 +136,22 @@ $(document).ready(function() {
     $('#id_agHoraAg').append(
         $('<option></option>').val(horario).html(horario)
     );
+  }else{
+    $('#id_agHoraAg').prop('required',false)
   }
 
   // bloqueando campos de data e horario, obrigando o preenchimento de cliente, local e profissional para seleção
   $('#id_agDataAg').prop('disabled', true)
   $('#id_agDataAg').prop('style', '')
   $('#id_agHoraAg').prop('disabled', true)
-
+  if({{updateAgendamento}}==1){
+    var horarioCompleto = '{{ horario_agendamento }}';
+    var horario = horarioCompleto.substring(0, 5);
+    $('#id_agHoraAg').empty()
+    $('#id_agHoraAg').append(
+        $('<option></option>').val(horario).html(horario)
+    );
+  }
   // consultando dados da agenda com ajax
   var datas_disponiveis;
   var horarios_disponiveis;
@@ -251,7 +259,6 @@ $(document).ready(function() {
               if (datas_disponiveis && datas_disponiveis.responseJSON && datas_disponiveis.responseJSON.hasOwnProperty('results')) {
                 var agenda = datas_disponiveis.responseJSON.results[0].id;
               }
-              $('#id_agHoraAg').focus();
               $('#id_agAgenda').val(agenda)
               flatpickrInstance = null;
               const form = inputElement.form;
@@ -331,6 +338,7 @@ $(document).ready(function() {
                           }
                         }
                       }
+                      $('#id_agHoraAg').focus();
                   },                 
                 });
               }
