@@ -23,6 +23,7 @@ class AgendamentoModel(models.Model):
     agDataAg = models.DateField(verbose_name='Data Agendamento')
     agHoraAg = models.TimeField(verbose_name='Horário Agendamento')
     agObserv = models.TextField(verbose_name='Observações', blank=True, null=True)
+    agSituac = models.CharField(max_length=30, verbose_name='Situação', choices=(['agendado','Agendado'],['atendido','Atendido']), default='agendado', blank=True)
     agAgenda = models.ForeignKey(AgendaModel, on_delete=models.PROTECT, verbose_name='Agenda', default=1)
 
     def __str__(self) -> str:

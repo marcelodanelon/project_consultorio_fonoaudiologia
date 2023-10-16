@@ -41,29 +41,22 @@
           }
           ]
         });
-        //var chart3 = new CanvasJS.Chart("chartContainer3", {
-        //  theme: "light2", // "light2", "dark1", "dark2"
-        //  animationEnabled: true, // change to true		
-        //  title:{
-        //      text: "Consumo médio de Insumos (mensal)"
-        //  },
-        //  data: [
-        //  {
-        //      // Change type to "bar", "area", "spline", "pie",etc.
-        //      type: "column",
-        //      name: "Entradas",
-        //      showInLegend: true,
-        //      dataPoints: {{ data_points3 | safe }},
-        //  },
-        //  {
-        //    // Change type to "bar", "area", "spline", "pie",etc.
-        //    type: "column",
-        //    name: "Saídas",
-        //    showInLegend: true,
-        //    dataPoints: {{ data_points4 | safe }},
-        //  },
-        //  ]
-        //});
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Agendamentos (mensal)"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "column",
+              name: "Entradas",
+              showInLegend: true,
+              dataPoints: {{ data_points3 | safe }},
+          }
+          ]
+        });
         //var chart4 = new CanvasJS.Chart("chartContainer4", {
         //  theme: "light2", // "light2", "dark1", "dark2"
         //  animationEnabled: true, // change to true		
@@ -80,7 +73,7 @@
         //});
         chart1.render();
         chart2.render();
-        //chart3.render();
+        chart3.render();
         //chart4.render();
     }
 </script>
@@ -95,7 +88,43 @@
     <br><br>
     <div class="row">
         <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
-        <div id="chartContainer4" style="width: 45%; height: 360px;"></div>
+        <div style="width:46%; height:370px; overflow-x: auto;">
+            <table style="width: 100%;">
+              <div style="text-align: center; background: white; font-size: 30px"><b>Agendamentos do Dia</b></div>
+              <thead>
+                  <tr class="table-row table-row-header">
+                    <th class="table-header"></th>
+                    <th class="table-header">Cliente</th>
+                    <th class="table-header">Profissional</th>
+                    <th class="table-header">Unidade</th>
+                    <th class="table-header">Horário</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for field in agendamentos %}
+                      <tr class="table-row">
+                        <td class="table-cel">
+                        </td>
+                        <td class="table-cel">
+                            {{ field.aClient }}
+                        </td>
+                        <td class="table-cel">
+                            {{ field.aProfessional }}
+                        </td>
+                        <td class="table-cel">
+                            {{ field.aLocal }}
+                        </td>
+                        <td class="table-cel">
+                            {{field.agHoraAg}}
+                        </td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+            {% if not agendamentos %}
+              <div style="background-color:white;height:76%;display: flex;align-items: center;justify-content: center;"><b>Sem Agendamentos</b></div>
+            {% endif %}
+          </div>
     </div>
 </div>
 {% endblock content %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from datetime import date
 from agendamento.models import AgendaModel, AgendamentoModel
 from home.models import ProfessionalModel, LocalModel
 
@@ -31,10 +32,24 @@ def index(request):
         else:
             data_points2.append({'label': str(local.first().aLocal), "y": local.count()})
 
+    # Criação terceiro gráfico por mês no ano atual
+    data_meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    data_points3 = []
+    for i in range(12):
+        meses = AgendamentoModel.objects.filter(agDataAg__month=i).filter(agDataAg__year=date.today().year)
+        if meses.count() != 0:
+            data_points3.append({'label': data_meses[i], "y": meses.count()})
+
+    # Buscando agendamentos do dia
+    today = date.today()
+    agendamentos = AgendamentoModel.objects.filter(agDataAg=today).filter(agSituac='agendado')
+
     context = {
         'name_module': 'Agendamento',
         'data_points' : data_points1,
         'data_points2' : data_points2,
+        'data_points3' : data_points3,
+        'agendamentos': agendamentos,
     }
 
     return render(
