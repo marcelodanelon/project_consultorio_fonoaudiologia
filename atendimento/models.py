@@ -77,8 +77,8 @@ class AtendimentoModel(models.Model):
 class ContatosTelefonicosModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
     aDemanda = models.CharField(max_length=15, choices=[('telefone', 'Telefone'), ('espontanea', 'Espontânea'), ('agendamento', 'Agendamento')], default=2, verbose_name='Demanda')
-    aTelData = models.DateField(verbose_name='Data Telefonema')
-    aTelLiga = models.CharField(max_length=20, verbose_name='Telefone')
+    aTelData = models.DateField(verbose_name='Data Telefonema',blank=True, null=True,)
+    aTelLiga = models.CharField(max_length=20, verbose_name='Telefone',blank=True, null=True,)
     aTelObse = models.CharField(max_length=50,blank=True, null=True, verbose_name='Observações')
 
     def __str__(self):

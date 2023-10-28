@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.http import JsonResponse
-from django.core import serializers
 from django.contrib import messages
 from datetime import date
 from django.db.models import F, Case, When, Value, CharField
@@ -91,6 +91,13 @@ def atendimento(request):
         except:
             search = None
             client = None
+
+        agendamento_id = request.POST.get('agendamentoId')
+        if agendamento_id:
+            agendamento_id = int(agendamento_id)
+            agendamento = get_object_or_404(AgendamentoModel, id=agendamento_id)
+            agendamento.agSituac = 'atendido'
+            agendamento.save()
 
         updateAtend = int(request.POST.get('updateAtendimento'))
         forms = AtendimentoForm(request.POST, request.FILES, instance=order_forms)

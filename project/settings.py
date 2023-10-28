@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-32(k7bzif!q26lz#d2c-#$q4+z4rpr-^)7w-0x7n#3vwwl2!de
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'elephant-glowing-bison.ngrok-free.app']
 
-
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://elephant-glowing-bison.ngrok-free.app",
+# ]
 # Application definition
 
 INSTALLED_APPS = [

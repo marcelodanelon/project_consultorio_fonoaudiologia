@@ -104,18 +104,19 @@
                 {% for field in agendamentos %}
                       <tr class="table-row">
                         <td class="table-cel">
+                          <a class="btn btn-primary" href="{% url "atendimento:atendimento" %}?searchClient={{field.aClient.id}}&agendamentoId={{field.id}}">Atender</a>
                         </td>
                         <td class="table-cel">
-                            {{ field.aClient }}
+                          {{ field.aClient }}
                         </td>
                         <td class="table-cel">
-                            {{ field.aProfessional }}
+                          {{ field.aProfessional }}
                         </td>
                         <td class="table-cel">
-                            {{ field.aLocal }}
+                          {{ field.aLocal }}
                         </td>
                         <td class="table-cel">
-                            {{field.agHoraAg}}
+                          {{field.agHoraAg}}
                         </td>
                       </tr>
                   {% endfor %}

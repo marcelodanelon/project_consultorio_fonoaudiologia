@@ -271,11 +271,9 @@ class ContatosTelefonicosForm(forms.ModelForm):
 
         self.fields['aTelData'].widget.attrs.update({
             'class':'form-control mask-date',
-            'required': True,
         })
         self.fields['aTelLiga'].widget.attrs.update({
             'class':'form-control mask-telefone',
-            'required': True,
         })
         self.fields['aTelObse'].widget.attrs.update({
             'class':'form-control',

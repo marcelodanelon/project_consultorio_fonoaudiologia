@@ -16,6 +16,8 @@
       var url_string = window.location.href; 
       var url = new URL(url_string);
       var paramValue = url.searchParams.get("searchClient");
+      var agendamentoId = url.searchParams.get("agendamentoId");
+      $("#agendamentoId").val(agendamentoId)
       $('#id_aClient option').each(function() {
         if($(this).val() == paramValue) {
           $(this).attr('selected', true);
@@ -59,6 +61,7 @@
       {% for i in client %}
         <input name="clientId" hidden value="{{i.id}}">
       {% endfor %}
+      <input name="agendamentoId" id="agendamentoId" hidden value="">
       <!-- Conteúdo da Primeira Aba -->
       <div id="first" class="tabcontent">
         {% include 'atendimento/pages_atendimentos/page1_at.html' %}
