@@ -11,7 +11,7 @@
     --clr-light-shadow-5: rgba(200, 200, 255, 5%);
     --clr-light-shadow-10: rgba(200, 200, 255, 10%);
     --clr-light-shadow-20: rgba(200, 200, 255, 20%);
-    --main-page-width: 120rem;
+    --main-page-width: 100rem;
     --table-min-width: 60rem;
     --biggest-font-size: 5rem;
     --bigger-font-size: 4rem;
@@ -92,15 +92,19 @@
     margin: calc(var(--spacing) * 2) auto;
     padding: var(--spacing);
     background: var(--clr-white);
-    /* box-shadow: 2px 2px 5px var(--clr-dark-shadow-20); */
     border-radius: var(--default-border-radius);
     position: relative;
-    height: auto;
+    overflow: auto;
+    height: 100vh;
+  }
+
+  .content * {
+    box-sizing: border-box;
   }
 
   .container{
     width: 1000px;
-    height: 1000px;
+    height: 850px;
     flex-direction: row;
     justify-content: center;
     align-items: center;

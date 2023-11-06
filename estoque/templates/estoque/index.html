@@ -98,46 +98,48 @@
 {% endblock head_base %}
 
 {% block content %}
-<div class="row" style="z-index: -1;">
-    <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
-    <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
-</div>
-<br><br>
-<div class="row">
-    <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
-    <div style="width: 45%; height: 360px;">
-      <table style="width: 100%;">
-        <div style="text-align: center; background: white; font-size: 30px"><b>Insumos abaixo do Estoque Mínimo</b></div>
-        <thead>
-            <tr class="table-row table-row-header">
-                <th class="table-header">Descricao</th>
-                <th class="table-header" style="text-align: center;">Quantidade</th>
-                <th class="table-header" style="text-align: center;">Quantidade Mínima</th>
-                <th class="table-header">Unidade</th>
-            </tr>
-        </thead>
-        <tbody>
-          {% for field in text_estoqueMin %}
-                <tr class="table-row">
-                    <td class="table-cel">
-                      {{ field.descricao }}
-                    </td>
-                    <td class="table-cel" style="text-align: center;">
-                      {{ field.quantidade }}
-                    </td>
-                    <td class="table-cel" style="text-align: center;">
-                      {{ field.quantidadeMin }}
-                    </td>
-                    <td class="table-cel">
-                      {{ field.local }} 
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-      </table>
-      {% if not text_estoqueMin %}
-        <div style="background-color:white;height:76%;display: flex;align-items: center;justify-content: center;"><b>Sem Registros</b></div>
-      {% endif %}
-    </div>
+<div class="container" style="padding:1px 16px;">
+  <div class="row" style="z-index: -1;">
+      <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+      <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
+  </div>
+  <br><br>
+  <div class="row">
+      <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+      <div style="width: 45%; height: 360px;">
+        <table style="width: 100%;">
+          <div style="text-align: center; background: white; font-size: 30px"><b>Insumos abaixo do Estoque Mínimo</b></div>
+          <thead>
+              <tr class="table-row table-row-header">
+                  <th class="table-header">Descricao</th>
+                  <th class="table-header" style="text-align: center;">Quantidade</th>
+                  <th class="table-header" style="text-align: center;">Quantidade Mínima</th>
+                  <th class="table-header">Unidade</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for field in text_estoqueMin %}
+                  <tr class="table-row">
+                      <td class="table-cel">
+                        {{ field.descricao }}
+                      </td>
+                      <td class="table-cel" style="text-align: center;">
+                        {{ field.quantidade }}
+                      </td>
+                      <td class="table-cel" style="text-align: center;">
+                        {{ field.quantidadeMin }}
+                      </td>
+                      <td class="table-cel">
+                        {{ field.local }} 
+                      </td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+        {% if not text_estoqueMin %}
+          <div style="background-color:white;height:76%;display: flex;align-items: center;justify-content: center;"><b>Sem Registros</b></div>
+        {% endif %}
+      </div>
+  </div>
 </div>
 {% endblock content %}
