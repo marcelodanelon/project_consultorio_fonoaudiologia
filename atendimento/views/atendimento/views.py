@@ -258,3 +258,22 @@ def historicoAtendimento(request):
         'atendimento/historicoAtendimento.html',
         context
     )
+
+def atendimento_new(request):
+    atendimentoForm = AtendimentoForm()
+    telefonemasFormset = inlineformset_factory(AtendimentoModel, ContatosTelefonicosModel, form=ContatosTelefonicosForm, extra=0, can_delete=True, min_num=1)
+    telefonemasForm = telefonemasFormset(instance=AtendimentoModel())
+    regulagensFormset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=0, can_delete=True, min_num=1)
+    regulagemForm = regulagensFormset(instance=AtendimentoModel())
+
+    context={
+        'atendimentoForm': atendimentoForm,
+        'telefonemasForm': telefonemasForm,
+        'regulagemForm': regulagemForm,
+    }
+
+    return render(
+        request,
+        'atendimento_new/atendimento.html',
+        context
+    )

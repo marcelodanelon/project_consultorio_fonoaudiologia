@@ -1,0 +1,21 @@
+{% load custom_template_tag %}
+<br>
+{% for field in atendimentoForm %} 
+    {% if field.name == 'aDataPri' or field.name == 'aDifiEsc' or field.name == 'aDifiPio' or field.name == 'aOuviMel' or field.name == 'aPessFam' or field.name == 'aTrabRui'%}  
+        <div class="row align-items-center">
+        {% setvar "yes" as action %}
+    {% endif %} 
+    {% if field.name == "aTrabRui" %}
+        {% setvar "no" as action %}
+    {% endif %}
+    {% if action == "yes" %}
+        <div class="col">                
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+        </div>  
+    {% endif %}        
+    {% if field.name == 'aConhece' or field.name == 'aDifiEsc' or field.name == 'aDifiPio' or field.name == 'aOuviMel' or field.name == 'aPessFam' or field.name == 'aTrabRui'%}    
+        </div> 
+    {% endif %}
+{% endfor %}
+<br>

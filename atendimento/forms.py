@@ -51,6 +51,7 @@ class AtendimentoForm(forms.ModelForm):
         })
         self.fields['aObsAten'].widget.attrs.update({
             'class':'form-control',
+            'style':'height:15vh;resize: none;'
         })
         self.fields['aTelevis'].label = 'Televisão'
         self.fields['aTelevis'].widget.attrs.update({

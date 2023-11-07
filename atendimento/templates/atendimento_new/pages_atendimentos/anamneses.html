@@ -1,0 +1,37 @@
+{% load custom_template_tag %}
+<br>
+{% for field in atendimentoForm %} 
+    {% if field.name == 'aTelevis' %}
+        <p>Assinale as principais dificuldades?</p>
+    {% endif %}
+    {% if field.name == 'aZumbido' %}
+        <br>
+        <p>Assinale o que você sente no ouvido?</p>
+    {% endif %}
+    {% if field.name == 'aCardiop' %}
+        <br>
+        <p>Doenças</p>
+    {% endif %}
+    {% if field.name == 'aTelevis' or field.name == 'aConvGru' or field.name == 'aFaladis' or field.name == 'aZumbido' or field.name == 'aDorOOOO' or field.name == 'aSensTam' or field.name == 'aOutrOuv' or field.name == 'aCardiop' or field.name == 'aTontura' or field.name == 'aUsoOtot' or field.name == 'aCancerO' or field.name == 'aOutrDoe'%}  
+        <div class="row align-items-center">
+        {% setvar "yes" as action %}
+    {% endif %} 
+    {% if field.name == "aJaUsoAp" %}
+        {% setvar "no" as action %}
+    {% endif %}
+    {% if action == "yes" %}
+        <div class="col"> 
+            {% if field.name == 'aOutrDif' or field.name == 'aOutrOuv' or field.name == 'aOutrDoe' %}                  
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+            {% else %}
+                {{ field }}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {% endif %}
+        </div>  
+    {% endif %}        
+    {% if field.name == 'aTeleCel' or field.name == 'aFalaBai' or field.name == 'aPaleSal' or field.name == 'aOtiteOO' or field.name == 'aTimpPer' or field.name == 'aSensTam' or field.name == 'aOutrOuv' or field.name == 'aProbRin' or field.name == 'aProbTir' or field.name == 'aLabirin' or field.name == 'aCancerO' or field.name == 'aOutrDoe'%}    
+        </div> 
+    {% endif %}
+{% endfor %}
+<br>

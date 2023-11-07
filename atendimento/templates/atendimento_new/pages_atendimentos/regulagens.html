@@ -1,0 +1,127 @@
+{% load custom_template_tag %}
+{% csrf_token %}
+<div style="width: 100%;height: 600px;overflow-y: auto;">
+    {{regulagemForm.management_form}}
+    {% for form in regulagemForm %} 
+        <div class="form-row ps-3 pe-3 pt-2">
+            <div class="row">
+                <div class="input-group-text d-flex align-items-start">
+                    <div class="col-2 ms-1"> 
+                        {{form.errors}}
+                        <td class="hidden">{{ form.id }}</td>
+                        <label for="{{ form.aDataAna.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aDataAna.label }}</label>
+                        {{form.aDataAna}} 
+                    </div> 
+                    <div class="col-2 ms-1">    
+                        <label for="{{ form.aAjustOD.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOD.label }}</label>
+                        {{form.aAjustOD}}  
+                    </div> 
+                    <div class="col-2 ms-1"> 
+                        <label for="{{ form.aAjustOE.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAjustOE.label }}</label>
+                        {{form.aAjustOE}} 
+                    </div> 
+                    <div class="col-5 ms-1">    
+                        <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.aAObserv.label }}</label>
+                        {{form.aAObserv}}  
+                    </div> 
+                    <div hidden class="col-5 ms-1">    
+                        <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.DELETE.label }}</label>
+                        {{form.DELETE}}  
+                    </div> 
+                    
+                    <div class="col-1 mt-5"> 
+                        <button class="btn btn-success add-form-row">+</button> 
+                    </div>   
+                </div>                      
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div>
+    <br>
+    {% for field in form %} 
+        {% if field.name == 'aSituaca'%}  
+            <div class="row align-items-center">
+            {% setvar "yes" as action %}
+        {% endif %} 
+        {% if action == "yes" %}
+            <div class="col">                  
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}<br>
+            </div>  
+        {% endif %}        
+        {% if field.name == 'aSituaca'%}    
+            </div> 
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + prefix + '_set-TOTAL_FORMS').val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+        forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+        $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
+    $(selector).after(newElement);
+    var conditionRow = $('.form-row:not(:first)');
+    conditionRow.find('.btn.add-form-row')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row').addClass('remove-form-row')
+    .html('-');
+    return false;
+}
+function deleteForm(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '_set-TOTAL_FORMS').val());
+    if (total > 1){
+        var divFind = btn.parents('.form-row');
+        var elementFind = divFind.find("input[name$='aAjustOE']");
+        var numberElement = elementFind.attr('name').replace(/[^0-9]/g,'')
+        document.getElementById("id_" + prefix + "_set-" + numberElement + "-DELETE").checked = true;
+
+        btn.closest('.form-row').hide();
+
+        var forms = $('.form-row');
+        $('#id_' + prefix + '_set-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row', function(e){
+    e.preventDefault();
+    cloneMore('.form-row:last', 'anamnesemodel');
+    return false;
+});
+$(document).on('click', '.remove-form-row', function(e){
+    e.preventDefault();
+    deleteForm('anamnesemodel', $(this));
+    return false;
+});
+
+</script>
