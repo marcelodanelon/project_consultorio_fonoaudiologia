@@ -12,7 +12,8 @@ class AtendimentoModel(models.Model):
     aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.SET_NULL, null=True)
     aProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
     aLocal = models.ForeignKey(LocalModel, verbose_name="Unidade de Atendimento", on_delete=models.SET_NULL, null=True)
-    aDataPri = models.DateField(verbose_name="Data 1ª consulta", null=True)
+    aDataAte = models.DateField(default=date.today, verbose_name="Data")
+    aDataPri = models.DateField(verbose_name="Data 1ª consulta", null=True, blank=True)
     aDemanda = models.CharField(max_length=15, choices=[('espontanea', 'Espontânea'), ('telefone', 'Telefone'), ('agendamento', 'Agendamento')], default='espontanea', verbose_name='Demanda')
     aObsAten = models.TextField(blank=True, null=True, verbose_name='Observações')
     aConhece = models.CharField(max_length=50, null=True, blank=True)
@@ -69,30 +70,26 @@ class AtendimentoModel(models.Model):
     aTuboOOE = models.CharField(max_length=50, null=True, blank=True)
     aReceOOD = models.CharField(max_length=50, null=True, blank=True)
     aReceOOE = models.CharField(max_length=50, null=True, blank=True)
-    aSituaca = models.CharField(max_length=15, choices=[('Em Andamento', 'Em Andamento'), ('Concluído', 'Concluído')], default='Em Andamento')
 
     def __str__(self) -> str:
         return f'{self.pk} - {self.aDataPri} {self.aClient}'
     
 class ContatosTelefonicosModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
-    aDemanda = models.CharField(max_length=15, choices=[('telefone', 'Telefone'), ('espontanea', 'Espontânea'), ('agendamento', 'Agendamento')], default=2, verbose_name='Demanda')
-    aTelData = models.DateField(verbose_name='Data Telefonema',blank=True, null=True,)
     aTelLiga = models.CharField(max_length=20, verbose_name='Telefone',blank=True, null=True,)
     aTelObse = models.CharField(max_length=50,blank=True, null=True, verbose_name='Observações')
 
     def __str__(self):
         return f'{self.aTelData} - {self.aTelLiga}'
 
-class AnamneseModel(models.Model):
+class RegulagemModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
-    aDataAna = models.DateField(default=date.today)
     aAjustOD = models.CharField(max_length=50, null=True, blank=True)
     aAjustOE = models.CharField(max_length=50, null=True, blank=True)
     aAObserv = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'ID: {self.pk} - Data: {self.aDataAna} - IDAtend: {self.aIDAtend}'
+        return f'ID: {self.pk} - IDAtend: {self.aIDAtend}'
     
 class AudiometriaModel(models.Model):
     aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.PROTECT, null=True)

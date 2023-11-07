@@ -1,4 +1,4 @@
-from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
+from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefonicosModel, AudiometriaModel
 from django import forms
 from home.models import ClientModel
 from django.db.models import F
@@ -17,6 +17,9 @@ class AtendimentoForm(forms.ModelForm):
             'class':'form-control',
         })
         self.fields['aLocal'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aDataAte'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['aDemanda'].widget.attrs.update({
@@ -246,14 +249,10 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['aReceOOE'].widget.attrs.update({
             'class':'form-control',
         })
-        self.fields['aSituaca'].label = 'Situação'
-        self.fields['aSituaca'].widget.attrs.update({
-            'class':'form-control',
-        })
 
     class Meta:
         model = AtendimentoModel
-        fields = ('aClient', 'aProfessional', 'aLocal', 'aDemanda', 'aDataPri', 'aConhece', 
+        fields = ('aClient', 'aDataAte', 'aProfessional', 'aLocal', 'aDemanda', 'aDataPri', 'aConhece', 
                   'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 'aObsAten', 
                   'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
                   'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',
@@ -264,15 +263,12 @@ class AtendimentoForm(forms.ModelForm):
                   'aMarcaOO', 'aTempoOO', 'aJaTesAp', 'aQualApa', 'aApaIndi',
                   'aValApar', 'aLadoInd', 'aFormPag', 'aSaiTest', 'aRetTest',
                   'aComClik', 'aSemClik', 'aClikOOD', 'aClikOOE', 'aTuboOOD', 
-                  'aTuboOOE', 'aReceOOD', 'aReceOOE', 'aSituaca')
+                  'aTuboOOE', 'aReceOOD', 'aReceOOE')
 
 class ContatosTelefonicosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['aTelData'].widget.attrs.update({
-            'class':'form-control mask-date',
-        })
         self.fields['aTelLiga'].widget.attrs.update({
             'class':'form-control mask-telefone',
         })
@@ -282,18 +278,14 @@ class ContatosTelefonicosForm(forms.ModelForm):
 
     class Meta:
         model = ContatosTelefonicosModel
-        fields = ('aTelData', 'aTelLiga', 'aTelObse')
+        fields = ('aTelLiga', 'aTelObse')
 
-class AnamneseForm(forms.ModelForm):
+class RegulagemForm(forms.ModelForm):
     aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['aDataAna'].label = 'Data:'
-        self.fields['aDataAna'].widget.attrs.update({
-            'class':'form-control mask-date',
-        })
         self.fields['aAjustOD'].label = 'Ajuste OD:'
         self.fields['aAjustOD'].widget.attrs.update({
             'class':'form-control',
@@ -308,8 +300,8 @@ class AnamneseForm(forms.ModelForm):
         })
     
     class Meta:
-        model = AnamneseModel
-        fields = ('aDataAna', 'aAjustOD', 'aAjustOE', 'aAObserv')
+        model = RegulagemModel
+        fields = ('aAjustOD', 'aAjustOE', 'aAObserv')
 
 class AudiometriaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

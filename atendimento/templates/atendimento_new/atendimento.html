@@ -5,75 +5,82 @@
 {% endblock nav_lateral %}
 
 {% block content %}
-<div style="height: 90vh; width: 82vw; position: relative;">
-  <div class="row">
-    <div style="margin-left:1%; background: white; width: 35vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
-      <div style="margin-top:1vh;">
-        {{atendimentoForm.aClient.label}}
-        {{atendimentoForm.aClient}}    
-      </div> 
-      <div style="margin-top:1vh;">
-        <div class="row">
-          <div class="col">
-            {{atendimentoForm.aLocal.label}}
-            {{atendimentoForm.aLocal}}   
+<form action="{{form_action}}" method="post">
+  {% csrf_token %}
+  <div style="height: 90vh; width: 82vw; position: relative;">
+    <div class="row">
+      <div style="margin-left:1%; background: white; width: 35vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
+        <div style="margin-top:1vh;">
+          {{atendimentoForm.aClient.label}}
+          {{atendimentoForm.aClient}}    
+        </div> 
+        <div style="margin-top:1vh;">
+          <div class="row">
+            <div class="col">
+              {{atendimentoForm.aLocal.label}}
+              {{atendimentoForm.aLocal}}   
+            </div>
+            <div class="col">
+              {{atendimentoForm.aProfessional.label}}
+              {{atendimentoForm.aProfessional}}  
+            </div>
           </div>
-          <div class="col">
-            {{atendimentoForm.aProfessional.label}}
-            {{atendimentoForm.aProfessional}}  
+        </div> 
+        <div style="margin-top:1vh;">
+          <div class="row">
+            <div class="col">
+              {{atendimentoForm.aDemanda.label}}
+              {{atendimentoForm.aDemanda}}   
+            </div>
+            <div class="col">
+              
+            </div>
+            <div class="col">
+              {{atendimentoForm.aDataAte.label}}
+              {{atendimentoForm.aDataAte}}  
+            </div>
           </div>
+        </div> 
+        <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+          <button type="button" id="btn-dados_iniciais" style="width: 50px; height: 50px; margin: 0 10px;">IN</button>
+          <button type="button" id="btn-telefonemas" style="width: 50px; height: 50px; margin: 0 10px;">TL</button>
+          <button type="button" id="btn-anamneses" style="width: 50px; height: 50px; margin: 0 10px;">AN</button>
+          <button type="button" id="btn-aparelhos" style="width: 50px; height: 50px; margin: 0 10px;">AP</button>
+          <button type="button" id="btn-regulagens" style="width: 50px; height: 50px; margin: 0 10px;">RE</button>
+        </div>   
+        <div style="position: absolute; bottom: 2vh; width: 34vw;">
+          {{atendimentoForm.aObsAten.label}}
+          {{atendimentoForm.aObsAten}}    
         </div>
-      </div> 
-      <div style="margin-top:1vh;">
-        <div class="row">
-          <div class="col">
-            {{atendimentoForm.aDemanda.label}}
-            {{atendimentoForm.aDemanda}}   
-          </div>
-          <div class="col">
-            
-          </div>
+      </div>
+      <div style="margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
+        <div id="card-dados_iniciais" style="margin-top:1vh; display: none;">
+          <h5>PRIMEIRO CONTATO</h5>
+          {% include 'atendimento_new/pages_atendimentos/dados_iniciais.html' %}
         </div>
-      </div> 
-      <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-        <button id="btn-dados_iniciais" style="width: 50px; height: 50px; margin: 0 10px;">IN</button>
-        <button id="btn-telefonemas" style="width: 50px; height: 50px; margin: 0 10px;">TL</button>
-        <button id="btn-anamneses" style="width: 50px; height: 50px; margin: 0 10px;">AN</button>
-        <button id="btn-aparelhos" style="width: 50px; height: 50px; margin: 0 10px;">AP</button>
-        <button id="btn-regulagens" style="width: 50px; height: 50px; margin: 0 10px;">RE</button>
-      </div>   
-      <div style="position: absolute; bottom: 2vh; width: 34vw;">
-        {{atendimentoForm.aObsAten.label}}
-        {{atendimentoForm.aObsAten}}    
+        <div id="card-telefonemas" style="margin-top:1vh; display: none;">
+          <h5>LIGAÇÕES</h5>
+          {% include 'atendimento_new/pages_atendimentos/telefonemas.html' %}
+        </div>
+        <div id="card-anamneses" style="margin-top:1vh; display: none;">
+          <h5>ANAMNESE</h5>
+          {% include 'atendimento_new/pages_atendimentos/anamneses.html' %}
+        </div>
+        <div id="card-aparelhos" style="margin-top:1vh; display: none;">
+          <h5>APARELHOS</h5>
+          {% include 'atendimento_new/pages_atendimentos/aparelhos.html' %}
+        </div>
+        <div id="card-regulagens" style="margin-top:1vh; display: none;">
+          <h5>REGULAGENS</h5>
+          {% include 'atendimento_new/pages_atendimentos/regulagens.html' %}
+        </div>
       </div>
     </div>
-    <div style="margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
-      <div id="card-dados_iniciais" style="margin-top:1vh; display: none;">
-        <h5>PRIMEIRO CONTATO</h5>
-        {% include 'atendimento_new/pages_atendimentos/dados_iniciais.html' %}
-      </div>
-      <div id="card-telefonemas" style="margin-top:1vh; display: none;">
-        <h5>LIGAÇÕES</h5>
-        {% include 'atendimento_new/pages_atendimentos/telefonemas.html' %}
-      </div>
-      <div id="card-anamneses" style="margin-top:1vh; display: none;">
-        <h5>ANAMNESE</h5>
-        {% include 'atendimento_new/pages_atendimentos/anamneses.html' %}
-      </div>
-      <div id="card-aparelhos" style="margin-top:1vh; display: none;">
-        <h5>APARELHOS</h5>
-        {% include 'atendimento_new/pages_atendimentos/aparelhos.html' %}
-      </div>
-      <div id="card-regulagens" style="margin-top:1vh; display: none;">
-        <h5>REGULAGENS</h5>
-        {% include 'atendimento_new/pages_atendimentos/regulagens.html' %}
-      </div>
-    </div>
-  </div>
-  <button class="btn btn-success" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw;">
-    GRAVAR
-  </button>
-</div>  
+    <button class="btn btn-success" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw;">
+      GRAVAR
+    </button>
+  </div>  
+</form>
 <script>
 $(document).ready(function(){
   $('#btn-dados_iniciais').on('click', function(){

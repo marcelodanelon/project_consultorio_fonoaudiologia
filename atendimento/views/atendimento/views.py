@@ -7,8 +7,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from datetime import date
 from django.db.models import F, Case, When, Value, CharField
-from atendimento.forms import AtendimentoForm, AnamneseForm, ContatosTelefonicosForm
-from atendimento.models import AtendimentoModel, AnamneseModel, ContatosTelefonicosModel, AudiometriaModel
+from atendimento.forms import AtendimentoForm, RegulagemForm, ContatosTelefonicosForm
+from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefonicosModel, AudiometriaModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
 from agendamento.models import AgendamentoModel
@@ -50,7 +50,7 @@ def index(request):
     data_meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     data_points3 = []
     for i in range(12):
-        meses = AnamneseModel.objects.filter(aDataAna__month=i).filter(aDataAna__year=date.today().year)
+        meses = AtendimentoModel.objects.filter(aDataAte__month=i).filter(aDataAte__year=date.today().year)
         if meses.count() != 0:
             data_points3.append({'label': data_meses[i], "y": meses.count()})
 
@@ -82,7 +82,7 @@ def index(request):
 def atendimento(request):
     form_action = reverse('atendimento:atendimento')
     order_forms = AtendimentoModel()
-    anam_order_formset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=0, can_delete=True, min_num=1)
+    anam_order_formset = inlineformset_factory(AtendimentoModel, RegulagemModel, form=RegulagemForm, extra=0, can_delete=True, min_num=1)
     tele_order_formset = inlineformset_factory(AtendimentoModel, ContatosTelefonicosModel, form=ContatosTelefonicosForm, extra=0, can_delete=True, min_num=1)
     if request.method == 'POST':
         try:
@@ -168,7 +168,7 @@ def atendimento(request):
             if atendimento.aSituaca != 'Concluído':
                 updateAtend = 1
                 forms = AtendimentoForm(instance=atendimento)
-                anams = AnamneseModel.objects.filter(aIDAtend=atendimento)
+                anams = RegulagemModel.objects.filter(aIDAtend=atendimento)
                 teles = ContatosTelefonicosModel.objects.filter(aIDAtend=atendimento).order_by('-id')
                 formAnamSet = anam_order_formset(instance=atendimento, queryset=anams)
                 formTeleSet = tele_order_formset(instance=atendimento, queryset=teles)
@@ -202,9 +202,9 @@ def historicoAtendimento(request):
         client = None
 
     client_atendimentos = AtendimentoModel.objects.filter(aClient=client)
-    client_anamneses = AnamneseModel.objects.none()
+    client_anamneses = RegulagemModel.objects.none()
     for i in range(client_atendimentos.count()):
-        client_anamneses = client_anamneses.union(AnamneseModel.objects.filter(aIDAtend=client_atendimentos[i]))
+        client_anamneses = client_anamneses.union(RegulagemModel.objects.filter(aIDAtend=client_atendimentos[i]))
     client_telefonemas = ContatosTelefonicosModel.objects.filter(aIDAtend__aClient=client)
 
     from django.db.models import F
@@ -259,17 +259,47 @@ def historicoAtendimento(request):
         context
     )
 
+@login_required(login_url='home:loginUser')
 def atendimento_new(request):
+    form_action = reverse('atendimento:atendimento_new')
+
     atendimentoForm = AtendimentoForm()
     telefonemasFormset = inlineformset_factory(AtendimentoModel, ContatosTelefonicosModel, form=ContatosTelefonicosForm, extra=0, can_delete=True, min_num=1)
     telefonemasForm = telefonemasFormset(instance=AtendimentoModel())
-    regulagensFormset = inlineformset_factory(AtendimentoModel, AnamneseModel, form=AnamneseForm, extra=0, can_delete=True, min_num=1)
+    regulagensFormset = inlineformset_factory(AtendimentoModel, RegulagemModel, form=RegulagemForm, extra=0, can_delete=True, min_num=1)
     regulagemForm = regulagensFormset(instance=AtendimentoModel())
+
+    if request.method == 'POST':
+        agendamento_id = request.POST.get('agendamentoId')
+        if agendamento_id:
+            agendamento_id = int(agendamento_id)
+            agendamento = get_object_or_404(AgendamentoModel, id=agendamento_id)
+            agendamento.agSituac = 'atendido'
+            agendamento.save()
+        
+        atendimentoForm = AtendimentoForm(request.POST, request.FILES, instance=AtendimentoModel())
+        regulagemForm = regulagensFormset(request.POST, request.FILES, instance=AtendimentoModel())
+        telefonemasForm = telefonemasFormset(request.POST, request.FILES, instance=AtendimentoModel())
+        print(atendimentoForm.errors)
+
+        if atendimentoForm.is_valid() and regulagemForm.is_valid() and telefonemasForm.is_valid():            
+            form_t = atendimentoForm.save(commit=False)     
+            form_t_tel = telefonemasForm.save(commit=False) 
+            for i in form_t_tel:
+                i.aDemanda = form_t.aDemanda
+            regulagemForm.save() 
+            telefonemasForm.save()
+            atendimentoForm.save()
+            messages.success(request, 'Atendimento gravado com sucesso!')
+            return redirect('atendimento:index')
 
     context={
         'atendimentoForm': atendimentoForm,
         'telefonemasForm': telefonemasForm,
         'regulagemForm': regulagemForm,
+        'form_action': form_action,
+        'name_module': 'Atendimento',
+        'title': 'Atendimento',
     }
 
     return render(
