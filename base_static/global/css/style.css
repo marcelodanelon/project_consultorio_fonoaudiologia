@@ -282,15 +282,15 @@
   }
   
   /* Muda a cor botão de fechamento on hover */
-  .topright:hover {color: red;}
+  .topright:hover {color: rgb(0, 81, 255);}
 
   .card_client {
     width: auto;
-    background: rgba(88, 88, 88, 0.2);
-    border-radius: 5px;
+    background: rgba(165, 0, 39);
+    color: white;
     opacity: 2;
     padding: 10px;
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px, rgba(0, 0, 0, 0.5) 0px 1px 1px;
     margin-top: 5px;
     margin-bottom: 10px;
   }

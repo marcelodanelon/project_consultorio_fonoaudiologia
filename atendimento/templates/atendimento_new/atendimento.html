@@ -4,12 +4,106 @@
   {% include 'partials/_nav_atendimento.html' %}
 {% endblock nav_lateral %}
 
+{% block head_base %}
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  .btn-atendimento {
+    border: none;
+    background: none;
+    width: 50px; 
+    height: 50px; 
+    margin: 0 10px;
+    transition: all 0.3s ease; /* Adiciona uma transição suave de 0.3 segundos para todas as propriedades */
+  }
+  .btn-atendimento:hover {
+    transform: scale(1.2); /* Aumenta o tamanho do botão em 20% (1.2 vezes) quando o mouse passa sobre ele */
+  }
+  #img-place-cards{
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+    font-family: 'Nunito', sans-serif;
+  }
+  #img-place-cards.active {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+  }
+</style>
+{% endblock head_base %}
+
 {% block content %}
 <form action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
     <div class="row">
       <div style="margin-left:1%; background: white; width: 35vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
+        {% for fieldClient in client %}
+          <div class="card_client">
+            <div class="row">
+                <div class="col-6">
+                    Nome: {{fieldClient.first_name}} {{fieldClient.last_name}}
+                </div>
+                <div class="col-6">
+                    {% if fieldClient.street == None or fieldClient.number == None or fieldClient.district == None %}
+                        Endereço: Incompleto
+                    {% else %}
+                        Endereço: {{fieldClient.street}}, {{fieldClient.number}} - {{fieldClient.district}} - CEP:{{fieldClient.zipcode}} {{fieldClient.city}}/{{fieldClient.state}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                {% if fieldClient.profession == None %}
+                    Profissão: Não Informado
+                {% else %}
+                    Profissão: {{fieldClient.profession}}
+                {% endif %}
+              </div>
+              <div class="col-3">
+                  {% if fieldClient.document1 == None %}
+                      CPF: 
+                  {% else %}
+                      CPF: {{fieldClient.document1}}
+                  {% endif %}
+              </div>
+              <div class="col-3">
+                  {% if fieldClient.document2 == None %}
+                      RG: 
+                  {% else %}
+                      RG: {{fieldClient.document2}}
+                  {% endif %}
+              </div>    
+              <div class="row">
+                <div class="col-3">
+                  {% if fieldClient.age == None %}
+                      Idade: 
+                  {% else %}
+                      Idade: {{fieldClient.age}} Anos
+                  {% endif %}
+                </div>
+                <div class="col-4">
+                    {% if fieldClient.phone1 == None %}
+                        Telefone: Não Informado
+                    {% else %}
+                        Telefone: {{fieldClient.phone1}}
+                    {% endif %}
+                </div>
+                <div class="col-5">
+                    {% if fieldClient.phone1 == None %}
+                        Recado: Não Informado
+                    {% else %}
+                        Recado: {{fieldClient.phone2}}
+                    {% endif %}
+                </div>
+              </div>        
+            </div>
+          </div>
+        {% endfor %}
         <div style="margin-top:1vh;">
           {{atendimentoForm.aClient.label}}
           {{atendimentoForm.aClient}}    
@@ -42,18 +136,32 @@
           </div>
         </div> 
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-          <button type="button" id="btn-dados_iniciais" style="width: 50px; height: 50px; margin: 0 10px;">IN</button>
-          <button type="button" id="btn-telefonemas" style="width: 50px; height: 50px; margin: 0 10px;">TL</button>
-          <button type="button" id="btn-anamneses" style="width: 50px; height: 50px; margin: 0 10px;">AN</button>
-          <button type="button" id="btn-aparelhos" style="width: 50px; height: 50px; margin: 0 10px;">AP</button>
-          <button type="button" id="btn-regulagens" style="width: 50px; height: 50px; margin: 0 10px;">RE</button>
+          <button class="btn-atendimento" type="button" id="btn-dados_iniciais">
+            <img src="/media/icons/btn-icon-dados_iniciais.png">
+          </button>
+          <button class="btn-atendimento" type="button" id="btn-telefonemas">
+            <img src="/media/icons/btn-icon-telefonemas.png">
+          </button>
+          <button class="btn-atendimento" type="button" id="btn-anamneses">
+            <img src="/media/icons/btn-icon-anamneses.png">
+          </button>
+          <button class="btn-atendimento" type="button" id="btn-aparelhos">
+            <img src="/media/icons/btn-icon-aparelhos.png">
+          </button>
+          <button class="btn-atendimento" type="button" id="btn-regulagens">
+            <img src="/media/icons/btn-icon-regulagens.png">
+          </button>
         </div>   
         <div style="position: absolute; bottom: 2vh; width: 34vw;">
           {{atendimentoForm.aObsAten.label}}
           {{atendimentoForm.aObsAten}}    
         </div>
       </div>
-      <div style="margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
+      <div style="padding:1%; margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
+        <div id="img-place-cards">
+          <span style="margin-bottom: 10px;"><b>Vamos Começar!</b></span>
+          <img src="/media/computador5.png" alt="Computador 5">
+        </div>
         <div id="card-dados_iniciais" style="margin-top:1vh; display: none;">
           <h5>PRIMEIRO CONTATO</h5>
           {% include 'atendimento_new/pages_atendimentos/dados_iniciais.html' %}
@@ -76,68 +184,132 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-success" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw;">
-      GRAVAR
+    <button class="btn-atendimento"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+      <img src="/media/btn-gravar.png">
     </button>
   </div>  
 </form>
 <script>
 $(document).ready(function(){
+  // controle exibição de cards no place
   $('#btn-dados_iniciais').on('click', function(){
     if ($('#card-dados_iniciais').css('display') === 'block') {
       $('#card-dados_iniciais').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
     } else {
       $('#card-dados_iniciais').css('display', 'block');
       $('#card-anamneses').css('display', 'none');
       $('#card-aparelhos').css('display', 'none');
       $('#card-regulagens').css('display', 'none');
       $('#card-telefonemas').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
     }    
   })
   $('#btn-telefonemas').on('click', function(){
     if ($('#card-telefonemas').css('display') === 'block') {
       $('#card-telefonemas').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
     } else {
       $('#card-telefonemas').css('display', 'block');
       $('#card-anamneses').css('display', 'none');
       $('#card-aparelhos').css('display', 'none');
       $('#card-regulagens').css('display', 'none');
       $('#card-dados_iniciais').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
     }    
   })
   $('#btn-anamneses').on('click', function(){
     if ($('#card-anamneses').css('display') === 'block') {
       $('#card-anamneses').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
     } else {
       $('#card-anamneses').css('display', 'block');
       $('#card-telefonemas').css('display', 'none');
       $('#card-aparelhos').css('display', 'none');
       $('#card-regulagens').css('display', 'none');
       $('#card-dados_iniciais').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
     }    
   })
   $('#btn-aparelhos').on('click', function(){
     if ($('#card-aparelhos').css('display') === 'block') {
       $('#card-aparelhos').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
     } else {
       $('#card-aparelhos').css('display', 'block');
       $('#card-telefonemas').css('display', 'none');
       $('#card-anamneses').css('display', 'none');
       $('#card-regulagens').css('display', 'none');
       $('#card-dados_iniciais').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
     }    
   })
   $('#btn-regulagens').on('click', function(){
     if ($('#card-regulagens').css('display') === 'block') {
       $('#card-regulagens').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
     } else {
       $('#card-regulagens').css('display', 'block');
       $('#card-telefonemas').css('display', 'none');
       $('#card-anamneses').css('display', 'none');
       $('#card-aparelhos').css('display', 'none');
       $('#card-dados_iniciais').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
     }    
   })
+  // buscar dados do client, chamando a view
+  $("#id_aClient").change(function(){
+    var client = $(this).children("option:selected").val();
+    if(client!=''){
+      window.location.replace("{% url 'atendimento:atendimento_new' %}?searchClient=" + client);
+    }
+  });
+  //obter valor parametro searchClient (control select)
+  var url_string = window.location.href; 
+  var url = new URL(url_string);
+  var paramValue = url.searchParams.get("searchClient");
+  var agendamentoId = url.searchParams.get("agendamentoId");
+  $("#agendamentoId").val(agendamentoId)
+  $('#id_aClient option').each(function() {
+    if($(this).val() == paramValue) {
+      $(this).attr('selected', true);
+    }
+  });
 })
 </script>
 {% endblock content %}

@@ -262,7 +262,13 @@ def historicoAtendimento(request):
 @login_required(login_url='home:loginUser')
 def atendimento_new(request):
     form_action = reverse('atendimento:atendimento_new')
-
+    try:
+        search = int(request.GET.get('searchClient'))
+        client = ClientModel.objects.filter(pk=search)
+    except:
+        search = None
+        client = None
+    print(client)
     atendimentoForm = AtendimentoForm()
     telefonemasFormset = inlineformset_factory(AtendimentoModel, ContatosTelefonicosModel, form=ContatosTelefonicosForm, extra=0, can_delete=True, min_num=1)
     telefonemasForm = telefonemasFormset(instance=AtendimentoModel())
@@ -298,6 +304,7 @@ def atendimento_new(request):
         'telefonemasForm': telefonemasForm,
         'regulagemForm': regulagemForm,
         'form_action': form_action,
+        'client': client,
         'name_module': 'Atendimento',
         'title': 'Atendimento',
     }
