@@ -1,6 +1,5 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.contrib.auth.models import User
 from home.static.home.partials._liststates import *
 from home.static.home.partials._listcities import *
     
@@ -29,9 +28,8 @@ class ClientModel(models.Model):
     phone1 = models.CharField(max_length=20, verbose_name='Telefone', null=True, blank=True)
     phone2 = models.CharField(max_length=20, verbose_name='Celular', null=True, blank=True)
     profession = models.CharField(max_length=50, verbose_name='Profissão', null=True, blank=True)
-    status = models.ForeignKey(StatusModel, on_delete=models.SET_NULL, verbose_name="Situação", null=True, blank=True, default=1)
+    status = models.ForeignKey(StatusModel, on_delete=models.PROTECT, verbose_name="Situação", default=1)
     typeRegister = models.CharField(max_length=15, choices=[('simplificado','Simplificado'),('completo','Completo')], default=1, verbose_name='Tipo do Cadastro')
-    # owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'

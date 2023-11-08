@@ -70,7 +70,11 @@ def updateClient(request, client_id):
     form_action = reverse('home:updateClient', args=(client_id,))
 
     today = date.today()
-    client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
+    try:
+        client.age = today.year - client.born.year - ((today.month, today.day) < (client.born.month, client.born.day))
+    except AttributeError:
+        print("Sem data de nascimento informada!")
+
 
     if request.method == 'POST':
         formClient = ClientForm(request.POST, instance=client)

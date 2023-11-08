@@ -8,7 +8,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(StatusModel)
 class StatusAdmin(admin.ModelAdmin):
-    ...
+    list_display = 'id', 'name',
 
 @admin.register(LocalModel)
 class StatusAdmin(admin.ModelAdmin):
