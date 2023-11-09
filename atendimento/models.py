@@ -8,11 +8,18 @@ CHOICES_OUVIDO = [
     ("Ambos" ,"Ambos"),
 ]
 
+class MotivosAtendimentoModel(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Descrição")
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
 class AtendimentoModel(models.Model):
     aClient = models.ForeignKey(ClientModel, verbose_name="Cliente", on_delete=models.SET_NULL, null=True)
     aProfessional = models.ForeignKey(ProfessionalModel, verbose_name="Profissional", on_delete=models.SET_NULL, null=True)
     aLocal = models.ForeignKey(LocalModel, verbose_name="Unidade de Atendimento", on_delete=models.SET_NULL, null=True)
     aDataAte = models.DateField(default=date.today, verbose_name="Data")
+    aMotAten = models.ForeignKey(MotivosAtendimentoModel, on_delete=models.PROTECT, verbose_name="Motivo de Atendimento", null=True)
     aDataPri = models.DateField(verbose_name="Data 1ª consulta", null=True, blank=True)
     aDemanda = models.CharField(max_length=15, choices=[('espontanea', 'Espontânea'), ('telefone', 'Telefone'), ('agendamento', 'Agendamento')], default='espontanea', verbose_name='Demanda')
     aObsAten = models.TextField(blank=True, null=True, verbose_name='Observações')
@@ -72,15 +79,15 @@ class AtendimentoModel(models.Model):
     aReceOOE = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.pk} - {self.aDataPri} {self.aClient}'
+        return f'{self.pk} - {self.aDataAte} {self.aClient}'
     
 class ContatosTelefonicosModel(models.Model):
-    aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.PROTECT, null=True, blank=True)
     aTelLiga = models.CharField(max_length=20, verbose_name='Telefone',blank=True, null=True,)
     aTelObse = models.CharField(max_length=50,blank=True, null=True, verbose_name='Observações')
 
     def __str__(self):
-        return f'{self.aTelData} - {self.aTelLiga}'
+        return f'{self.aTelLiga}'
 
 class RegulagemModel(models.Model):
     aIDAtend = models.ForeignKey(AtendimentoModel, on_delete=models.CASCADE, null=True, blank=True)
@@ -123,3 +130,4 @@ class AudiometriaModel(models.Model):
 
     def __str__(self) -> str:
         return f'{self.id} Data: {self.auData} Cliente: {self.aClient}'
+    

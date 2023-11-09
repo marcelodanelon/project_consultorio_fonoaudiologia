@@ -268,7 +268,6 @@ def atendimento_new(request):
     except:
         search = None
         client = None
-    print(client)
     atendimentoForm = AtendimentoForm()
     telefonemasFormset = inlineformset_factory(AtendimentoModel, ContatosTelefonicosModel, form=ContatosTelefonicosForm, extra=0, can_delete=True, min_num=1)
     telefonemasForm = telefonemasFormset(instance=AtendimentoModel())
@@ -286,16 +285,17 @@ def atendimento_new(request):
         atendimentoForm = AtendimentoForm(request.POST, request.FILES, instance=AtendimentoModel())
         regulagemForm = regulagensFormset(request.POST, request.FILES, instance=AtendimentoModel())
         telefonemasForm = telefonemasFormset(request.POST, request.FILES, instance=AtendimentoModel())
-        print(atendimentoForm.errors)
 
         if atendimentoForm.is_valid() and regulagemForm.is_valid() and telefonemasForm.is_valid():            
-            form_t = atendimentoForm.save(commit=False)     
-            form_t_tel = telefonemasForm.save(commit=False) 
-            for i in form_t_tel:
-                i.aDemanda = form_t.aDemanda
-            regulagemForm.save() 
-            telefonemasForm.save()
-            atendimentoForm.save()
+            formAten_instance = atendimentoForm.save()      
+            formTel_instances = telefonemasForm.save(commit=False) 
+            formReg_instances = regulagemForm.save(commit=False) 
+            for item in formTel_instances:
+                item.aIDAtend = formAten_instance
+                item.save()
+            for item in formReg_instances:
+                item.aIDAtend = formAten_instance
+                item.save()
             messages.success(request, 'Atendimento gravado com sucesso!')
             return redirect('atendimento:index')
 

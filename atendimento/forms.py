@@ -19,6 +19,9 @@ class AtendimentoForm(forms.ModelForm):
         self.fields['aLocal'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['aMotAten'].widget.attrs.update({
+            'class':'form-control',
+        })
         self.fields['aDataAte'].widget.attrs.update({
             'class':'form-control',
         })
@@ -252,7 +255,7 @@ class AtendimentoForm(forms.ModelForm):
 
     class Meta:
         model = AtendimentoModel
-        fields = ('aClient', 'aDataAte', 'aProfessional', 'aLocal', 'aDemanda', 'aDataPri', 'aConhece', 
+        fields = ('aClient', 'aMotAten', 'aDataAte', 'aProfessional', 'aLocal', 'aDemanda', 'aDataPri', 'aConhece', 
                   'aDifiEsc', 'aDifiPio', 'aOuviMel','aPessFam', 'aTrabRui', 'aObsAten', 
                   'aTelevis', 'aTeleFix', 'aTeleCel','aConvGru', 'aConvRui', 
                   'aFalaBai', 'aFaladis', 'aCineTea','aPaleSal', 'aOutrDif',

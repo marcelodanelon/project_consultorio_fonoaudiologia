@@ -8,6 +8,9 @@ class AgendaForm(forms.ModelForm):
         self.fields['aProfessional'].widget.attrs.update({
             'class':'form-control',
         })
+        self.fields['aMotAten'].widget.attrs.update({
+            'class':'form-control',
+        })
         self.fields['aLocal'].widget.attrs.update({
             'class':'form-control',
         })
@@ -46,6 +49,9 @@ class AgendamentoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['aProfessional'].widget.attrs.update({
+            'class':'form-control',
+        })
+        self.fields['aMotAten'].widget.attrs.update({
             'class':'form-control',
         })
         self.fields['aLocal'].widget.attrs.update({
