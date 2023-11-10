@@ -176,9 +176,10 @@ $(document).ready(function() {
 
     local = $("#id_aLocal").children("option:selected").val();
     profissional = $("#id_aProfessional").children("option:selected").val();
+    motivo = $("#id_aMotAten").children("option:selected").val();
 
     //desbloqueando campos de data e horario caso campos cliente, local e profissional selecionados
-    if(local!='' && profissional!=''){
+    if(local!='' && profissional!='' && motivo!=''){
       $('#id_agDataAg').prop('disabled', false)
       $('#id_agDataAg').prop('style', 'background-color: #fff; color: #000;')
       $('#id_agHoraAg').prop('disabled', false)
@@ -187,7 +188,7 @@ $(document).ready(function() {
     // buscando datas minima e maxima para calendario
     if(local!='' && profissional!=''){
       datas_disponiveis = $.ajax({
-          url: "{% url 'agendamento:getJSONdatas' %}?local=" + local + "&profissional=" + profissional,   
+          url: "{% url 'agendamento:getJSONdatas' %}?local=" + local + "&profissional=" + profissional + "&motivo=" + motivo,   
           type: "get",     
           async: false,  
           data: $("#search").serialize(),    
@@ -227,6 +228,9 @@ $(document).ready(function() {
   });
 
   $('#id_aProfessional').on('change', function(){
+    $('#id_aLocal').trigger('change');
+  });
+  $('#id_aMotAten').on('change', function(){
     $('#id_aLocal').trigger('change');
   });
 

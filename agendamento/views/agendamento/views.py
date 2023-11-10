@@ -12,7 +12,8 @@ def getJSONdatas(request):
     if request.GET.get('local') and request.GET.get('profissional'):
         local = int(request.GET.get('local'))
         profissional = int(request.GET.get('profissional'))
-        model = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).filter(agDatFim__gte=date.today()).values()
+        motivo = int(request.GET.get('motivo'))
+        model = AgendaModel.objects.filter(aLocal=local).filter(aProfessional=profissional).filter(aMotAten=motivo).filter(agDatFim__gte=date.today()).values()
         agendamentos_com_vagas = [] 
 
         for i in model:
@@ -68,9 +69,6 @@ def getJSONhorarios(request):
                 if agenda.agTipAge == 'quantidade':
                     quantidade = agenda.agQtdTot
                     tipoAgenda = agenda.agTipAge
-                    # agendadosQtdTotal = AgendamentoModel.objects.filter(agAgenda=agenda).filter(agDataAg=data)
-                    # agendadosQtdTotal = agendadosQtdTotal.count()
-                    # quantidade = quantidade - agendadosQtdTotal
                     dados_horarios.append({'agenda':agenda.pk,'quantidade': quantidade, 'tipoAgenda': tipoAgenda})
                     break
                 else:

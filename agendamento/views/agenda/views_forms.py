@@ -27,7 +27,8 @@ def createAgenda(request):
                     (Q(agHorIni__lte=model.agHorIni) & Q(agHorFim__gte=model.agHorIni)) |  
                     (Q(agHorIni__lte=model.agHorFim) & Q(agHorFim__gte=model.agHorFim)) |  
                     (Q(agHorIni__gte=model.agHorIni) & Q(agHorFim__lte=model.agHorFim))    
-                )
+                ) &
+                Q(aMotAten=model.aMotAten)
             )
             if agendas_conflitantes.exists():
                 messages.error(request, 'Agenda com período já existente!')
