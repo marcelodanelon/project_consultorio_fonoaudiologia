@@ -28,7 +28,7 @@ def index(request):
     data_points1 = []
     for i in range(count):
         professional = AtendimentoModel.objects.filter(aProfessional=professionals[i])
-        if not professional != None:
+        if not professional:
             data_points1.append({'label': 'Sem registros', "y": 0})
             break
         else:
@@ -40,7 +40,7 @@ def index(request):
     data_points2 = []
     for i in range(count):
         local = AtendimentoModel.objects.filter(aLocal=locais[i])
-        if not local != None:
+        if not local:
             data_points2.append({'label': 'Sem registros', "y": 0})
             break
         else:

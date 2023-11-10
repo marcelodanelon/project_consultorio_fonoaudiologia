@@ -303,9 +303,15 @@ $(document).ready(function(){
   //obter valor parametro searchClient (control select)
   var url_string = window.location.href; 
   var url = new URL(url_string);
-  var paramValue = url.searchParams.get("searchClient");
   var agendamentoId = url.searchParams.get("agendamentoId");
   $("#agendamentoId").val(agendamentoId)
+  var motivoId = url.searchParams.get("motivoId");
+  $('#id_aMotAten option').each(function() {
+    if($(this).val() == motivoId) {
+      $(this).attr('selected', true);
+    }
+  });
+  var paramValue = url.searchParams.get("searchClient");
   $('#id_aClient option').each(function() {
     if($(this).val() == paramValue) {
       $(this).attr('selected', true);
