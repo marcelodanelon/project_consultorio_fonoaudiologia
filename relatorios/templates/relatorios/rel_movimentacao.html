@@ -67,7 +67,7 @@
 </div>
 <div class="container mt-3">
     <h2 class="mb-3">Relatório de Movimentações do Estoque</h2>
-    <form method="post" class="container-all form-horizontal">
+    <form method="post" action="{% url "relatorios:teste" %}" class="container-all form-horizontal">
         {% csrf_token %}
         <div class="row">
             <div class="col-md-6">

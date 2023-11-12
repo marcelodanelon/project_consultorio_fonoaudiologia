@@ -1,10 +1,16 @@
 from django.shortcuts import render
 from django.contrib import messages
 from estoque.models import ItensMovimentacaoInsumoModel, MovimentacaoInsumoModel
-from django.db.models import Q
-from relatorios.forms import RelatorioForm
-from django.db.models import F
+from django.db.models import Q, F
 from datetime import datetime
+from relatorios.forms import RelatorioForm
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import pandas as pd
+from io import BytesIO
+import pandas as pd
+from home.models import ClientModel
 
 def rel_movimentacao_insumos(request):
     form = RelatorioForm()
@@ -207,89 +213,125 @@ def rel_movimentacao_insumos(request):
         context,
     )
 
-# views.py
-
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-import pandas as pd
-from io import BytesIO
-
 def render_to_pdf(template_path, context_dict):
     template = get_template(template_path)
     html_string = template.render(context_dict)
+
     response = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), response, encoding="UTF-8")
 
-    pisa_status = pisa.CreatePDF(html_string, dest=response)
-    if pisa_status.err:
-        return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
+    if not pdf.err:
+        response.seek(0)
+        return response
 
-    response.seek(0)
-    return response
+    return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
 
 def teste(request):
-    import random
+    clientes = ClientModel.objects.all()
+    if request.method == 'POST':
+        form = RelatorioForm(request.POST)
+        resultados = ItensMovimentacaoInsumoModel.objects.all()
+        if form.is_valid():
+            campo_agrupamento = form.cleaned_data['campos_agrupamento']
+            campos_selecionados = form.cleaned_data['campos']
+        # [FILTRO]
+        # coletando todos os filtros enviados para um dict
+        primeiro_filtro = {form.cleaned_data['campo_filtro']:form.cleaned_data.get('filtro_valor', None)}
+        campos_filtro = {}
+        for key, value in request.POST.items():
+            if key.startswith('campo_filtro_'):
+                filtro_number = key.split('_')[-1] 
+                campo_name = f'filtro_valor_{filtro_number}'
+                campos_filtro[value] = request.POST[campo_name]
+        campos_filtro.update(primeiro_filtro)                      
+        # utilizando os filtros para buscar os dados
+        query = Q()
+        for campo, valor in campos_filtro.items():
+            if valor:
+                if campo == 'dataEntrada' or campo == 'dataValidade':
+                    try:
+                        valor = datetime.strptime(valor, '%d/%m/%Y').date()
+                    except ValueError:
+                        messages.error(request, f'A data "{valor}" não é válida no formato "dd/mm/yyyy"')
+                        return render(
+                            request, 
+                            'relatorios/rel_movimentacao.html', 
+                            {'form': form,'name_module': 'Relatórios',},
+                        )
+                    query &= Q(**{campo: valor})
+                if campo == 'operacao':
+                    query &= Q(movimentacao__operacao=valor)
+                else:
+                    query &= Q(**{campo: valor})
+        for campo, valor in campos_filtro.items():
+            if valor:
+                try:
+                    resultados = ItensMovimentacaoInsumoModel.objects.filter(query)
+                    break
+                except Exception as e:
+                    error_message = str(e)
+                    if "Field 'id' expected a number but got" in error_message:
+                        translated_error_message = "Campo 'id' esperava um número, mas recebeu texto"
+                    else:
+                        translated_error_message = error_message
+                    messages.error(request, translated_error_message)
+                    return render(
+                        request, 
+                        'relatorios/rel_movimentacao.html', 
+                        {'form': form, 'name_module': 'Relatórios',},
+                    )
+                
+        # Criar uma lista de dicionários com os dados dos clientes
+        dados = {}
+        for campo in campos_selecionados:
+            dados[campo] = [getattr(item, campo) for item in resultados]
+        df = pd.DataFrame(dados)
 
-    # Estrutura inicial
-    dados = {
-        'CampoA': ['A', 'B', 'A', 'B', 'A'],
-        'CampoB': [1, 2, 3, 3, 5],
-        'CampoC': [10, 20, 30, 30, 50]
-    }
+        # Verificar se o campo de agrupamento foi selecionado
+        if campo_agrupamento and campo_agrupamento in df.columns:
+            grupos = df.groupby(campo_agrupamento)
+        else:
+            # Se campo_agrupamento não foi selecionado ou não está presente no DataFrame, não agrupar
+            grupos = {'Todos': df}
 
-    # Número de valores que você quer gerar
-    num_valores = 100
+        # Pré-processar os dados para tornar acessíveis no template
+        relatorios = []
 
-    # Gerar 100 valores aleatórios para cada campo
-    dados_aleatorios = {
-        'CampoA': random.choices(['A', 'B'], k=num_valores),
-        'CampoB': [random.randint(1, 10) for _ in range(num_valores)],
-        'CampoC': [random.randint(10, 50) for _ in range(num_valores)]
-    }
+        if campo_agrupamento and campo_agrupamento in df.columns:
+            for nome_grupo in df[campo_agrupamento].unique():
+                grupo_dados = df[df[campo_agrupamento] == nome_grupo]
 
-    # Adicionar os novos valores aos dados existentes
-    dados['CampoA'].extend(dados_aleatorios['CampoA'])
-    dados['CampoB'].extend(dados_aleatorios['CampoB'])
-    dados['CampoC'].extend(dados_aleatorios['CampoC'])
+                colunas = grupo_dados.columns.tolist()
+                dados = grupo_dados.values.tolist()
 
-    df = pd.DataFrame(dados)
+                total_registros = len(grupo_dados)
 
-    # Escolha o campo para agrupamento
-    campo_agrupamento = 'CampoA'
+                relatorios.append({
+                    'agrupamento': nome_grupo,
+                    'colunas': colunas,
+                    'dados': dados,
+                    'total_registros': total_registros,
+                })
+        else:
+            # Não há campo de agrupamento, tratamento especial aqui
+            colunas = df.columns.tolist()
+            dados = df.values.tolist()
 
-    # Agrupe os dados pelo campo escolhido
-    grupos = df.groupby(campo_agrupamento)
+            total_registros = len(df)
 
-    # Pré-processar os dados para tornar acessíveis no template
-    relatorios = []
-    for nome_grupo, grupo_dados in grupos:
-        colunas = grupo_dados.columns.tolist()
-        dados = grupo_dados.values.tolist()
+            relatorios.append({
+                'agrupamento': 'Sem Agrupamento',
+                'colunas': colunas,
+                'dados': dados,
+                'total_registros': total_registros,
+            })
 
-        # Calcular o total para CampoB e CampoC
-        total_campo_b = grupo_dados['CampoB'].sum()
-        total_campo_c = grupo_dados['CampoC'].sum()
-
-        total_registros = len(grupo_dados)
-
-        relatorios.append({
-            'agrupamento': nome_grupo,
-            'colunas': colunas,
-            'dados': dados,
-            'total_campo_b': total_campo_b,
-            'total_campo_c': total_campo_c,
-            'total_registros': total_registros,
-        })
-
-    # Renderizar o template em um PDF
-    pdf = render_to_pdf('relatorios/teste.html', {'relatorios': relatorios})
-
-    # Responda com o PDF e force o download
-    response = HttpResponse(pdf.read(), content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="relatorio.pdf"'
-    return response
+        # Renderizar o template em um PDF
+        pdf = render_to_pdf('relatorios/teste.html', {'relatorios': relatorios})
 
 
-
-
+        # Responda com o PDF e force o download
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="relatorio.pdf"'
+        return response
 

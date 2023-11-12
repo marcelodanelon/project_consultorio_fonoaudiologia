@@ -261,6 +261,7 @@
         </div>
     </div>
     <form action="{{form_action}}" method="post" class="container-all form-horizontal" id="search">
+        {% csrf_token %}
         {% comment "movimentacao" %}Formulario Movimentacao{% endcomment %}
         {% for field in formMov %}
             {% if field.name == 'operacao' or field.name == 'eClient' %}  
