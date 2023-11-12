@@ -206,3 +206,90 @@ def rel_movimentacao_insumos(request):
         'relatorios/rel_movimentacao.html', 
         context,
     )
+
+# views.py
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import pandas as pd
+from io import BytesIO
+
+def render_to_pdf(template_path, context_dict):
+    template = get_template(template_path)
+    html_string = template.render(context_dict)
+    response = BytesIO()
+
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
+
+    response.seek(0)
+    return response
+
+def teste(request):
+    import random
+
+    # Estrutura inicial
+    dados = {
+        'CampoA': ['A', 'B', 'A', 'B', 'A'],
+        'CampoB': [1, 2, 3, 3, 5],
+        'CampoC': [10, 20, 30, 30, 50]
+    }
+
+    # Número de valores que você quer gerar
+    num_valores = 100
+
+    # Gerar 100 valores aleatórios para cada campo
+    dados_aleatorios = {
+        'CampoA': random.choices(['A', 'B'], k=num_valores),
+        'CampoB': [random.randint(1, 10) for _ in range(num_valores)],
+        'CampoC': [random.randint(10, 50) for _ in range(num_valores)]
+    }
+
+    # Adicionar os novos valores aos dados existentes
+    dados['CampoA'].extend(dados_aleatorios['CampoA'])
+    dados['CampoB'].extend(dados_aleatorios['CampoB'])
+    dados['CampoC'].extend(dados_aleatorios['CampoC'])
+
+    df = pd.DataFrame(dados)
+
+    # Escolha o campo para agrupamento
+    campo_agrupamento = 'CampoA'
+
+    # Agrupe os dados pelo campo escolhido
+    grupos = df.groupby(campo_agrupamento)
+
+    # Pré-processar os dados para tornar acessíveis no template
+    relatorios = []
+    for nome_grupo, grupo_dados in grupos:
+        colunas = grupo_dados.columns.tolist()
+        dados = grupo_dados.values.tolist()
+
+        # Calcular o total para CampoB e CampoC
+        total_campo_b = grupo_dados['CampoB'].sum()
+        total_campo_c = grupo_dados['CampoC'].sum()
+
+        total_registros = len(grupo_dados)
+
+        relatorios.append({
+            'agrupamento': nome_grupo,
+            'colunas': colunas,
+            'dados': dados,
+            'total_campo_b': total_campo_b,
+            'total_campo_c': total_campo_c,
+            'total_registros': total_registros,
+        })
+
+    # Renderizar o template em um PDF
+    pdf = render_to_pdf('relatorios/teste.html', {'relatorios': relatorios})
+
+    # Responda com o PDF e force o download
+    response = HttpResponse(pdf.read(), content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="relatorio.pdf"'
+    return response
+
+
+
+
+

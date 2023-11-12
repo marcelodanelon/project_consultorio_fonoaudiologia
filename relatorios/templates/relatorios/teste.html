@@ -1,0 +1,58 @@
+<!-- relatorios/teste_pdf.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Teste</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;  /* Cor do fundo para as linhas pares */
+        }
+    </style>
+</head>
+<body>
+
+{% for relatorio in relatorios %}
+    <h2>Agrupamento: {{ relatorio.agrupamento }} (Total de Registros: {{ relatorio.total_registros }})</h2>
+    <table>
+        <tr>
+            {% for coluna in relatorio.colunas %}
+                <th>{{ coluna }}</th>
+            {% endfor %}
+        </tr>
+        {% for linha in relatorio.dados %}
+            <tr>
+                {% for valor in linha %}
+                    <td>{{ valor }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="1">{{ "Total" }}</td>
+            <td>{{ relatorio.total_campo_b }}</td>
+            <td>{{ relatorio.total_campo_c }}</td>
+        </tr>
+    </table>
+{% endfor %}
+
+</body>
+</html>

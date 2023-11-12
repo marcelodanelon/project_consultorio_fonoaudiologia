@@ -114,6 +114,7 @@
 <script>
     var pontosLinha1 = [];
     var pontosLinha2 = [];
+    var pontosXY = [];
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
 
@@ -124,6 +125,26 @@
         linhaAtual = classe;
         corLinhaAtual = cor;
     }
+    {% comment %} var pontosLinha1 = [
+        { x: 50, y: 50, cor: 'green', classe: 'linha1' },
+        { x: 150, y: 100, cor: 'green', classe: 'linha1' },
+        { x: 250, y: 150, cor: 'green', classe: 'linha1' },
+        { x: 200, y: 200, cor: 'green', classe: 'linha1' },
+        { x: 100, y: 250, cor: 'green', classe: 'linha1' }
+    ];
+
+    var pontosLinha2 = [
+        { x: 150, y: 50, cor: 'red', classe: 'linha2' },
+        { x: 200, y: 100, cor: 'red', classe: 'linha2' },
+        { x: 250, y: 50, cor: 'red', classe: 'linha2' }
+    ];
+
+    // Adiciona os pontos fictícios ao array principal
+    pontosXY = pontosLinha1.concat(pontosLinha2);
+
+    // Adiciona os pontos ao plano
+    desenharPontos(pontosXY);
+    desenharLinhas(pontosXY); {% endcomment %}
 
     function desenharReta(event) {
         if (linhaAtual === null || corLinhaAtual === null) {
@@ -141,6 +162,10 @@
         y = Math.max(0, Math.min(y, plano.height));
     
         var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+        pontosXY.push(ponto);
+
+        // Mostra os pontos no console.log
+        console.log("Pontos: ", pontosXY);
     
         if (linhaAtual === 'linha1') {
             pontosLinha1.push(ponto);
@@ -181,6 +206,7 @@
         // Limpa os arrays de pontos
         pontosLinha1 = [];
         pontosLinha2 = [];
+        pontosXY = [];
 
         // Limpa o canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
