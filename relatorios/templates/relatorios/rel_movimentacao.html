@@ -21,50 +21,6 @@
         pointer-events: auto;
     }
 </style>
-<!-- Modal -->
-<div class="modal fade custom-modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Documento Gerado</h5>
-                <div>
-                    <a class="btn btn-success" id="gerarPDF">Gerar PDF</a>
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Fechar">
-                        Fechar
-                    </button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="mt-4 p-3 table-print" style="width: 100%; height: 35%; background-color: white; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); overflow-x: hidden; overflow-y: auto;">
-                    {% if dados_agrupados %}
-                        <div class="row d-flex justify-content-center align-items-center">
-                            <div class="col-4">
-                                <div style="width: 130px; margin-top: 0px; padding: 0px;">
-                                    <img src="/media/logo.png" alt="">
-                                </div>
-                            </div>   
-                            <div class="col-7">
-                                <h4>Relatório de Movimentações do Estoque</h4>
-                            </div>    
-                        </div>  
-                        <div class="row" style="font-size:10px;">
-                            {% if campo_agrupamento %}
-                                <i>Agrupamento: {{ campo_agrupamento }}</i>
-                            {% endif %}
-                            {% if campos_filtros %}
-                                <i>Filtros: {{ campos_filtros }}</i>
-                            {% endif %}
-                            {% if campos_selecionados %}
-                                <i>Detalhes: {{ campos_selecionados }}</i>
-                            {% endif %}
-                        </div>    
-                            {{ dados_agrupados | safe }}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container mt-3">
     <h2 class="mb-3">Relatório de Movimentações do Estoque</h2>
     <form method="post" action="{% url "relatorios:teste" %}" class="container-all form-horizontal">

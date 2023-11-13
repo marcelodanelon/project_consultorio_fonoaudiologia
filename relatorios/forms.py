@@ -32,15 +32,3 @@ class RelatorioForm(forms.Form):
 
     filtro_valor = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-# codigo para restringir fields
-# campos_incluidos = ['campo1', 'campo2', 'campo3']
-
-# class SeuForm(forms.Form):
-#     campo_filtro = forms.ChoiceField(
-#         choices=[
-#             (field.name, field.verbose_name)
-#             for field in ItensMovimentacaoInsumoModel._meta.get_fields()
-#             if field.name in campos_incluidos  # Verifica se o nome do campo está na lista de campos incluídos
-#         ],
-#         required=False,
-#     )
