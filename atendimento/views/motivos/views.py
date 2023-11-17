@@ -1,54 +1,54 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from estoque.models import MarcaModel
+from atendimento.models import MotivosAtendimentoModel
 from django.core.paginator import Paginator
 
 @login_required(login_url='home:loginUser')
-def listMarca(request):
-    form_action = reverse('estoque:createMarca')
+def listMotivo(request):
+    form_action = reverse('atendimento:createMotivo')
 
-    marcas = MarcaModel.objects.all().order_by('id')
+    motivos = MotivosAtendimentoModel.objects.all().order_by('id')
 
-    paginator = Paginator(marcas, 14)
+    paginator = Paginator(motivos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     context = {
             'page_obj': page_obj,
             'title':'Cadastro',
-            'name_module': 'Estoque',
+            'name_module': 'Atendimento',
             'form_action': form_action,
     }
 
     return render(
         request,
-        'estoque/marca/search.html',
+        'motivos/search.html',
         context
     )
 
 @login_required(login_url='home:loginUser')
-def searchMarca(request):
-    search_marca = request.GET.get('q','').strip()
+def searchMotivo(request):
+    search_motivo = request.GET.get('q','').strip()
 
-    if search_marca == "":
-        return redirect('estoque:listMarca')
+    if search_motivo == "":
+        return redirect('atendimento:listMotivo')
 
-    if search_marca.isdigit():
-        marcas = MarcaModel.objects.filter(id=int(search_marca)).order_by('id')
+    if search_motivo.isdigit():
+        motivos = MotivosAtendimentoModel.objects.filter(id=int(search_motivo)).order_by('id')
 
-    paginator = Paginator(marcas, 14)
+    paginator = Paginator(motivos, 14)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     context = {
             'title':'Pesquisa',
-            'name_module': 'Estoque',
+            'name_module': 'Atendimento',
             'page_obj': page_obj,
     }
 
     return render(
         request,
-        'estoque/marcas/search.html',
+        'motivos/search.html',
         context
     )

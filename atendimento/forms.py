@@ -1,4 +1,4 @@
-from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefonicosModel, AudiometriaModel
+from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefonicosModel, AudiometriaModel, MotivosAtendimentoModel
 from django import forms
 from home.models import ClientModel
 from django.db.models import F
@@ -282,6 +282,18 @@ class ContatosTelefonicosForm(forms.ModelForm):
     class Meta:
         model = ContatosTelefonicosModel
         fields = ('aTelLiga', 'aTelObse')
+
+class MotivosAtendimentoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].widget.attrs.update({
+            'class':'form-control',
+        })
+
+    class Meta:
+        model = MotivosAtendimentoModel
+        fields = ('name',)
 
 class RegulagemForm(forms.ModelForm):
     aAObserv = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)

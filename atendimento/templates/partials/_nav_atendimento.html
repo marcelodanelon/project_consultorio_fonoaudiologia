@@ -1,18 +1,15 @@
     <ul>
         <li><a href='{% url 'atendimento:index' %}'>Início</a></li>
-        {% comment %} <li class='sub-menu'><a href='#'>Cadastros<div class='fa fa-caret-down right'></div></a>
-        <ul> {% endcomment %}
-            {% comment %} <li><a href='{% url 'home:listClient' %}'>Clientes</a></li>
-            <li><a href='{% url 'home:listLocal' %}'>Unidades de Atendimento</a></li>
-            <li><a href='{% url 'home:listProfessional' %}'>Profissionais</a></li> {% endcomment %}
-        {% comment %} </ul> {% endcomment %}
+        <li class='sub-menu'><a href='#'>Cadastros<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href='{% url 'atendimento:listMotivo' %}'>Motivos de Atendimento</a></li>
+            </ul> 
+        <li>
         <li class='sub-menu'><a href='#'>Movimentação<div class='fa fa-caret-down right'></div></a>
             <ul>
                 <li><a href='{% url 'atendimento:atendimento_new' %}'>Atendimento</a></li>
                 <li><a href='{% url 'atendimento:listAudiometria' %}'>Audiometria</a></li>
                 <li><a href='{% url 'atendimento:historicoAtendimento' %}'>Histórico de Atendimentos</a></li>
-                {% comment %} <li><a href='{% url 'home:listLocal' %}'>Unidades de Atendimento</a></li>
-                <li><a href='{% url 'home:listProfessional' %}'>Profissionais</a></li>  {% endcomment %}
             </ul>
         <li><a href='{% url 'home:logoutUser' %}'>Logout</a></li>
     </ul>

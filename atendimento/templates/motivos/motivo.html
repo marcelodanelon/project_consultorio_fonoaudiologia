@@ -1,0 +1,33 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
+
+{% block content %}
+<div class="container" style="padding:1px 16px;">
+  <div class="col-10">
+    <h3>{{name_screen}}</h3>
+  </div>
+  <form action="{{form_action}}" method="post" class="form-control" id="form_grupo">
+    {% csrf_token %}   
+    <div class="col"> 
+      <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+      {{ form.name }}       
+    </div> <br>
+    <div class="form-content d-flex flex-row bd-highlight mb-3">        
+      <button class="btn btn-success me-1" type="submit">Gravar</button>
+  </form>  
+        {% if option_delete == 'yes'%}
+        <form action="{% url 'atendimento:deleteMotivo' motivo.id %}" method="POST">
+            {% csrf_token %}
+            {% if confirmation_delete == 'no' %}
+              <input name="confirmation_delete" type="hidden" value="yes">
+              <button class="btn btn-danger">Confirma?</button>  
+            {% else %}
+              <button class="btn btn-danger">Delete</button> 
+            {% endif %}      
+            <a href="{% url 'atendimento:listMotivo' %}" class="btn btn-primary">Voltar</a>
+    </div>  
+        </form> 
+        {% endif %} 
+</div>
+{% endblock content %}
