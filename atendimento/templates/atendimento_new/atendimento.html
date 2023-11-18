@@ -13,10 +13,21 @@
     width: 50px; 
     height: 50px; 
     margin: 0 10px;
-    transition: all 0.3s ease; /* Adiciona uma transição suave de 0.3 segundos para todas as propriedades */
+    transition: all 0.3s ease; 
   }
   .btn-atendimento:hover {
-    transform: scale(1.2); /* Aumenta o tamanho do botão em 20% (1.2 vezes) quando o mouse passa sobre ele */
+    transform: scale(1.2); 
+  }
+  .btn-historico {
+    border: none;
+    background: none;
+    width: 50px; 
+    height: 50px; 
+    margin: 0 10px;
+    transition: transform 0.3s ease; 
+  }
+  .btn-historico:hover {
+    transform: translateX(-10px); 
   }
   #img-place-cards{
     display: flex; 
@@ -190,6 +201,9 @@
     </button>
   </div>  
 </form>
+<button class="btn-historico"style="display: inline-block; position: absolute; top: 10vh; right: -1vw; height:100px; width:100px;" target="_blank">
+  <img src="/media/btn-historico.png">
+</button>
 <script>
 $(document).ready(function(){
   // controle exibição de cards no place
@@ -315,6 +329,13 @@ $(document).ready(function(){
   $('#id_aClient option').each(function() {
     if($(this).val() == paramValue) {
       $(this).attr('selected', true);
+    }
+  });
+  // Funcionamento botão de historico
+  $('.btn-historico').on('click', function(){
+    var client = $('#id_aClient').val();
+    if(client != ''){
+      window.open("{% url 'atendimento:historicoAtendimento' %}?searchClient=" + client, '_blank');
     }
   });
 })
