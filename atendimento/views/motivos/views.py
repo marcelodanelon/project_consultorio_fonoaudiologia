@@ -36,6 +36,8 @@ def searchMotivo(request):
 
     if search_motivo.isdigit():
         motivos = MotivosAtendimentoModel.objects.filter(id=int(search_motivo)).order_by('id')
+    else:
+        motivos = MotivosAtendimentoModel.objects.filter(name__icontains=search_motivo).order_by('id')
 
     paginator = Paginator(motivos, 14)
     page_number = request.GET.get("page")
