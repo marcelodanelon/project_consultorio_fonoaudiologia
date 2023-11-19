@@ -38,12 +38,14 @@ def searchLocal(request):
 
     if search_local == "":
         return redirect('home:listLocal')
-
-    if search_local.isdigit():
-        locais = LocalModel.objects.filter(document1=int(search_local)).order_by('id')
+    print(search_local)
+    print(type(search_local))
+    if search_local.isnumeric():
+        locais = LocalModel.objects.filter(id=int(search_local)).order_by('id')
     else:        
         locais = LocalModel.objects.filter(
-            Q(name=search_local)
+            Q(name__icontains=search_local) | 
+            Q(city__icontains=search_local)
         ).order_by('id')
 
     paginator = Paginator(locais, 14)

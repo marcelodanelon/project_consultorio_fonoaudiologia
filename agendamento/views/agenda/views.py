@@ -3,8 +3,17 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from datetime import date
+from django.db.models import Q
 from agendamento.models import AgendaModel, AgendamentoModel
 from home.models import ProfessionalModel, LocalModel
+from datetime import datetime, date
+
+def isDate(var):
+    try:
+        d = datetime.strptime(var, '%d/%m/%Y').date()
+        return True
+    except:
+        return False
 
 @login_required(login_url='home:loginUser')
 def index(request):
@@ -88,8 +97,19 @@ def searchAgenda(request):
     if search_agenda == "":
         return redirect('agendamento:listAgenda')
 
-    if search_agenda.isdigit():
-        agendas = search_agenda.objects.filter(id=int(search_agenda)).order_by('id')
+    if search_agenda.isnumeric():
+        agendas = AgendaModel.objects.filter(id=int(search_agenda)).order_by('id')
+    elif isDate(search_agenda):
+        agendas = AgendaModel.objects.filter(
+            Q(agDatIni=datetime.strptime(search_agenda, '%d/%m/%Y').date()) |
+            Q(agDatFim=datetime.strptime(search_agenda, '%d/%m/%Y').date()) 
+        ).order_by('id')
+    else:        
+        agendas = AgendaModel.objects.filter(
+            Q(aProfessional__first_name__icontains=search_agenda) |
+            Q(aProfessional__last_name__icontains=search_agenda) | 
+            Q(aLocal__name__icontains=search_agenda) 
+        ).order_by('id')
 
     paginator = Paginator(agendas, 14)
     page_number = request.GET.get("page")

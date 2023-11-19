@@ -1,5 +1,4 @@
-<!-- relatorios/teste_pdf.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +28,10 @@
     </style>
 </head>
 <body>
+<div style="vertical-align: middle;">
+    <img src="file:///D:/media/logo.png" style="width: 100px; height: auto; margin-right: 100px;">
+    <span><b style="font-size: 10px;">Relatório de Movimentação de Insumos</b></span>
+</div>
 {% for relatorio in relatorios %}
     <h2>Agrupamento: {{ relatorio.agrupamento }} (Total de Registros: {{ relatorio.total_registros }})</h2>
     <table>

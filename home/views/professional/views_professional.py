@@ -39,11 +39,12 @@ def searchProfessional(request):
     if search_profissional == "":
         return redirect('home:listProfessional')
 
-    if search_profissional.isdigit():
-        profissionais = ProfessionalModel.objects.filter(document1=int(search_profissional)).order_by('id')
+    if search_profissional.isnumeric():
+        profissionais = ProfessionalModel.objects.filter(id=int(search_profissional)).order_by('id')
     else:        
         profissionais = ProfessionalModel.objects.filter(
-            Q(name=search_profissional)
+            Q(first_name__icontains=search_profissional) |
+            Q(last_name__icontains=search_profissional)
         ).order_by('id')
 
     paginator = Paginator(profissionais, 14)

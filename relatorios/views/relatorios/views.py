@@ -10,6 +10,8 @@ from xhtml2pdf import pisa
 import pandas as pd
 from io import BytesIO
 import pandas as pd
+import os
+from django.conf import settings
 
 def rel_movimentacao_insumos(request):
     form = RelatorioForm()
@@ -30,13 +32,21 @@ def render_to_pdf(template_path, context_dict):
     html_string = template.render(context_dict)
 
     response = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), response, encoding="UTF-8")
+    pdf = pisa.pisaDocument(
+        BytesIO(html_string.encode("UTF-8")), response,
+        encoding="UTF-8", link_callback=link_callback
+    )
 
     if not pdf.err:
         response.seek(0)
         return response
 
     return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
+
+def link_callback(uri, rel):
+    # Função para resolver URLs relativas
+    # Certifique-se de configurar corretamente a base URL aqui
+    return os.path.normpath(os.path.join(settings.MEDIA_ROOT, uri))
 
 def teste(request):
     if request.method == 'POST':

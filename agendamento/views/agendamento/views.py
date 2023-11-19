@@ -6,6 +6,14 @@ from agendamento.models import AgendaModel, AgendamentoModel
 from django.http import JsonResponse
 from datetime import datetime, date
 from django.db.models import Count
+from django.db.models import Q
+
+def isDate(var):
+    try:
+        d = datetime.strptime(var, '%d/%m/%Y').date()
+        return True
+    except:
+        return False
 
 @login_required(login_url='home:loginUser')
 def getJSONdatas(request):
@@ -110,8 +118,18 @@ def searchAgendamento(request):
     if search_agendamento == "":
         return redirect('agendamento:listAgendamento')
 
-    if search_agendamento.isdigit():
-        agendamentos = search_agendamento.objects.filter(id=int(search_agendamento)).order_by('id')
+    if search_agendamento.isnumeric():
+        agendamentos = AgendamentoModel.objects.filter(id=int(search_agendamento)).order_by('id')
+    elif isDate(search_agendamento):
+        agendamentos = AgendamentoModel.objects.filter(agDataAg=datetime.strptime(search_agendamento, '%d/%m/%Y').date()).order_by('id')
+    else:        
+        agendamentos = AgendamentoModel.objects.filter(
+            Q(aProfessional__first_name__icontains=search_agendamento) |
+            Q(aProfessional__last_name__icontains=search_agendamento) | 
+            Q(aClient__first_name__icontains=search_agendamento) |
+            Q(aClient__last_name__icontains=search_agendamento) | 
+            Q(aLocal__name__icontains=search_agendamento) 
+        ).order_by('id')
 
     paginator = Paginator(agendamentos, 14)
     page_number = request.GET.get("page")

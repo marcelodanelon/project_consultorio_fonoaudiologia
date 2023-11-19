@@ -34,8 +34,10 @@ def searchMarca(request):
     if search_marca == "":
         return redirect('estoque:listMarca')
 
-    if search_marca.isdigit():
+    if search_marca.isnumeric():
         marcas = MarcaModel.objects.filter(id=int(search_marca)).order_by('id')
+    else:
+        marcas = MarcaModel.objects.filter(name__icontains=search_marca).order_by('id')
 
     paginator = Paginator(marcas, 14)
     page_number = request.GET.get("page")
@@ -49,6 +51,6 @@ def searchMarca(request):
 
     return render(
         request,
-        'estoque/marcas/search.html',
+        'estoque/marca/search.html',
         context
     )

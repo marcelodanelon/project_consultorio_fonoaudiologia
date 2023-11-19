@@ -49,14 +49,14 @@ def searchUser(request):
     if search_user == "":
         return redirect('home:listUser')
 
-    if search_user.isdigit():
-        users = User.objects.filter(document1=int(search_user)).order_by('id')
-    elif isDate(search_user):
-        users = User.objects.filter(born=datetime.strptime(search_user, '%d/%m/%Y').date()).order_by('id')
+    if search_user.isnumeric():
+        users = User.objects.filter(id=int(search_user)).order_by('id')
     else:        
         users = User.objects.filter(
-            Q(first_name=search_user) | 
-            Q(last_name=search_user)
+            Q(first_name__icontains=search_user) | 
+            Q(last_name__icontains=search_user) | 
+            Q(email__icontains=search_user) | 
+            Q(username__icontains=search_user)
         ).order_by('id')
 
     paginator = Paginator(users, 14)

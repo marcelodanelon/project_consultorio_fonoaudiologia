@@ -10,7 +10,7 @@
     <br>
 <div class="responsive-table">
     <form action="{% url 'home:searchClient' %}" method="get">
-        <input class="form-control" type="text" name="q" placeholder="Digite um nome, Data de Nascimento ou CPF">
+        <input class="form-control" type="text" name="q" placeholder="Digite um Nome, Data de Nascimento ou CPF">
     </form>
     <table class="clients-table">
         <thead>
@@ -30,10 +30,10 @@
                         </a>
                     </td>
                     <td class="table-cel">
-                            {{ client.first_name }} {% if client.last_name %}{{ client.last_name }}{% endif %}
+                        {{ client.first_name }} {% if client.last_name %}{{ client.last_name }}{% endif %}
                     </td>
                     <td class="table-cel">
-                            {% if client.born %}{{ client.born }}{% endif %}
+                        {% if client.born %}{{ client.born }}{% endif %}
                     </td>
                     <td class="table-cel">
                         {% if client.document1 %}{{ client.document1 }}{% endif %}                            

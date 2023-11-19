@@ -6,7 +6,7 @@ from home.models import LocalModel
 from django.core.paginator import Paginator
 from django.db.models import Sum, Avg
 from datetime import date
-from django.db.models import F
+from django.db.models import Q
 from django.db.models.functions import TruncDay
 
 @login_required(login_url='home:loginUser')
@@ -164,8 +164,10 @@ def searchInsumo(request):
     if search_insumo == "":
         return redirect('estoque:listInsumo')
 
-    if search_insumo.isdigit():
+    if search_insumo.isnumeric():
         insumos = InsumoModel.objects.filter(id=int(search_insumo)).order_by('id')
+    else:
+        insumos = InsumoModel.objects.filter(descricao__icontains=search_insumo).order_by('id')
 
     paginator = Paginator(insumos, 14)
     page_number = request.GET.get("page")

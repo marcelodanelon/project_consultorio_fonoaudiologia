@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from home.models import ClientModel
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime, date
 from django.core.paginator import Paginator
-from datetime import date
 
 def isDate(var):
     try:
@@ -117,14 +116,17 @@ def searchClient(request):
     if search_client == "":
         return redirect('home:listClient')
 
-    if search_client.isdigit():
-        clients = ClientModel.objects.filter(document1=int(search_client)).order_by('id')
+    if search_client.isnumeric():
+        clients = ClientModel.objects.filter(
+            Q(document1=int(search_client)) |
+            Q(id=int(search_client))
+        ).order_by('id')
     elif isDate(search_client):
         clients = ClientModel.objects.filter(born=datetime.strptime(search_client, '%d/%m/%Y').date()).order_by('id')
     else:        
         clients = ClientModel.objects.filter(
-            Q(first_name__iexact=search_client) | 
-            Q(last_name__iexact=search_client) 
+            Q(first_name__icontains=search_client) | 
+            Q(last_name__icontains=search_client) 
         ).order_by('id')
 
     paginator = Paginator(clients, 14)

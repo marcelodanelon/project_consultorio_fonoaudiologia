@@ -35,8 +35,10 @@ def searchGrupo(request):
     if search_grupo == "":
         return redirect('estoque:listInsumo')
 
-    if search_grupo.isdigit():
+    if search_grupo.isnumeric():
         grupos = GrupoInsumoModel.objects.filter(id=int(search_grupo)).order_by('id')
+    else:
+        grupos = GrupoInsumoModel.objects.filter(descricao__icontains=search_grupo).order_by('id')
 
     paginator = Paginator(grupos, 14)
     page_number = request.GET.get("page")
