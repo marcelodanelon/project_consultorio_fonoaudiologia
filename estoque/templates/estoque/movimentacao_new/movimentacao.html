@@ -1,0 +1,155 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}
+  {% include 'partials/_nav_atendimento.html' %}
+{% endblock nav_lateral %}
+
+{% block head_base %}
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  .btn-movimentacao {
+    border: none;
+    background: none;
+    width: 60px; 
+    height: 60px; 
+    margin: 0 10px;
+    transition: all 0.3s ease; 
+  }
+  .btn-movimentacao:hover {
+    transform: scale(1.2); 
+  }
+  .btn-historico {
+    border: none;
+    background: none;
+    width: 50px; 
+    height: 50px; 
+    margin: 0 10px;
+    transition: transform 0.3s ease; 
+  }
+  .btn-historico:hover {
+    transform: translateX(-10px); 
+  }
+  #img-place-cards{
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+    font-family: 'Nunito', sans-serif;
+  }
+  #img-place-cards.active {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+  }
+</style>
+{% endblock head_base %}
+
+{% block content %}
+<form action="{{form_action}}" method="post">
+  {% csrf_token %}
+  <div style="height: 90vh; width: 82vw; position: relative;">
+    <div class="row">
+      <div style="margin-left:1%; background: white; width: 35vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
+        <div style="margin-top:1vh;">
+          <div class="row">
+            <div class="col">
+              {{formMovimentacao.data.label}}
+              {{formMovimentacao.data}}   
+            </div>
+            <div class="col">
+              {{formMovimentacao.local.label}}
+              {{formMovimentacao.local}}    
+            </div>
+          </div>
+        </div> 
+        <div style="margin-top:1vh;">
+          {{formMovimentacao.tipoMovimentacao.label}}
+          {{formMovimentacao.tipoMovimentacao}}    
+        </div>
+        <div hidden style="margin-top:1vh;">
+          <input id="id_operacao" name="operacao" type="text">   
+        </div>
+        <div style="margin-top:1vh;">
+          {{formMovimentacao.eClient.label}}
+          {{formMovimentacao.eClient}}    
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+          <button class="btn-movimentacao" type="button" id="btn-entrada">
+            <img src="/media/icons/btn-icon-entrada.png">
+          </button>
+          <button class="btn-movimentacao" type="button" id="btn-saida">
+            <img src="/media/icons/btn-icon-saida.png">
+          </button>
+        </div>
+        <div style="position: absolute; bottom: 2vh; width: 34vw;">
+          {{formMovimentacao.observacao.label}}
+          {{formMovimentacao.observacao}}    
+        </div>
+      </div>
+      <div style="padding:1%; margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
+        <div id="img-place-cards">
+          <span style="margin-bottom: 10px;"><b>Vamos começar a Movimentar!</b></span>
+          <img src="/media/estoque.png" alt="estoque">
+        </div>
+        <div id="card-entrada" style="margin-top:1vh; display: none;">
+          <h5>ENTRADA DE INSUMOS</h5>
+          {% include 'estoque/movimentacao_new/pages_movimentacao/entrada_de_insumos.html' %}
+        </div>
+        <div id="card-saida" style="margin-top:1vh; display: none;">
+          <h5>SAÍDA DE INSUMOS</h5>
+          {% include 'estoque/movimentacao_new/pages_movimentacao/saida_de_insumos.html' %}
+        </div>
+      </div>
+    </div>
+    <button class="btn-movimentacao"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+      <img src="/media/btn-gravar.png">
+    </button>
+  </div>  
+</form>
+<script>
+$(document).ready(function(){
+  // controle exibição de cards no place
+  $('#btn-entrada').on('click', function(){
+    if ($('#card-entrada').css('display') === 'block') {
+      $('#card-entrada').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
+    } else {
+      $('#card-entrada').css('display', 'block');
+      $('#card-saida').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
+    }
+    // se clicado em entrada, atribui 'entrada' para o campo input 'id_operacao'
+    $('#id_operacao').val('entrada')   
+  })
+  $('#btn-saida').on('click', function(){
+    if ($('#card-saida').css('display') === 'block') {
+      $('#card-saida').css('display', 'none');
+      $('#img-place-cards').css('display', 'block');
+      $('#img-place-cards').css({
+        'display': 'flex',
+        'flex-direction': 'column',
+        'justify-content': 'center',
+        'align-items': 'center',
+        'height': '80vh'
+      });
+    } else {
+      $('#card-saida').css('display', 'block');
+      $('#card-entrada').css('display', 'none');
+      $('#img-place-cards').css('display', 'none');
+    }   
+    // se clicado em saída, atribui 'saida' para o campo input 'id_operacao'
+    $('#id_operacao').val('saida')   
+  })
+})
+</script>
+{% endblock content %}

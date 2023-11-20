@@ -40,6 +40,7 @@ class MovimentacaoInsumoModel(models.Model):
     data = models.DateField(default=date.today, verbose_name='Data')
     tipoMovimentacao = models.CharField(max_length=20, choices=[('usoProprio','Uso próprio'),('compra','Compra'),('venda','Venda'),('doacao','Doação')], verbose_name='Tipo de Movimentação', default=2)
     eClient = models.ForeignKey(ClientModel, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Usuário')
+    observacao = models.TextField(blank=True, null=True, verbose_name='Observações')
 
     def __str__(self) -> str:
         return f'{self.id}'
@@ -47,8 +48,8 @@ class MovimentacaoInsumoModel(models.Model):
 class ItensInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True)
     insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
-    valorUnitario = models.CharField(max_length=15, verbose_name='Valor Unitario', null=True)
-    valorTotal = models.CharField(max_length=15, verbose_name='Valor Total', null=True)
+    valorUnitario = models.CharField(max_length=15, verbose_name='Val. Unitario', null=True)
+    valorTotal = models.CharField(max_length=15, verbose_name='Val. Total', null=True)
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)
@@ -61,9 +62,9 @@ class ItensInsumoModel(models.Model):
 class ItensMovimentacaoInsumoModel(models.Model):
     movimentacao = models.ForeignKey(MovimentacaoInsumoModel, on_delete=models.CASCADE, null=True, verbose_name='Movimentação')
     insumo = models.ForeignKey(InsumoModel, verbose_name='Insumo', on_delete=models.SET_NULL, null=True)
-    valorUnitario = models.CharField(max_length=15, verbose_name='Valor Unitario', null=True)
-    valorCompra = models.CharField(max_length=15, verbose_name='Valor Compra', blank=True, null=True)
-    valorTotal = models.CharField(max_length=15, verbose_name='Valor Total', null=True)
+    valorUnitario = models.CharField(max_length=15, verbose_name='Val. Unitario', null=True)
+    valorCompra = models.CharField(max_length=15, verbose_name='Val. Compra', blank=True, null=True)
+    valorTotal = models.CharField(max_length=15, verbose_name='Val. Total', null=True)
     quantidade = models.IntegerField(verbose_name='Quantidade', null=True)
     dataValidade = models.DateField(verbose_name='Data de Validade', default=date.today)
     dataEntrada = models.DateField(verbose_name='Data de Entrada', default=date.today)

@@ -22,6 +22,7 @@ urlpatterns = [
     path('<int:marca_id>/updateMarca/', marca.updateMarca, name='updateMarca'),
 
     path('listMovimentacaoInsumo/', movimentacao.listMovimentacaoInsumo, name='listMovimentacaoInsumo'),
+    path('createMovimentacaoInsumo/', movimentacao.createMovimentacaoInsumo, name='createMovimentacaoInsumo'),
     path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
     path('movimentacaoInsumoSaida/', movimentacao.movimentacaoInsumoSaida, name='movimentacaoInsumoSaida'),
     path('searchMovimentacaoInsumo/', movimentacao.searchMovimentacaoInsumo, name='searchMovimentacaoInsumo'),

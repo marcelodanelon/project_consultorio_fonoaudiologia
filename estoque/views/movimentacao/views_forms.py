@@ -344,3 +344,22 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
         url,
         context
     )
+
+@login_required(login_url='home:loginUser')
+def createMovimentacaoInsumo(request):
+    formMovimentacao = MovimentacaoInsumoForm()
+    formSetMovimentacao=inlineformset_factory(MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, form=ItensMovimentacaoInsumoForm, extra=0, can_delete=True, min_num=1)
+
+    context = {
+        'title': 'Estoque',
+        'name_module': 'Estoque',
+        'name_screen': 'Movimentação de Insumos',
+        'formMovimentacao': formMovimentacao,
+        'formSetMovimentacao': formSetMovimentacao(instance=MovimentacaoInsumoModel()),
+    }
+
+    return render(
+        request,
+        'estoque/movimentacao_new/movimentacao.html',
+        context
+    )

@@ -172,7 +172,11 @@ class MovimentacaoInsumoForm(forms.ModelForm):
         self.fields['eClient'].queryset = ClientModel.objects.annotate(
             client_first_name=F('first_name')
         ).order_by('first_name')
+        self.fields['observacao'].widget.attrs.update({
+            'class':'form-control',
+            'style':'height:15vh;resize: none;'
+        })
 
     class Meta:
         model = MovimentacaoInsumoModel
-        fields = ('operacao','local','data','tipoMovimentacao','eClient',)
+        fields = ('operacao','local','data','tipoMovimentacao','eClient','observacao',)
