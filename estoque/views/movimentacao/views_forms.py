@@ -366,6 +366,7 @@ def createMovimentacaoInsumo(request):
         'form_action': form_action,
         'name_screen': 'Movimentação de Insumos',
         'formMovimentacao': formMovimentacao,
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'formSetMovimentacao': formSetMovimentacao(instance=MovimentacaoInsumoModel()),
     }
 

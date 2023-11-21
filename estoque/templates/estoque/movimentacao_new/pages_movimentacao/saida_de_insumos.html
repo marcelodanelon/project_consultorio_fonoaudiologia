@@ -1,56 +1,60 @@
-<div style="width: 100%;height: 500px;overflow-y: auto;">
+<div style="width: 100%;height: 80vh;overflow-y: auto;">
     {{formSetMovimentacao.management_form}}
     {% for form in formSetMovimentacao %} 
         <div class="form-row-saida ps-3 pe-3 pt-3 position-relative">
             <div class="row input-group-text d-flex align-items-start">
-                <div class="text-end position-absolute" style="top: -0.5%; right: 0%;">
-                    <button class="btn btn-success add-form-row-saida">+</button>
+                <div class="text-end position-absolute" style="top: -7%; right: 0%;">
+                    <button class="btn add-form-row-saida" style="height:53px; width: 53px;border: none; background: none;">
+                        <img src="/media/btn-adicionar.png" alt="Descrição da imagem">
+                    </button>
                 </div>
                 <div class="d-flex align-items-start">                               
-                    <div class="col-3 ms-1"> 
+                    <div class="col-4 ms-1"> 
                         {{form.errors}}
                         <td class="hidden">{{ form.id }}</td>
                         <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                         {{form.insumo}} 
                     </div> 
-                    <div class="col-4 ms-1" id="div_myItems"> 
+                    <div class="col-8 ms-2" id="div_myItems"> 
                         <label class="form-label d-flex align-items-start">Serie/Lote</label>
                         <select id='myItems' class="form-control required">                                    
                         </select> 
                     </div>
+                </div>
+                <div class="d-flex align-items-start">
                     <div class="col-2 ms-1" id="field_quantidade">    
                         <label for="{{ form.quantidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.quantidade.label }}</label>
                         {{form.quantidade}}  
                     </div> 
-                    <div class="col-1 ms-1"> 
+                    <div class="col-2 ms-1"> 
                         <label class="form-label d-flex align-items-start">Disponível</label>
                         <input class="form-control" id="disponivel" placeholder="0" disabled></input>
                     </div> 
-                    <div class="col-1 ms-1"> 
+                    <div class="col-2 ms-2"> 
                         <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
                         {{form.valorUnitario}} 
                     </div> 
-                    <div hidden class="col-1 ms-2">    
+                    <div hidden>    
                         <label for="{{ form.dataEntrada.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataEntrada.label }}</label>
                         {{form.dataEntrada}}  
                     </div> 
-                    <div hidden class="col-1 ms-2">    
+                    <div hidden>    
                         <label for="{{ form.local.id_for_label }}" class="form-label d-flex align-items-start">{{ form.local.label }}</label>
                         {{form.local}}  
                     </div> 
-                    <div hidden class="col-1 ms-2">    
+                    <div hidden>    
                         <label for="{{ form.valorTotal.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorTotal.label }}</label>
                         {{form.valorTotal}}  
                     </div> 
-                    <div hidden class="col-2 ms-2"> 
+                    <div hidden> 
                         <label for="{{ form.dataValidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.dataValidade.label }}</label>
                         {{form.dataValidade}} 
                     </div> 
-                    <div hidden class="col-4 ms-2">    
+                    <div hidden>    
                         <label for="{{ form.serie.id_for_label }}" class="form-label d-flex align-items-start">{{ form.serie.label }}</label>
                         {{form.serie}}  
                     </div> 
-                    <div hidden class="col-4 ms-1">    
+                    <div hidden>    
                         <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.DELETE.label }}</label>
                         {{form.DELETE}}  
                     </div>   
@@ -60,7 +64,89 @@
     {% endfor %}
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function($) {
+    // Aplicar a máscara de dinheiro quando o campo perde o foco
+    $('.mask-money').on('blur', function() {
+        var valor = $(this).val();
+        // Verificar se o valor tem apenas um número
+        if (/^\d+$/.test(valor)) {
+            // Converter para 2 casas decimais com a máscara
+            $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
+        }
+    });
+    $('.mask-date').mask('00/00/0000');  
+    $('.mask-money').mask("#.##0,00", {reverse: true});
+    $('.mask-int').mask('0#');
+    $(document).on("focus", ".mask-date", function() {
+        $(this).mask('00/00/0000');
+    });
+    $(document).on("focus", ".mask-money", function() {
+        $(this).mask("#.##0,00", {reverse: true});
+    });
+
+    //obter valor parametro searchLocal (control select)
+    var url_string = window.location.href; 
+    var url = new URL(url_string);
+    var paramValue = url.searchParams.get("searchLocal");
+    $('#id_local option').each(function() {
+      if($(this).val() == paramValue) {
+        $(this).attr('selected', true);
+      }
+    });
+
+    // buscando itens disponiveis no local
+    var itens_estoque;
+    $("#id_local").change(function(){
+        var local = $("#id_local").children("option:selected").val();
+        if(local!=''){
+            itens_estoque = $.ajax({
+                url: "{% url 'estoque:getJSONitem' %}?searchLocal=" + local,   
+                type: "get",     
+                async: false,  
+                data: $("#search").serialize(),    
+                success: function (data){
+                    data_items = data.results 
+                },                 
+            });
+        };
+    });    
+
+    //ação ao selecionar cliente, verificando se há alguma mensagem para apresentar
+    var itens_cliente;
+    var mensagem;
+    $(document).on('change', '#id_eClient', function(e){
+        var cliente = $("#id_eClient").children("option:selected").val();
+        var tipoMovimentacao = $("#id_tipoMovimentacao").children("option:selected").val();
+        
+        if (cliente !== '') {
+            var ajaxPromise = $.ajax({
+                url: "{% url 'estoque:getJSONclient' %}?searchClient=" + cliente + "&tipoMovimentacao=" + tipoMovimentacao,
+                type: "get",
+                data: $("#search").serialize(),
+            });
+            
+            ajaxPromise.done(function (data) {
+                itens_cliente = data.results;
+                mensagem = data.mensagem;
+                if(mensagem){
+                    $('#message').text(mensagem)
+                } else{
+                    $('#message').text('')
+                }
+            });
+            
+            ajaxPromise.fail(function (jqXHR, textStatus, errorThrown) {
+                console.error("Erro na requisição AJAX: " + textStatus, errorThrown);
+            });
+        }
+    });
+
+
+});
 function updateElementIndex2(el, prefix, ndx) {
     var id_regex = new RegExp('(' + prefix + '-\\d+)');
     var replacement = prefix + '-' + ndx;
@@ -123,7 +209,7 @@ function cloneMore2(selector, prefix) {
     conditionRow.find('.btn.add-form-row-saida')
     .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row-saida').addClass('remove-form-row-saida')
-    .html('-');
+    .html('<img src="/media/btn-remover.png" alt="Remover">');
     return false;
 }
 function deleteForm2(prefix, btn) {

@@ -1,10 +1,13 @@
-<div style="width: 100%;height: 600px;overflow-y: auto;">
+<div style="width: 100%;height: 80vh;overflow-y: auto;">
+    <input hidden id="groups_user" value="{{groups_user}}">
     {{formSetMovimentacao.management_form}}
     {% for form in formSetMovimentacao %} 
         <div class="form-row-entrada ps-3 pe-3 pt-3 position-relative">
             <div class="row input-group-text d-flex align-items-start">
-                <div class="text-end position-absolute" style="top: -0.5%; right: 1%;">
-                    <button class="btn btn-success add-form-row">+</button>
+                <div class="text-end position-absolute" style="top: -7%; right: 0%;">
+                    <button class="btn add-form-row" style="height:53px; width: 53px;border: none; background: none;">
+                        <img src="/media/btn-adicionar.png" alt="Adicionar">
+                    </button>
                 </div>
                 <div class="d-flex align-items-start">
                     <div class="col-4"> 
@@ -57,7 +60,113 @@
     {% endfor %}
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
 <script>
+$(document).ready(function($) {
+    // Aplicar a máscara de dinheiro quando o campo perde o foco
+    $('.mask-money').on('blur', function() {
+        var valor = $(this).val();
+        // Verificar se o valor tem apenas um número
+        if (/^\d+$/.test(valor)) {
+            // Converter para 2 casas decimais com a máscara
+            $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
+        }
+    });
+    $('.mask-date').mask('00/00/0000');  
+    $('.mask-money').mask("#.##0,00", {reverse: true});
+    $('.mask-int').mask('0#');
+    $(document).on("focus", ".mask-date", function() {
+        $(this).mask('00/00/0000');
+    });
+    $(document).on("focus", ".mask-money", function() {
+        $(this).mask("#.##0,00", {reverse: true});
+    });
+
+    //ação ao selecionar insumo
+    var items_insumo;
+    var items_grupo;
+    $(document).on('change', '[id$=-insumo]', function(e){
+        var insumo = $(this).children("option:selected").val();
+        if(insumo!=''){
+            items_insumo = $.ajax({
+                url: "{% url 'estoque:getJSONinsumo' %}?searchInsumo=" + insumo,   
+                type: "get",     
+                async: false,  
+                data: $("#search").serialize(),    
+                success: function (data){
+                    data_items = data.results 
+                    var jsonDataInsumo = JSON.parse(data.results);
+
+                    // pegando o grupo do insumo
+                    var grupo = jsonDataInsumo[0].fields.grupoInsumo;
+                    if(grupo!=null){
+                        items_grupo = $.ajax({
+                            url: "{% url 'estoque:getJSONgrupo' %}?searchGrupo=" + grupo,   
+                            type: "get",     
+                            async: false,  
+                            data: $("#search").serialize(),    
+                            success: function (data){            
+                                var jsonDataGrupo = JSON.parse(data.results);
+                                
+                                var controle = jsonDataGrupo[0].fields.controleDeCompra;
+                            },                 
+                        });
+                    }else{
+                        items_grupo = null
+                    }
+                },                 
+            });         
+        };
+        // verifica se o grupo do insumo está configurado para controle por compra
+        var controlaCompra = 'nao'
+        var grupos_gruposDeInsumos = null
+        if (items_grupo && items_grupo.responseJSON) {
+            var resultJSON = items_grupo.responseJSON;
+            var resultsArray = JSON.parse(resultJSON.results);
+            var primeiroResultado = resultsArray[0];
+            var grupos_gruposDeInsumos = primeiroResultado.fields.perfis;
+            var controlaCompra = primeiroResultado.fields.controleDeCompra;
+        }
+
+        // verifica se grupos do usuários esta em grupos do insumo selecionado
+        var grupos_usuario = $('#groups_user').val()
+        if (grupos_usuario !== null && grupos_gruposDeInsumos !== null) {
+            var usuarioEstaEmGrupoDeInsumos = false;
+            for (var i = 0; i < grupos_usuario.length; i++) {
+                var grupoUsuario = grupos_usuario[i];
+                
+                for (var j = 0; j < grupos_gruposDeInsumos.length; j++) {
+                    var grupoInsumo = grupos_gruposDeInsumos[j];                   
+                    if (grupoUsuario === grupoInsumo) {
+                        usuarioEstaEmGrupoDeInsumos = true;
+                        break; 
+                    }
+                }                    
+                if (usuarioEstaEmGrupoDeInsumos) {
+                    break; 
+                }
+            }
+        }
+
+        if (controlaCompra == 'sim' && usuarioEstaEmGrupoDeInsumos) {
+            $(this).parent().parent().find('[name$=-valorCompra]').prop('readonly', false);
+        } else {
+            $(this).parent().parent().find('[name$=-valorCompra]').prop('readonly', true);
+        }
+
+        var controle = JSON.parse(items_insumo.responseJSON.results)[0].fields.controle
+        var serie = $(this).parent().parent().parent().find('[id$=-serie]');
+        if (controle == 'quantidade'){
+            serie.prop('required', false)
+            serie.prop('readonly', true)
+        } else{
+            serie.prop('required', true)
+            serie.prop('readonly', false)
+        }
+    });  
+});
 function updateElementIndex(el, prefix, ndx) {
     var id_regex = new RegExp('(' + prefix + '-\\d+)');
     var replacement = prefix + '-' + ndx;
@@ -85,9 +194,9 @@ function cloneMore(selector, prefix) {
     });
     function GetTodayDate() {
         var tdate = new Date();
-        var dd = tdate.getDate().toString().padStart(2, "0"); //yields day
-        var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); //yields month
-        var yyyy = tdate.getFullYear(); //yields year
+        var dd = tdate.getDate().toString().padStart(2, "0"); 
+        var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); 
+        var yyyy = tdate.getFullYear(); 
         var currentDate= dd + "/" + MM + "/" + yyyy;
         
         return currentDate;
@@ -114,7 +223,7 @@ function cloneMore(selector, prefix) {
     conditionRow.find('.btn.add-form-row')
     .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row').addClass('remove-form-row')
-    .html('-');
+    .html('<img src="/media/btn-remover.png" alt="Remover">');
     return false;
 }
 function deleteForm(prefix, btn) {

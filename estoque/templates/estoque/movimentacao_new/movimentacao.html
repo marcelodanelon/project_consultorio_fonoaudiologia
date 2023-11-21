@@ -1,7 +1,7 @@
 {% extends 'global/base.html' %}
 
 {% block nav_lateral %}
-  {% include 'partials/_nav_atendimento.html' %}
+  {% include 'partials/_nav_estoque.html' %}
 {% endblock nav_lateral %}
 
 {% block head_base %}
@@ -78,10 +78,10 @@
         </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
           <button class="btn-movimentacao" type="button" id="btn-entrada">
-            <img src="/media/icons/btn-icon-entrada.png">
+            <img src="/media/estoque/btn-icon-entrada.png">
           </button>
           <button class="btn-movimentacao" type="button" id="btn-saida">
-            <img src="/media/icons/btn-icon-saida.png">
+            <img src="/media/estoque/btn-icon-saida.png">
           </button>
         </div>
         <div style="position: absolute; bottom: 2vh; width: 34vw;">
@@ -92,7 +92,7 @@
       <div style="padding:1%; margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
         <div id="img-place-cards">
           <span style="margin-bottom: 10px;"><b>Vamos começar a Movimentar!</b></span>
-          <img src="/media/estoque.png" alt="estoque">
+          <img src="/media/estoque/estoque.png" alt="estoque">
         </div>
         <div hidden id="card-entrada" style="margin-top:1vh;">
           <h5>ENTRADA DE INSUMOS</h5>
@@ -100,6 +100,9 @@
         </div>
         <div hidden id="card-saida" style="margin-top:1vh;">
           <h5>SAÍDA DE INSUMOS</h5>
+          <div class="text-end">
+              <h5 id="message" style="color: #007BFF; font-family: 'Arial', sans-serif; font-size: 18px;"></h5>
+          </div>
           {% include 'estoque/movimentacao_new/pages_movimentacao/saida_de_insumos.html' %}
         </div>
       </div>
@@ -144,7 +147,10 @@ $(document).ready(function(){
     });
 
     // se clicado em entrada, atribui 'entrada' para o campo input 'id_operacao'
-    $('#id_operacao').val('Entrada')   
+    $('#id_operacao').val('Entrada') 
+    
+    //ajuste layout para opçao de SAIDA
+    $('[id$=-valorUnitario]').prop( "readonly", false );
   })
 
   $('#btn-saida').on('click', function(){
@@ -184,6 +190,9 @@ $(document).ready(function(){
 
     // se clicado em saída, atribui 'saida' para o campo input 'id_operacao'
     $('#id_operacao').val('Saída')   
+
+    //ajuste layout para opçao de SAIDA
+    $('[id$=-valorUnitario]').prop( "readonly", true );
   })
 
   // desabilita o envio dos campos da outra movimentacao

@@ -124,6 +124,7 @@ class ItensMovimentacaoInsumoForm(forms.ModelForm):
             'class': 'form-control mask-money',
             'required': True,
             'value': '0,00',
+            'readonly': True,
             'min': "0",
         })
         self.fields['valorTotal'].widget.attrs.update({
