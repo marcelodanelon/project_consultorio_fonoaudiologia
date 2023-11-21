@@ -347,12 +347,23 @@ def movimentacaoInsumoUpdate(request, movimentacao_id):
 
 @login_required(login_url='home:loginUser')
 def createMovimentacaoInsumo(request):
+    form_action = reverse('estoque:createMovimentacaoInsumo')
+    modelMovimentacao = MovimentacaoInsumoModel()
     formMovimentacao = MovimentacaoInsumoForm()
     formSetMovimentacao=inlineformset_factory(MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel, form=ItensMovimentacaoInsumoForm, extra=0, can_delete=True, min_num=1)
+
+    if request.method == 'POST':
+        formMovimentacao = MovimentacaoInsumoForm(request.POST)
+        formSetMovimentacao_P = formSetMovimentacao(request.POST, instance=modelMovimentacao)
+        if formMovimentacao.is_valid() and formSetMovimentacao_P.is_valid():
+            ...
+        else:
+            print(formSetMovimentacao_P.errors)
 
     context = {
         'title': 'Estoque',
         'name_module': 'Estoque',
+        'form_action': form_action,
         'name_screen': 'Movimentação de Insumos',
         'formMovimentacao': formMovimentacao,
         'formSetMovimentacao': formSetMovimentacao(instance=MovimentacaoInsumoModel()),

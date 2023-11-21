@@ -1,29 +1,32 @@
 <div style="width: 100%;height: 500px;overflow-y: auto;">
     {{formSetMovimentacao.management_form}}
     {% for form in formSetMovimentacao %} 
-        <div class="form-row ps-3 pe-3 pt-2">
-            <div class="row">
-                <div class="input-group-text d-flex align-items-start">                               
-                    <div class="col-4 ms-2"> 
+        <div class="form-row-saida ps-3 pe-3 pt-3 position-relative">
+            <div class="row input-group-text d-flex align-items-start">
+                <div class="text-end position-absolute" style="top: -0.5%; right: 0%;">
+                    <button class="btn btn-success add-form-row-saida">+</button>
+                </div>
+                <div class="d-flex align-items-start">                               
+                    <div class="col-3 ms-1"> 
                         {{form.errors}}
                         <td class="hidden">{{ form.id }}</td>
                         <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                         {{form.insumo}} 
                     </div> 
-                    <div class="col-4 ms-2" id="div_myItems"> 
+                    <div class="col-4 ms-1" id="div_myItems"> 
                         <label class="form-label d-flex align-items-start">Serie/Lote</label>
                         <select id='myItems' class="form-control required">                                    
                         </select> 
                     </div>
-                    <div class="col-1 ms-2" id="field_quantidade">    
+                    <div class="col-2 ms-1" id="field_quantidade">    
                         <label for="{{ form.quantidade.id_for_label }}" class="form-label d-flex align-items-start">{{ form.quantidade.label }}</label>
                         {{form.quantidade}}  
                     </div> 
-                    <div class="col-1 ms-2"> 
+                    <div class="col-1 ms-1"> 
                         <label class="form-label d-flex align-items-start">Disponível</label>
                         <input class="form-control" id="disponivel" placeholder="0" disabled></input>
                     </div> 
-                    <div class="col-1 ms-2"> 
+                    <div class="col-1 ms-1"> 
                         <label for="{{ form.valorUnitario.id_for_label }}" class="form-label d-flex align-items-start">{{ form.valorUnitario.label }}</label>
                         {{form.valorUnitario}} 
                     </div> 
@@ -50,15 +53,107 @@
                     <div hidden class="col-4 ms-1">    
                         <label for="{{ form.aAObserv.id_for_label }}" class="form-label d-flex align-items-start">{{ form.DELETE.label }}</label>
                         {{form.DELETE}}  
-                    </div> 
-                    
-                    <div class="col mt-3">
-                        <div class="text-end"> 
-                            <button id="btnAddRow" class="btn btn-success add-form-row">+</button>
-                        </div>
-                    </div>    
+                    </div>   
                 </div>                      
             </div>
         </div>
     {% endfor %}
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function updateElementIndex2(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore2(selector, prefix) {
+    var newElement = $(selector).clone(true, true);
+    var total = $('#id_' + prefix + '_set-TOTAL_FORMS').val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+        forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+        $(this).attr({'for': forValue});
+        }
+    });
+    function GetTodayDate() {
+        var tdate = new Date();
+        var dd = tdate.getDate().toString().padStart(2, "0"); //yields day
+        var MM = (tdate.getMonth() + 1).toString().padStart(2, "0"); //yields month
+        var yyyy = tdate.getFullYear(); //yields year
+        var currentDate= dd + "/" + MM + "/" + yyyy;
+        
+        return currentDate;
+    }
+    newElement.find('[name$=-valorUnitario]').each(function() {
+        $(this).val('0,00')
+    });
+    newElement.find('[name$=-valorTotal]').each(function() {
+        $(this).val('0,00')
+    });
+    newElement.find('[name$=-dataValidade]').each(function() {
+        $(this).val(GetTodayDate())
+    });
+    newElement.find('[name$=-dataEntrada]').each(function() {
+        $(this).val('01/01/2000') 
+    });
+    newElement.find('[name$=-local]').each(function() {
+        $(this).prop("selectedIndex", 0).val();
+    });
+    newElement.find('[id=myItems]').each(function() {
+        $(this).empty();
+    });
+    newElement.find('[id=disponivel]').each(function() {
+        $(this).val(0);
+    });
+    total++;
+    $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
+    $(selector).before(newElement);
+    var conditionRow = $('.form-row-saida:not(:first)');
+    conditionRow.find('.btn.add-form-row-saida')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row-saida').addClass('remove-form-row-saida')
+    .html('-');
+    return false;
+}
+function deleteForm2(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '_set-TOTAL_FORMS').val());
+    if (total > 1){
+        var divFind = btn.parents('.form-row-saida');
+        var elementFind = divFind.find("input[name$='serie']");
+        var numberElement = elementFind.attr('name').replace(/[^0-9]/g,'')
+        document.getElementById("id_" + prefix + "_set-" + numberElement + "-DELETE").checked = true;
+
+        btn.closest('.form-row-saida').hide();
+
+        var forms = $('.form-row-saida');
+        $('#id_' + prefix + '_set-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex2(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row-saida', function(e){
+    e.preventDefault();
+    cloneMore2('.form-row-saida:first', 'itensmovimentacaoinsumomodel');
+    return false;
+});
+$(document).on('click', '.remove-form-row-saida', function(e){
+    e.preventDefault();
+    deleteForm2('itensmovimentacaoinsumomodel', $(this));
+    return false;
+});
+</script>
