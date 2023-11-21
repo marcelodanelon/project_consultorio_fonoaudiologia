@@ -48,7 +48,7 @@
 {% endblock head_base %}
 
 {% block content %}
-<form action="{{form_action}}" method="post">
+<form id="form-movimentacao" action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
     <div class="row">
@@ -94,11 +94,11 @@
           <span style="margin-bottom: 10px;"><b>Vamos começar a Movimentar!</b></span>
           <img src="/media/estoque.png" alt="estoque">
         </div>
-        <div id="card-entrada" style="margin-top:1vh; display: none;">
+        <div hidden id="card-entrada" style="margin-top:1vh;">
           <h5>ENTRADA DE INSUMOS</h5>
           {% include 'estoque/movimentacao_new/pages_movimentacao/entrada_de_insumos.html' %}
         </div>
-        <div id="card-saida" style="margin-top:1vh; display: none;">
+        <div hidden id="card-saida" style="margin-top:1vh;">
           <h5>SAÍDA DE INSUMOS</h5>
           {% include 'estoque/movimentacao_new/pages_movimentacao/saida_de_insumos.html' %}
         </div>
@@ -113,66 +113,88 @@
 $(document).ready(function(){
   // controle exibição de cards no place
   $('#btn-entrada').on('click', function(){
-    $(this).prop('required', true);
-    if ($('#card-entrada').css('display') === 'block') {
-      $('#card-entrada').css('display', 'none');
-      $('#img-place-cards').css('display', 'block');
-      $('#img-place-cards').css({
-        'display': 'flex',
-        'flex-direction': 'column',
-        'justify-content': 'center',
-        'align-items': 'center',
-        'height': '80vh'
+    var divEntrada = document.getElementById('card-entrada'); 
+
+    if (divEntrada && divEntrada.hidden) {
+      $('#card-entrada').prop('hidden', false);
+      $('#card-saida').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', true);
+      $('.form-row-entrada').find(':input').each(function() {
+        $(this).prop('required', true);
+      }); 
+      $('.form-row-entrada').find('[name$=-DELETE]').each(function() {
+        $(this).prop('required', false);
       });
+      $('.form-row-saida').find(':input').each(function() {
+        $(this).prop('required', false);
+      }); 
     } else {
-      $('#card-entrada').css('display', 'block');
-      $('#card-saida').css('display', 'none');
-      $('#img-place-cards').css('display', 'none');
+      $('#card-entrada').prop('hidden', true);
+      $('#card-saida').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', false);
     }
     // limpando dados caso alterado para operacao tipo SAIDA
     var conditionRow = $('.form-row-saida:not(:first)');
     conditionRow.remove()
     $('.form-row-saida').find(':input').each(function() {
       $(this).val('');
-      $(this).prop('required', false);
       if ($(this).is('select')) {
           $(this).prop("selectedIndex", 0);
       }
     });
+
     // se clicado em entrada, atribui 'entrada' para o campo input 'id_operacao'
     $('#id_operacao').val('Entrada')   
   })
-  $('#btn-saida').on('click', function(){
-    $(this).prop('required', true);
-    if ($('#card-saida').css('display') === 'block') {
-      $('#card-saida').css('display', 'none');
-      $('#img-place-cards').css('display', 'block');
-      $('#img-place-cards').css({
-        'display': 'flex',
-        'flex-direction': 'column',
-        'justify-content': 'center',
-        'align-items': 'center',
-        'height': '80vh'
-      });
-    } else {
-      $('#card-saida').css('display', 'block');
-      $('#card-entrada').css('display', 'none');
-      $('#img-place-cards').css('display', 'none');
 
-      // limpando dados caso alterado para operacao tipo ENTRADA
-      var conditionRow = $('.form-row-entrada:not(:first)');
-      conditionRow.remove()
-      $('.form-row-entrada').find(':input').each(function() {
-        $(this).val('');
+  $('#btn-saida').on('click', function(){
+    var divSaida = document.getElementById('card-saida'); 
+
+    if (divSaida && divSaida.hidden) {
+      $('#card-saida').prop('hidden', false);
+      $('#card-entrada').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', true);
+      $('.form-row-saida').find(':input').each(function() {
+        $(this).prop('required', true);
+      }); 
+      $('.form-row-saida').find('[name$=-DELETE]').each(function() {
         $(this).prop('required', false);
-        if ($(this).is('select')) {
-            $(this).prop("selectedIndex", 0);
-        }
       });
-    }   
+      $('.form-row-entrada').find(':input').each(function() {
+        $(this).prop('required', false);
+      }); 
+    } else {
+      $('#card-saida').prop('hidden', true);
+      $('#card-entrada').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', false);
+    }
+
+    // limpando dados caso alterado para operacao tipo ENTRADA
+    var conditionRow = $('.form-row-entrada:not(:first)');
+    conditionRow.remove()
+    $('.form-row-entrada').find(':input').each(function() {
+      var nameCampo = $(this).attr('name');
+      if (!(nameCampo && (nameCampo.endsWith('-dataEntrada') || nameCampo.endsWith('-valorTotal') || nameCampo.endsWith('-dataValidade')))) {
+        $(this).val('');
+        if ($(this).is('select')) {
+            $(this).prop('selectedIndex', 0);
+        }
+      }
+    });      
+
     // se clicado em saída, atribui 'saida' para o campo input 'id_operacao'
     $('#id_operacao').val('Saída')   
   })
+
+  // desabilita o envio dos campos da outra movimentacao
+  $('#form-movimentacao').submit(function(){
+    operacao = $('#id_operacao').val()
+    if (operacao == 'Saída'){
+      $('#card-entrada :input').prop('disabled', true);
+    }else{
+      $('#card-saida :input').prop('disabled', true);
+    }
+  });
 })
 </script>
 {% endblock content %}
