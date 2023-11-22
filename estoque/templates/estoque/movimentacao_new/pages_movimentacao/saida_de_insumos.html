@@ -207,7 +207,6 @@ function cloneMore2(selector, prefix) {
     $(selector).before(newElement);
     var conditionRow = $('.form-row-saida:not(:first)');
     conditionRow.find('.btn.add-form-row-saida')
-    .removeClass('btn-success').addClass('btn-danger')
     .removeClass('add-form-row-saida').addClass('remove-form-row-saida')
     .html('<img src="/media/btn-remover.png" alt="Remover">');
     return false;

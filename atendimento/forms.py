@@ -277,6 +277,7 @@ class ContatosTelefonicosForm(forms.ModelForm):
         })
         self.fields['aTelObse'].widget.attrs.update({
             'class':'form-control',
+            'style':'resize: none;'
         })
 
     class Meta:
@@ -312,6 +313,7 @@ class RegulagemForm(forms.ModelForm):
         self.fields['aAObserv'].label = 'Observações:'
         self.fields['aAObserv'].widget.attrs.update({
             'class':'form-control',
+            'style':'height:10vh;resize: none;'
         })
     
     class Meta:
