@@ -386,6 +386,7 @@ def createMovimentacaoInsumo(request):
                         modelSetInsumo.append(novo_item_insumo)
 
                     insumo = None
+                    insumo_valorUnitario = None
                     # verifica se há lote existente
                     for item in modelSet:
                         try:
@@ -397,7 +398,8 @@ def createMovimentacaoInsumo(request):
                             print(e)
 
                         # retira pontos e virgulas e converte em reais
-                        item_valorUnitario = float(item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())           
+                        item_valorUnitario = float(item.valorUnitario.replace("R$", "").replace(".", "").replace(",", ".").strip())  
+                        item_valorUnitario = (item_valorUnitario/100)         
                         item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
 
                         # verifica valor unitario divergente
@@ -415,8 +417,8 @@ def createMovimentacaoInsumo(request):
                                 valorTotal_item = float(item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
                                 totalValor = valorTotal_insumo + (valorTotal_item/100)
                                 totalValor = format_currency(totalValor, 'BRL', locale='pt_BR')
-                                ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
-                                ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
+                                ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).update(quantidade=totalQuantidade)
+                                ItensMovimentacaoInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).update(valorTotal=totalValor)
                                 messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                             else:
                                 item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))
@@ -436,8 +438,8 @@ def createMovimentacaoInsumo(request):
                                 valorTotal_item = float(item.valorTotal.replace("R$", "").replace(".", "").replace(",", ".").strip())
                                 totalValor = valorTotal_insumo + (valorTotal_item/100)
                                 totalValor = format_currency(totalValor, 'BRL', locale='pt_BR')
-                                ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(quantidade=totalQuantidade)
-                                ItensInsumoModel.objects.filter(insumo=item.insumo.pk).update(valorTotal=totalValor)
+                                ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).update(quantidade=totalQuantidade)
+                                ItensInsumoModel.objects.filter(insumo=item.insumo.pk).filter(serie=item.serie).filter(local=item.local).update(valorTotal=totalValor)
                                 messages.success(request, f'Lote para {insumo} já existente, adicionado quantidade na Data de Entrada: {insumo.dataEntrada}')
                             else:
                                 item_valorUnitario = float(item.valorUnitario.replace(",","").replace(".",""))
