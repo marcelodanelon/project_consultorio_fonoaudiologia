@@ -77,10 +77,10 @@
           {{formMovimentacao.eClient}}    
         </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-          <button class="btn-movimentacao" type="button" id="btn-entrada">
+          <button title='Entrada' class="btn-movimentacao" type="button" id="btn-entrada">
             <img src="/media/estoque/btn-icon-entrada.png">
           </button>
-          <button class="btn-movimentacao" type="button" id="btn-saida">
+          <button title='Saída' class="btn-movimentacao" type="button" id="btn-saida">
             <img src="/media/estoque/btn-icon-saida.png">
           </button>
         </div>
@@ -114,6 +114,20 @@
 </form>
 <script>
 $(document).ready(function(){
+  $('#id_local').on('change', function(){
+    if ($('#id_local').val() == '') {
+      $('#btn-entrada').prop('hidden', true);
+      $('#btn-saida').prop('hidden', true);
+      $('#card-entrada').prop('hidden', true);
+      $('#card-saida').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', false);
+    } else {
+      $('#btn-entrada').prop('hidden', false);
+      $('#btn-saida').prop('hidden', false);
+    }
+  });
+  $('#id_local').trigger('change');
+
   // controle exibição de cards no place
   $('#btn-entrada').on('click', function(){
     var divEntrada = document.getElementById('card-entrada'); 
@@ -136,14 +150,22 @@ $(document).ready(function(){
       $('#card-saida').prop('hidden', true);
       $('#img-place-cards').prop('hidden', false);
     }
-    // limpando dados caso alterado para operacao tipo SAIDA
+
+    // limpando card de SAIDAS caso alterado para operacao tipo SAIDA
     var conditionRow = $('.form-row-saida:not(:first)');
     conditionRow.remove()
     $('.form-row-saida').find(':input').each(function() {
-      $(this).val('');
-      if ($(this).is('select')) {
-          $(this).prop("selectedIndex", 0);
+      var nameCampo = $(this).attr('name');
+      if (!(nameCampo && (nameCampo.endsWith('-dataEntrada') || nameCampo.endsWith('-valorTotal') || nameCampo.endsWith('-dataValidade')))) {
+        $(this).val('');
       }
+    });
+    $('.form-row-saida').find('select').each(function() {
+      var id = $(this).attr('id');
+      if (id && id.endsWith('myItems')) {
+        $(this).empty();
+      }
+      $(this).prop('selectedIndex', 0);
     });
 
     // se clicado em entrada, atribui 'entrada' para o campo input 'id_operacao'
@@ -175,18 +197,21 @@ $(document).ready(function(){
       $('#img-place-cards').prop('hidden', false);
     }
 
-    // limpando dados caso alterado para operacao tipo ENTRADA
+    // limpando card de ENTRADA caso alterado para operacao tipo ENTRADA
     var conditionRow = $('.form-row-entrada:not(:first)');
     conditionRow.remove()
     $('.form-row-entrada').find(':input').each(function() {
       var nameCampo = $(this).attr('name');
       if (!(nameCampo && (nameCampo.endsWith('-dataEntrada') || nameCampo.endsWith('-valorTotal') || nameCampo.endsWith('-dataValidade')))) {
         $(this).val('');
-        if ($(this).is('select')) {
-            $(this).prop('selectedIndex', 0);
-        }
       }
-    });      
+      if (nameCampo && nameCampo.endsWith('-valorCompra')){
+        $(this).prop('readonly', true);
+      }
+    });    
+    $('.form-row-entrada').find('select').each(function() {
+      $(this).prop('selectedIndex', 0);
+    });  
 
     // se clicado em saída, atribui 'saida' para o campo input 'id_operacao'
     $('#id_operacao').val('Saída')   
