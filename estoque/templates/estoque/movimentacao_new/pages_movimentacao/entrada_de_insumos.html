@@ -255,4 +255,26 @@ $(document).on('click', '.remove-form-row', function(e){
     deleteForm('itensmovimentacaoinsumomodel', $(this));
     return false;
 });
+function parsePotentiallyGroupedFloat(stringValue) {
+    stringValue = stringValue.trim();
+    var result = stringValue.replace(/[^0-9]/g, '');
+    if (/[,\.]\d{2}$/.test(stringValue)) {
+        result = result.replace(/(\d{2})$/, '.$1');
+    }
+    return parseFloat(result);
+};
+$(document).on('change', '[id$=-valorUnitario]', function(e){
+    valor = $(this).val()
+    valorConvertido = parsePotentiallyGroupedFloat(valor)
+    quantidade = $(this).parent().parent().find('[id$=-quantidade]').val()
+    calculo = valorConvertido * quantidade
+    $(this).parent().parent().find('[id$=-valorTotal]').val(calculo.toFixed(2))
+});
+$(document).on('change', '[id$=-quantidade]', function(e){
+    valor = $(this).parent().parent().find('[id$=-valorUnitario]').val()
+    valorConvertido = parsePotentiallyGroupedFloat(valor)
+    quantidade = $(this).val()
+    calculo = valorConvertido * quantidade
+    $(this).parent().parent().find('[id$=-valorTotal]').val(calculo.toFixed(2))
+});
 </script>
