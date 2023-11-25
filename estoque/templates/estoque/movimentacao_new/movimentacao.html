@@ -45,6 +45,11 @@
     height: 80vh;
   }
 </style>
+<script>
+$(document).ready(function($) {
+
+})
+</script>
 {% endblock head_base %}
 
 {% block content %}
@@ -114,6 +119,7 @@
 </form>
 <script>
 $(document).ready(function(){
+  // desabilita botões de movimentação ENTRADA / SAÍDA até que seja selecionado um local
   $('#id_local').on('change', function(){
     if ($('#id_local').val() == '') {
       $('#btn-entrada').prop('hidden', true);

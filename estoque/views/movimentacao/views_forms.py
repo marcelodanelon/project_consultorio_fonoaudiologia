@@ -14,6 +14,9 @@ def getJSONitem(request):
     if request.GET.get('searchLocal'):
         q = int(request.GET.get('searchLocal'))
         model = list(ItensInsumoModel.objects.filter(local=q).exclude(quantidade=0).values())
+        for i in model:
+            insumo = InsumoModel.objects.filter(id=i['insumo_id']).first()
+            i['insumo_nome'] = insumo.descricao
         return JsonResponse(data={'results': model})
 
 @login_required(login_url='home:loginUser')

@@ -8,13 +8,18 @@
                         <img src="/media/btn-adicionar.png" alt="Descrição da imagem">
                     </button>
                 </div>
-                <div class="d-flex align-items-start">                               
-                    <div class="col-4 ms-1"> 
-                        {{form.errors}}
+                <div class="d-flex align-items-start">   
+                    {{form.errors}}                            
+                    <div hidden>                         
                         <td class="hidden">{{ form.id }}</td>
                         <label for="{{ form.insumo.id_for_label }}" class="form-label d-flex align-items-start">{{ form.insumo.label }}</label>
                         {{form.insumo}} 
                     </div> 
+                    <div class="col-4 ms-1" id="div_selectInsumos"> 
+                        <label class="form-label d-flex align-items-start">Insumo</label>
+                        <select id='selectInsumos' class="form-control required">                                    
+                        </select> 
+                    </div>
                     <div class="col-8 ms-2" id="div_myItems"> 
                         <label class="form-label d-flex align-items-start">Serie/Lote</label>
                         <select id='myItems' class="form-control required">                                    
@@ -113,8 +118,32 @@ $(document).ready(function($) {
                 },                 
             });
         };
-    });    
 
+        // Adicionar insumos no select do html, buscando somente insumos que possuem saldo
+        var selectInsumos = $('[id=selectInsumos]');
+        selectInsumos.empty();
+        selectInsumos.append(
+            $('<option></option>').val('').html('--------')
+        );
+        for (const key in itens_estoque.responseJSON.results) {
+            var insumo_id = itens_estoque.responseJSON.results[key].insumo_id;
+            if (!selectInsumos.find('option[value="' + insumo_id + '"]').length) {
+                selectInsumos.append(
+                    $('<option></option>').val(insumo_id).html(itens_estoque.responseJSON.results[key].insumo_id + ' ' + itens_estoque.responseJSON.results[key].insumo_nome)
+                );
+            }
+        }
+        $('#selectInsumos').trigger('change');
+    });
+    
+    // ação ao selecionar insumo no SELECT criado diretamente no HTML
+    $(document).on('change', '[id=selectInsumos]', function(e){
+        var selectedValue = $(this).val();
+        var insumoSelect = $('[id$=-insumo]');
+        insumoSelect.find('option[value="' + selectedValue + '"]').prop('selected', true);
+        insumoSelect.trigger('change');
+    });
+    
     //ação ao selecionar insumo
     $(document).on('change', '[id$=-insumo]', function(e){
         var local = $("#id_local").children("option:selected").val();
