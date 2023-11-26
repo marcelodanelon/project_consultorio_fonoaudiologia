@@ -18,6 +18,9 @@
   .btn-movimentacao:hover {
     transform: scale(1.2); 
   }
+  .btn-movimentacao.hover-effect:hover {
+    transform: none; 
+  }
   .btn-historico {
     border: none;
     background: none;
@@ -28,9 +31,6 @@
   }
   .btn-historico:hover {
     transform: translateX(-10px); 
-  }
-  .btn-movimentacao.hover-effect:hover {
-    transform: none; 
   }
   #img-place-cards{
     display: flex; 
@@ -245,6 +245,28 @@ $(document).ready(function(){
     }else{
       $('#card-saida :input').prop('disabled', true);
     }
+  });
+
+  //ação ao selecionar tipo de movimentacao
+  $('#id_tipoMovimentacao').on('change', function(){
+    if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
+        $('#id_eClient').parent().prop('hidden', false);
+        $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada-inativo.png');
+        $('#btn-entrada').prop('disabled', true);
+        $('#card-entrada').prop('hidden', true);
+        $('#card-saida').prop('hidden', true);
+        $('#img-place-cards').prop('hidden', false);
+        $('#btn-entrada.btn-movimentacao').css('transition', 'none');
+        $('#btn-entrada.btn-movimentacao').addClass('hover-effect');
+    }else{
+        $('#id_eClient').parent().prop('hidden', true);
+        $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada.png');
+        $('#btn-entrada').prop('disabled', false);
+        $('#btn-entrada.btn-movimentacao').css('transition', 'all 0.3s ease');
+        $('#btn-entrada.btn-movimentacao').removeClass('hover-effect');
+        $('#id_eClient').prop('selectedIndex', 0);
+    }
+    $('#id_eClient').trigger('change');
   });
 })
 </script>

@@ -198,16 +198,6 @@ $(document).ready(function($) {
         }
     });  
 
-    //ação ao selecionar tipo de movimentacao
-    $('#id_tipoMovimentacao').on('change', function(){
-        if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
-            $('#id_eClient').parent().prop('hidden', false);
-        }else{
-            $('#id_eClient').parent().prop('hidden', true);
-        }
-        $('#id_eClient').trigger('change');
-    });
-
     //ação ao selecionar cliente, verificando se há alguma mensagem para apresentar
     var itens_cliente;
     var mensagem;
