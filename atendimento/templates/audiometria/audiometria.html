@@ -64,12 +64,28 @@
             border-radius: 50%;
             transform: translate(-50%, -50%);
         }
+
+        .blue-point {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: blue;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
         
         .line {
             position: absolute;
             height: 2px;
-            background-color: green;
             transform-origin: left center;
+        }
+
+        .line-green {
+            background-color: green;
+        }
+
+        .line-blue {
+            background-color: blue;
         }
     </style>
 </head>
@@ -158,11 +174,16 @@
         </div>
         
     </div>
-
+    <br><br><br>
+    <button onclick="selectLineType(1)">Linha 1</button>
+    <button onclick="selectLineType(2)">Linha 2</button>
+    <button onclick="clearAll()">Limpar Tudo</button>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const plane = document.getElementById("cartesian-plane");
             let greenPoints = [];
+            let bluePoints = [];
+            let selectedLineType = 1;
         
             for (let i = 0; i <= 100; i += 10) {
                 for (let j = 0; j <= 120; j += 10) {
@@ -180,43 +201,75 @@
                 const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
         
                 if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
-                    // Adiciona um ponto verde
-                    const greenPoint = document.createElement("div");
-                    greenPoint.className = "green-point";
-                    greenPoint.style.left = clickedPoint.style.left;
-                    greenPoint.style.top = clickedPoint.style.top;
-                    plane.appendChild(greenPoint);
+                    // Adiciona um ponto verde ou azul, dependendo do botão selecionado
+                    const point = document.createElement("div");
+                    point.className = selectedLineType === 1 ? "green-point" : "blue-point";
+                    point.style.left = clickedPoint.style.left;
+                    point.style.top = clickedPoint.style.top;
+                    plane.appendChild(point);
         
-                    // Adiciona o ponto verde à lista
-                    greenPoints.push(greenPoint);
+                    // Adiciona o ponto à lista correspondente
+                    if (selectedLineType === 1) {
+                        greenPoints.push(point);
+                    } else if (selectedLineType === 2) {
+                        bluePoints.push(point);
+                    }
         
-                    // Conecta pontos verdes com uma linha
-                    if (greenPoints.length > 1) {
-                        const line = document.createElement("div");
-                        line.className = "line";
-        
-                        const startX = parseFloat(greenPoints[greenPoints.length - 2].style.left);
-                        const startY = parseFloat(greenPoints[greenPoints.length - 2].style.top);
-                        const endX = parseFloat(greenPoint.style.left);
-                        const endY = parseFloat(greenPoint.style.top);
-        
-                        // Calcula o comprimento e ângulo em porcentagens
-                        const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                        const angle = Math.atan2(endY - startY, endX - startX);
-        
-                        // Define as coordenadas do ponto inicial e o comprimento da linha
-                        line.style.left = startX + "%";
-                        line.style.top = startY + "%";
-                        line.style.width = length + "%";
-        
-                        // Define a transformação para a rotação da linha
-                        line.style.transform = `rotate(${angle}rad)`;
-                        plane.appendChild(line);
+                    // Conecta pontos com uma linha
+                    if (greenPoints.length > 1 && selectedLineType === 1) {
+                        const line = createLineElement("line-green");
+                        connectPointsWithLine(greenPoints[greenPoints.length - 2], point, line, plane);
+                    }
+                    if (bluePoints.length > 1 && selectedLineType === 2) {
+                        const line = createLineElement("line-blue");
+                        connectPointsWithLine(bluePoints[bluePoints.length - 2], point, line, plane);
                     }
                 }
             });
-        });
         
+            window.selectLineType = function(type) {
+                // Atualiza o tipo de linha selecionado
+                selectedLineType = type;
+            }
+
+            window.clearAll = function() {
+                // Limpa todos os pontos e linhas
+                greenPoints.forEach(point => plane.removeChild(point));
+                bluePoints.forEach(point => plane.removeChild(point));
+                greenPoints = [];
+                bluePoints = [];
+                const lines = document.querySelectorAll(".line");
+                lines.forEach(line => plane.removeChild(line));
+            }
+        });
+
+        function connectPointsWithLine(point1, point2, line, plane) {
+            const startX = parseFloat(point1.style.left);
+            const startY = parseFloat(point1.style.top);
+            const endX = parseFloat(point2.style.left);
+            const endY = parseFloat(point2.style.top);
+
+            // Calcula o comprimento e ângulo em porcentagens
+            const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+            const angle = Math.atan2(endY - startY, endX - startX);
+
+            // Define as coordenadas do ponto inicial e o comprimento da linha
+            line.style.left = startX + "%";
+            line.style.top = startY + "%";
+            line.style.width = length + "%";
+
+            // Define a transformação para a rotação da linha
+            line.style.transform = `rotate(${angle}rad)`;
+
+            // Adiciona a linha à tela
+            plane.appendChild(line);
+        }
+
+        function createLineElement(className) {
+            const line = document.createElement("div");
+            line.className = "line " + className;
+            return line;
+        }
     </script>
     
     
