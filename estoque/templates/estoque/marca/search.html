@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container" style="padding:1px 16px;">
     <div class="d-flex justify-content-between">
-        <h3>Marcas</h3> <a href="{% url 'estoque:createMarca' %}" class="btn btn-primary">Cadastrar</a>
+        <h3>Marcas</h3> <button id="btn-incluir" onclick="location.href='{% url 'estoque:createMarca' %}'" class="custom-button-base">Cadastrar</button>
     </div>
     <br>
 <div class="responsive-table">

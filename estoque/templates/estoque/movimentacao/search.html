@@ -3,9 +3,12 @@
 {% block nav_lateral %}{% include 'partials/_nav_estoque.html' %}{% endblock nav_lateral %}
 
 {% block content %}
+<style>
+    
+</style>
 <div class="container" style="padding:1px 16px;">
     <div class="d-flex justify-content-between">
-        <h3>Movimentações de Estoque</h3> <a href="{% url 'estoque:createMovimentacaoInsumo' %}" class="btn btn-primary">Incluir</a>
+        <h3>Movimentações de Estoque</h3> <button id="btn-incluir" onclick="location.href='{% url 'estoque:createMovimentacaoInsumo' %}'" class="custom-button-base">Incluir</button>
     </div>
     <br>
     <div class="responsive-table">

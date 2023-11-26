@@ -280,6 +280,24 @@
     /* border: 1px solid #ccc; */
     border-top: none;
   }
+
+  /* Estilo dos botões nas telas de Pesquisa na maioria */
+  .custom-button-base {
+    display: inline-block;
+    padding: 8px 18px;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: rgba(165, 0, 39); 
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-button-base:hover {
+    background-color:  rgb(126, 1, 30); 
+}
   
   /* Muda a cor botão de fechamento on hover */
   .topright:hover {color: rgb(0, 81, 255);}

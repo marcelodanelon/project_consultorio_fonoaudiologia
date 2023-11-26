@@ -293,6 +293,12 @@ function cloneMore2(selector, prefix) {
     newElement.find('[id=disponivel]').each(function() {
         $(this).val(0);
     });
+    newElement.find('.mask-money').on('blur', function() {
+        var valor = $(this).val();
+        if (/^\d+$/.test(valor)) {
+            $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
+        }
+    });
     total++;
     $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);
     $(selector).before(newElement);

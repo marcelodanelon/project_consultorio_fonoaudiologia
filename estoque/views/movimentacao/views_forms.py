@@ -428,9 +428,11 @@ def createMovimentacaoInsumo(request):
                                 item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
                                 item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
                                 item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
-                                item_valorCompra = float(item.valorCompra.replace(",","").replace(".",""))
-                                item.valorCompra = format_currency(item_valorCompra / 100, 'BRL', locale='pt_BR')
-                                item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
+                                try:
+                                    item_valorCompra = float(item.valorCompra.replace(",","").replace(".",""))
+                                    item.valorCompra = format_currency(item_valorCompra / 100, 'BRL', locale='pt_BR')
+                                except:
+                                    ...
                                 item.save()
 
                         for item in modelSetInsumo:
@@ -449,7 +451,6 @@ def createMovimentacaoInsumo(request):
                                 item.valorUnitario = format_currency(item_valorUnitario / 100, 'BRL', locale='pt_BR')
                                 item_valorTotal = float(item.valorTotal.replace(",","").replace(".",""))
                                 item.valorTotal = format_currency(item_valorTotal / 100, 'BRL', locale='pt_BR')
-                                item_valorUnitario = format_currency(item_valorUnitario, 'BRL', locale='pt_BR')
                                 item.save()
                         messages.success(request, 'Movimentação gravada com sucesso!')
                         return redirect('estoque:index')

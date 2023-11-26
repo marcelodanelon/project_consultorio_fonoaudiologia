@@ -204,6 +204,9 @@ function cloneMore(selector, prefix) {
     newElement.find('[name$=-valorUnitario]').each(function() {
         $(this).val('0,00')
     });
+    newElement.find('[name$=-valorCompra]').each(function() {
+        $(this).val('0,00')
+    });
     newElement.find('[name$=-valorTotal]').each(function() {
         $(this).val('0,00')
     });
@@ -215,6 +218,12 @@ function cloneMore(selector, prefix) {
     });
     newElement.find('[name$=-local]').each(function() {
         $(this).prop("selectedIndex", 0).val();
+    });
+    newElement.find('.mask-money').on('blur', function() {
+        var valor = $(this).val();
+        if (/^\d+$/.test(valor)) {
+            $(this).val(parseFloat(valor).toFixed(2)).maskMoney({ thousands: '.', decimal: ',', precision: 2, allowZero: true });
+        }
     });
     total++;
     $('#id_' + prefix + '_set-TOTAL_FORMS').attr('value', total);

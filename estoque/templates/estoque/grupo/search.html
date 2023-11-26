@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container" style="padding:1px 16px;">
     <div class="d-flex justify-content-between">
-        <h3>Grupos de Insumos</h3> <a href="{% url 'estoque:createGrupo' %}" class="btn btn-primary">Cadastrar</a>
+        <h3>Grupos de Insumos</h3> <button id="btn-incluir" onclick="location.href='{% url 'estoque:createGrupo' %}'" class="custom-button-base">Cadastrar</button>
     </div>
     <br>
 <div class="responsive-table">

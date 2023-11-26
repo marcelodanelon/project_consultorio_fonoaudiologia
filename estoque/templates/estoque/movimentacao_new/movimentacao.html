@@ -29,6 +29,9 @@
   .btn-historico:hover {
     transform: translateX(-10px); 
   }
+  .btn-movimentacao.hover-effect:hover {
+    transform: none; 
+  }
   #img-place-cards{
     display: flex; 
     flex-direction: column; 
@@ -83,10 +86,10 @@ $(document).ready(function($) {
         </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
           <button title='Entrada' class="btn-movimentacao" type="button" id="btn-entrada">
-            <img src="/media/estoque/btn-icon-entrada.png">
+            <img src="/media/estoque/btn-icon-entrada-inativo.png">
           </button>
           <button title='Saída' class="btn-movimentacao" type="button" id="btn-saida">
-            <img src="/media/estoque/btn-icon-saida.png">
+            <img src="/media/estoque/btn-icon-saida-inativo.png">
           </button>
         </div>
         <div style="position: absolute; bottom: 2vh; width: 34vw;">
@@ -122,14 +125,22 @@ $(document).ready(function(){
   // desabilita botões de movimentação ENTRADA / SAÍDA até que seja selecionado um local
   $('#id_local').on('change', function(){
     if ($('#id_local').val() == '') {
-      $('#btn-entrada').prop('hidden', true);
-      $('#btn-saida').prop('hidden', true);
+      $('#btn-entrada').prop('disabled', true);
+      $('#btn-saida').prop('disabled', true);
       $('#card-entrada').prop('hidden', true);
       $('#card-saida').prop('hidden', true);
       $('#img-place-cards').prop('hidden', false);
+      $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada-inativo.png');
+      $('#btn-saida img').attr('src', '/media/estoque/btn-icon-saida-inativo.png');
+      $('.btn-movimentacao').css('transition', 'none');
+      $('.btn-movimentacao').addClass('hover-effect');
     } else {
-      $('#btn-entrada').prop('hidden', false);
-      $('#btn-saida').prop('hidden', false);
+      $('#btn-entrada').prop('disabled', false);
+      $('#btn-saida').prop('disabled', false);
+      $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada.png');
+      $('#btn-saida img').attr('src', '/media/estoque/btn-icon-saida.png');
+      $('.btn-movimentacao').css('transition', 'all 0.3s ease');
+      $('.btn-movimentacao').removeClass('hover-effect');
     }
   });
   $('#id_local').trigger('change');
