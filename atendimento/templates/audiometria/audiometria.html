@@ -11,7 +11,6 @@
             width: 300px;
             height: 300px;
             margin: 20px;
-            border: 1px solid #000;
         }
 
         .axis {
@@ -20,7 +19,7 @@
         }
 
         .x-axis {
-            width: 100%;
+            width: 90%;
             height: 1px;
             top: 50%;
             left: 0;
@@ -28,7 +27,7 @@
 
         .y-axis {
             width: 1px;
-            height: 100%;
+            height: 120%;
             top: 0;
             left: 50%;
         }
@@ -40,7 +39,7 @@
 
         .x-tick {
             width: 1px;
-            height: 100%;
+            height: 120%;
         }
 
         .y-tick {
@@ -53,6 +52,7 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
+            //background-color: red;
             transform: translate(-50%, -50%);
         }
 
@@ -84,29 +84,78 @@
 
         <!-- Ticks no eixo X -->
         <!-- Criei 10 ticks igualmente espaçados -->
-        <div class="tick x-tick" style="left: 10%;"></div>
-        <div class="tick x-tick" style="left: 20%;"></div>
-        <div class="tick x-tick" style="left: 30%;"></div>
-        <div class="tick x-tick" style="left: 40%;"></div>
-        <div class="tick x-tick" style="left: 50%;"></div>
-        <div class="tick x-tick" style="left: 60%;"></div>
-        <div class="tick x-tick" style="left: 70%;"></div>
-        <div class="tick x-tick" style="left: 80%;"></div>
-        <div class="tick x-tick" style="left: 90%;"></div>
-        <div class="tick x-tick" style="left: 100%;"></div>
+        <div class="tick x-tick" style="left: 0%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;"></div>
+        </div>
+        <div class="tick x-tick" style="left: 10%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">250</div>
+        </div>
+        <div class="tick x-tick" style="left: 20%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">500</div>
+        </div>
+        <div class="tick x-tick" style="left: 30%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">1K</div>
+        </div>
+        <div class="tick x-tick" style="left: 40%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">2K</div>
+        </div>
+        <div class="tick x-tick" style="left: 50%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">3K</div>
+        </div>
+        <div class="tick x-tick" style="left: 60%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">4K</div>
+        </div>
+        <div class="tick x-tick" style="left: 70%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">6K</div>
+        </div>
+        <div class="tick x-tick" style="left: 80%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">8K</div>
+        </div>
+        <div class="tick x-tick" style="left: 100%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">Hz</div>
+        </div>
 
         <!-- Ticks no eixo Y -->
         <!-- Criei 10 ticks igualmente espaçados -->
-        <div class="tick y-tick" style="top: 10%;"></div>
-        <div class="tick y-tick" style="top: 20%;"></div>
-        <div class="tick y-tick" style="top: 30%;"></div>
-        <div class="tick y-tick" style="top: 40%;"></div>
-        <div class="tick y-tick" style="top: 50%;"></div>
-        <div class="tick y-tick" style="top: 60%;"></div>
-        <div class="tick y-tick" style="top: 70%;"></div>
-        <div class="tick y-tick" style="top: 80%;"></div>
-        <div class="tick y-tick" style="top: 90%;"></div>
-        <div class="tick y-tick" style="top: 100%;"></div>
+        <div class="tick y-tick" style="top: 0%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">-10</div>
+        </div>
+        <div class="tick y-tick" style="top: 10%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">0</div>
+        </div>
+        <div class="tick y-tick" style="top: 20%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">10</div>
+        </div>
+        <div class="tick y-tick" style="top: 30%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">20</div>
+        </div>
+        <div class="tick y-tick" style="top: 40%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">30</div>
+        </div>
+        <div class="tick y-tick" style="top: 50%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">40</div>
+        </div>
+        <div class="tick y-tick" style="top: 60%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">50</div>
+        </div>
+        <div class="tick y-tick" style="top: 70%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">60</div>
+        </div>
+        <div class="tick y-tick" style="top: 80%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">70</div>
+        </div>
+        <div class="tick y-tick" style="top: 90%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">80</div>
+        </div>
+        <div class="tick y-tick" style="top: 100%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">90</div>
+        </div>
+        <div class="tick y-tick" style="top: 110%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">100</div>
+        </div>
+        <div class="tick y-tick" style="top: 120%;">
+            <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">110</div>
+        </div>
         
     </div>
 
@@ -116,12 +165,14 @@
             let greenPoints = [];
         
             for (let i = 0; i <= 100; i += 10) {
-                for (let j = 0; j <= 100; j += 10) {
-                    const point = document.createElement("div");
-                    point.className = "intersection-point";
-                    point.style.left = i + "%";
-                    point.style.top = j + "%";
-                    plane.appendChild(point);
+                for (let j = 0; j <= 120; j += 10) {
+                    if (i != 90){
+                        const point = document.createElement("div");
+                        point.className = "intersection-point";
+                        point.style.left = i + "%";
+                        point.style.top = j + "%";
+                        plane.appendChild(point);
+                    }
                 }
             }
         
