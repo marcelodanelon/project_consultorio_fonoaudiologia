@@ -1,0 +1,335 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_atendimento.html' %}{% endblock nav_lateral %}
+
+{% block head_base %}
+<style>
+    #plano-cartesiano {
+        width: 300px;
+        height: 350px;
+        position: relative;
+        border: 1px solid black;
+    }
+
+    #plano-cartesiano2 {
+        width: 300px;
+        height: 350px;
+        position: relative;
+        border: 1px solid black;
+    }
+
+    .ponto {
+        width: 5px;
+        height: 5px;
+        background-color: red;
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .linha-x, .linha-y {
+        position: absolute;
+        background-color: lightgray;
+    }
+
+    .linha-x {
+        height: 1px;
+        width: 100%;
+    }
+
+    .linha-y {
+        height: 100%;
+        width: 1px;
+    }
+
+    .marca-x {
+        position: absolute;
+        font-size: 12px;
+        transform: translateX(-50%);
+        top: -20px;
+    }
+
+    .marca-y {
+        position: absolute;
+        font-size: 12px;
+        transform: translateY(-50%);
+        left: -30px;
+        right: 100%;
+    }
+</style>
+{% endblock head_base %}
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<div class="container" style="padding:1px 16px;">
+    <h3>{{name_screen}}</h3>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'first')" id="defaultOpen">Dados Iniciais</button>
+        <button class="tablinks" onclick="openTab(event, 'second')">Desfecho</button>
+    </div>
+    <form action="{{form_action}}" method="post" class="container-all form-horizontal" style="height:75%">
+        {% csrf_token %} 
+        <!-- Conteúdo da Primeira Aba -->
+        <div id="first" class="tabcontent">
+            {% include 'audiometria/pages_audiometrias/page1_au.html' %}
+        </div>
+        <!-- Conteúdo da Segunda Aba -->
+        <div id="second" class="tabcontent">
+            {% include 'audiometria/pages_audiometrias/page2_au.html' %} 
+        </div>        
+        <div class="form-content d-flex flex-row bd-highlight" style="margin-top: 3%;">
+            <div style="display: inline-block;">
+                <button id="btn_gravar" class="btn btn-success me-1" type="submit">Gravar</button>
+                <a href="{% url 'atendimento:listAudiometria' %}" class="btn btn-primary">Voltar</a>
+    </form>
+            </div>
+            <div style="display: inline-block;">
+                {% if option_delete == 'yes' %}
+                <form action="{% url 'atendimento:deleteAudiometria' audiometria.id %}" method="POST">
+                    {% csrf_token %}
+                    {% if confirmation_delete == 'no' %}
+                    <input name="confirmation_delete" type="hidden" value="yes">
+                    <button class="btn btn-danger">Confirma?</button>
+                    {% else %}
+                    <button class="btn btn-danger">Delete</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>        
+                {% endif %}
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+    var pontosLinha1 = [];
+    var pontosLinha2 = [];
+    var pontosXY = [];
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var linhaAtual = null;
+    var corLinhaAtual = null;
+
+    function selecionarLinha(classe, cor) {
+        linhaAtual = classe;
+        corLinhaAtual = cor;
+    }
+    {% comment %} var pontosLinha1 = [
+        { x: 50, y: 50, cor: 'green', classe: 'linha1' },
+        { x: 150, y: 100, cor: 'green', classe: 'linha1' },
+        { x: 250, y: 150, cor: 'green', classe: 'linha1' },
+        { x: 200, y: 200, cor: 'green', classe: 'linha1' },
+        { x: 100, y: 250, cor: 'green', classe: 'linha1' }
+    ];
+
+    var pontosLinha2 = [
+        { x: 150, y: 50, cor: 'red', classe: 'linha2' },
+        { x: 200, y: 100, cor: 'red', classe: 'linha2' },
+        { x: 250, y: 50, cor: 'red', classe: 'linha2' }
+    ];
+
+    // Adiciona os pontos fictícios ao array principal
+    pontosXY = pontosLinha1.concat(pontosLinha2);
+
+    // Adiciona os pontos ao plano
+    desenharPontos(pontosXY);
+    desenharLinhas(pontosXY); {% endcomment %}
+
+    function desenharReta(event) {
+        if (linhaAtual === null || corLinhaAtual === null) {
+            return;
+        }
+    
+        var plano = document.getElementById('plano-cartesiano').getBoundingClientRect();
+        var x = event.clientX - plano.left;
+        var y = event.clientY - plano.top;
+    
+        // Limita a posição do ponto dentro dos limites do plano no eixo x
+        x = Math.max(0, Math.min(x, plano.width));
+        
+        // Limita a posição do ponto dentro dos limites do plano no eixo y
+        y = Math.max(0, Math.min(y, plano.height));
+    
+        var ponto = { x: x, y: y, cor: corLinhaAtual, classe: linhaAtual };
+        pontosXY.push(ponto);
+
+        // Mostra os pontos no console.log
+        console.log("Pontos: ", pontosXY);
+    
+        if (linhaAtual === 'linha1') {
+            pontosLinha1.push(ponto);
+            desenharPontos(pontosLinha1);
+            desenharLinhas(pontosLinha1);
+        } else if (linhaAtual === 'linha2') {
+            pontosLinha2.push(ponto);
+            desenharPontos(pontosLinha2);
+            desenharLinhas(pontosLinha2);
+        }
+    }    
+
+    function desenharPontos(pontos) {
+        for (var i = 0; i < pontos.length; i++) {
+            var ponto = pontos[i];
+            ctx.fillStyle = ponto.cor;
+            ctx.beginPath();
+            ctx.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function desenharLinhas(pontos) {
+        for (var i = 0; i < pontos.length - 1; i++) {
+            var ponto1 = pontos[i];
+            var ponto2 = pontos[i + 1];
+
+            ctx.strokeStyle = ponto1.cor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(ponto1.x, ponto1.y);
+            ctx.lineTo(ponto2.x, ponto2.y);
+            ctx.stroke();
+        }
+    }
+
+    function limparPlano() {
+        // Limpa os arrays de pontos
+        pontosLinha1 = [];
+        pontosLinha2 = [];
+        pontosXY = [];
+
+        // Limpa o canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Limpa as marcações no eixo x
+        var marcacoesX = document.querySelectorAll('.marca-x');
+        for (var i = 0; i < marcacoesX.length; i++) {
+            marcacoesX[i].style.backgroundColor = 'transparent';
+        }
+
+        // Limpa as marcações no eixo y
+        var marcacoesY = document.querySelectorAll('.marca-y');
+        for (var i = 0; i < marcacoesY.length; i++) {
+            marcacoesY[i].style.backgroundColor = 'transparent';
+        }
+    }
+
+    var pontosLinha3 = [];
+    var pontosLinha4 = [];
+    var canvas2 = document.getElementById('canvas2');
+    var ctx2 = canvas2.getContext('2d');
+
+    var linhaAtual2 = null;
+    var corLinhaAtual2 = null;
+
+    function selecionarLinha2(classe, cor) {
+        linhaAtual2 = classe;
+        corLinhaAtual2 = cor;
+        console.log(linhaAtual2)
+        console.log(corLinhaAtual2)
+    }
+
+    function desenharReta2(event) {
+        if (linhaAtual2 === null || corLinhaAtual2 === null) {
+            return;
+        }
+    
+        var plano2 = document.getElementById('plano-cartesiano2').getBoundingClientRect();
+        var x = event.clientX - plano2.left;
+        var y = event.clientY - plano2.top;
+    
+        // Limita a posição do ponto dentro dos limites do plano no eixo x
+        x = Math.max(0, Math.min(x, plano2.width));
+        
+        // Limita a posição do ponto dentro dos limites do plano no eixo y
+        y = Math.max(0, Math.min(y, plano2.height));
+    
+        var ponto2 = { x: x, y: y, cor: corLinhaAtual2, classe: linhaAtual2 };
+    
+        if (linhaAtual2 === 'linha1') {
+            pontosLinha3.push(ponto2);
+            desenharPontos2(pontosLinha3);
+            desenharLinhas2(pontosLinha3);
+        } else if (linhaAtual2 === 'linha2') {
+            pontosLinha4.push(ponto2);
+            desenharPontos2(pontosLinha4);
+            desenharLinhas2(pontosLinha4);
+        }
+    }   
+    
+    function desenharPontos2(pontos) {
+        for (var i = 0; i < pontos.length; i++) {
+            var ponto = pontos[i];
+            ctx2.fillStyle = ponto.cor;
+            ctx2.beginPath();
+            ctx2.arc(ponto.x, ponto.y, 2, 0, Math.PI * 2);
+            ctx2.fill();
+        }
+    }
+
+    function desenharLinhas2(pontos) {
+        for (var i = 0; i < pontos.length - 1; i++) {
+            var ponto1 = pontos[i];
+            var ponto2 = pontos[i + 1];
+
+            ctx2.strokeStyle = ponto1.cor;
+            ctx2.lineWidth = 2;
+            ctx2.beginPath();
+            ctx2.moveTo(ponto1.x, ponto1.y);
+            ctx2.lineTo(ponto2.x, ponto2.y);
+            ctx2.stroke();
+        }
+    }
+
+    function limparPlano2() {
+        // Limpa os arrays de pontos
+        pontosLinha3 = [];
+        pontosLinha4 = [];
+
+        // Limpa o canvas
+        ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+        // Limpa as marcações no eixo x
+        var marcacoesX = document.querySelectorAll('.marca-x');
+        for (var i = 0; i < marcacoesX.length; i++) {
+            marcacoesX[i].style.backgroundColor = 'transparent';
+        }
+
+        // Limpa as marcações no eixo y
+        var marcacoesY = document.querySelectorAll('.marca-y');
+        for (var i = 0; i < marcacoesY.length; i++) {
+            marcacoesY[i].style.backgroundColor = 'transparent';
+        }
+    }
+
+    $(document).ready(function($){
+        $('.mask-date').mask('00/00/0000');  
+    });
+
+
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    document.getElementById("defaultOpen").click();
+</script>
+{% endblock content %}
