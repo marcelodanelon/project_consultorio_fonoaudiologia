@@ -30,7 +30,7 @@ def audiometria(request):
 
     return render(
         request, 
-        'audiometria/audiometria.html', 
+        'audiometria_new/audiometria.html', 
         context
     )
 

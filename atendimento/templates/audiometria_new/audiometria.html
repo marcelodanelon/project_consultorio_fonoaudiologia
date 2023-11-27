@@ -1,0 +1,193 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}
+  {% include 'partials/_nav_atendimento.html' %}
+{% endblock nav_lateral %}
+
+{% block head_base %}
+<style>
+  .cartesian-plane {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 20px;
+  }
+
+  .axis {
+      position: absolute;
+      background-color: #000;
+  }
+
+  .x-axis {
+      width: 90%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+  }
+
+  .y-axis {
+      width: 1px;
+      height: 120%;
+      top: 0;
+      left: 50%;
+  }
+
+  .tick {
+      position: absolute;
+      background-color: #000;
+  }
+
+  .x-tick {
+      width: 1px;
+      height: 120%;
+  }
+
+  .y-tick {
+      width: 100%;
+      height: 1px;
+  }
+
+  .intersection-point {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      //background-color: red;
+      transform: translate(-50%, -50%);
+  }
+
+  .green-point {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: green;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+  }
+
+  .blue-point {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: blue;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+  }
+  
+  .line {
+      position: absolute;
+      height: 2px;
+      transform-origin: left center;
+  }
+
+  .line-green {
+      background-color: green;
+  }
+
+  .line-blue {
+      background-color: blue;
+  }
+
+  .btn-audiometria {
+    border: none;
+    background: none;
+    width: 70px; 
+    height: 70px; 
+    margin: 0 10px;
+    transition: all 0.3s ease; 
+  }
+  .btn-audiometria:hover {
+    transform: scale(1.2); 
+  }
+  .btn-audiometria.hover-effect:hover {
+    transform: none; 
+  }
+  .btn-historico {
+    border: none;
+    background: none;
+    width: 50px; 
+    height: 50px; 
+    margin: 0 10px;
+    transition: transform 0.3s ease; 
+  }
+  .btn-historico:hover {
+    transform: translateX(-10px); 
+  }
+  #img-place-cards{
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+    font-family: 'Nunito', sans-serif;
+  }
+  #img-place-cards.active {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 80vh;
+  }
+</style>
+{% endblock head_base %}
+
+{% block content %}
+<form id="form-movimentacao" action="{{form_action}}" method="post">
+  {% csrf_token %}
+  <div style="height: 90vh; width: 82vw; position: relative;">
+    <div class="row">
+      <div style="margin-left:1%; background: white; width: 30vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
+        <div style="margin-top:1vh;">
+          <div class="row">
+            <div class="col">
+              {{form.auData.label}}
+              {{form.auData}}  
+            </div>
+            <div class="col">
+              {{form.aClient.label}}
+              {{form.aClient}}    
+            </div>
+          </div>
+        </div> 
+        <div style="margin-top:1vh;">
+          {{form.auProfessional.label}}
+          {{form.auProfessional}}    
+        </div>
+        <div style="margin-top:1vh;">
+          {{form.auLocal.label}}
+          {{form.auLocal}}    
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+          <button title='Entrada' class="btn-audiometria" type="button" id="btn-audiometria">
+            <img src="/media/atendimento/btn-icon-audiometria.png">
+          </button>
+          <button title='Saída' class="btn-audiometria" type="button" id="btn-desfecho">
+            <img src="/media/atendimento/btn-icon-desfecho.png">
+          </button>
+        </div>
+        <div style="position: absolute; bottom: 2vh; width: 34vw;">
+          {{form.auObser.label}}
+          {{form.auObser}}    
+        </div>
+      </div>
+      <div style="padding:1%; margin-left:1%; background: white; width: 50vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;overflow-x:auto;">
+        <div hidden id="img-place-cards">
+          <span style="margin-bottom: 10px;"><b>Vamos começar a Movimentar!</b></span>
+          <img src="/media/estoque/estoque.png" alt="estoque">
+        </div>
+        <div id="card-dados_iniciais" style="margin-top:1vh;white-space: nowrap;">
+          <h5>AUDIOMETRIA</h5>
+          {% include 'audiometria_new/pages_audiometrias/page1_au.html' %}
+        </div>
+        <div hidden id="card-desfecho" style="margin-top:1vh;white-space: nowrap;">
+          <h5>DESFECHO</h5>
+          {% include 'audiometria_new/pages_audiometrias/page2_au.html' %}
+        </div>
+      </div>
+    </div>
+    <button class="btn-audiometria" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+      <img src="/media/btn-gravar.png">
+    </button>
+  </div>  
+</form>
+{% endblock content %}

@@ -37,218 +37,270 @@
         {{form.auMedSo.label}}{{form.auMedSo}}
     </div>
 </div>
-<br><br>
+<br>
 <div class="row align-items-center">
     <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <b>Ouvido Esquerdo</b><br>
-        <div class="row">
-            <div class="col-3">
-                <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
-                    <a class="btn btn-success" onclick="selecionarLinha('linha1', 'green')">Linha 1</a>
-                    <br>
-                    <a class="btn btn-danger" onclick="selecionarLinha('linha2', 'red')">Linha 2</a>
-                    <br>
-                    <a class="btn btn-primary" onclick="limparPlano()">Limpar</a>
-                    <br>
-                    {{ form.auMVaOe.label }}{{ form.auMVaOe }}
-                    <br>
-                    {{ form.auMVaOe.label }}{{ form.auMVaOe }}
-                </div>
-            </div>                
-            <div class="col-3">
-                <div id="plano-cartesiano" onclick="desenharReta(event)" style="margin-left: 50px;">
-                    <!-- Linhas de grade do eixo x -->
-                    <div class="linha-x" style="top: 0%;"></div>
-                    <div class="linha-x" style="top: 7.69%;"></div>
-                    <div class="linha-x" style="top: 15.38%;"></div>
-                    <div class="linha-x" style="top: 23.07%;"></div>
-                    <div class="linha-x" style="top: 30.76%;"></div>
-                    <div class="linha-x" style="top: 38.46%;"></div>
-                    <div class="linha-x" style="top: 46.15%;"></div>
-                    <div class="linha-x" style="top: 53.84%;"></div>
-                    <div class="linha-x" style="top: 61.53%;"></div>
-                    <div class="linha-x" style="top: 70%;"></div>
-                    <div class="linha-x" style="top: 80%;"></div>
-                    <div class="linha-x" style="top: 90%;"></div>
-
-                    <!-- Marcas no eixo x -->
-                    <div class="marca-x" style="left: 0%;">0</div>
-                    <div class="marca-x" style="left: 10%;">250</div>
-                    <div class="marca-x" style="left: 20%;">500</div>
-                    <div class="marca-x" style="left: 30%;">1K</div>
-                    <div class="marca-x" style="left: 40%;">2K</div>
-                    <div class="marca-x" style="left: 50%;">3K</div>
-                    <div class="marca-x" style="left: 60%;">4K</div>
-                    <div class="marca-x" style="left: 70%;">6K</div>
-                    <div class="marca-x" style="left: 80%;">8K</div>
-                    <div class="marca-x" style="left: 100%;">Hz</div>
-
-                    <div class="linha-y" style="left: 10%;"></div>
-                    <div class="linha-y" style="left: 20%;"></div>
-                    <div class="linha-y" style="left: 30%;"></div>
-                    <div class="linha-y" style="left: 40%;"></div>
-                    <div class="linha-y" style="left: 50%;"></div>
-                    <div class="linha-y" style="left: 60%;"></div>
-                    <div class="linha-y" style="left: 70%;"></div>
-                    <div class="linha-y" style="left: 80%;"></div>
-
-                    <!-- Marcas no eixo y -->
-                    <div class="marca-y" style="top: 0%;">-10</div>
-                    <div class="marca-y" style="top: 7.69%;">0</div>
-                    <div class="marca-y" style="top: 15.38%;">10</div>
-                    <div class="marca-y" style="top: 23.07%;">20</div>
-                    <div class="marca-y" style="top: 30.76%;">30</div>
-                    <div class="marca-y" style="top: 38.46%;">40</div>
-                    <div class="marca-y" style="top: 46.15%;">50</div>
-                    <div class="marca-y" style="top: 53.84%;">60</div>
-                    <div class="marca-y" style="top: 61.53%;">70</div>
-                    <div class="marca-y" style="top: 70%;">80</div>
-                    <div class="marca-y" style="top: 80%;">90</div>
-                    <div class="marca-y" style="top: 90%;">100</div>
-                    <div class="marca-y" style="top: 100%;">110</div>
-
-                    <!-- Elemento canvas -->
-                    <canvas id="canvas" width="300" height="350" style="position: relative; z-index: 1;"></canvas>
-                </div>
-                <br>
+        <div class="cartesian-plane" id="cartesian-plane">
+            <!-- Eixo X -->
+            <div class="axis x-axis"></div>
+    
+            <!-- Eixo Y -->
+            <div class="axis y-axis"></div>
+    
+            <!-- Ticks no eixo X -->
+            <!-- Criei 10 ticks igualmente espaçados -->
+            <div class="tick x-tick" style="left: 0%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;"></div>
             </div>
+            <div class="tick x-tick" style="left: 10%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">250</div>
+            </div>
+            <div class="tick x-tick" style="left: 20%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">500</div>
+            </div>
+            <div class="tick x-tick" style="left: 30%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">1K</div>
+            </div>
+            <div class="tick x-tick" style="left: 40%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">2K</div>
+            </div>
+            <div class="tick x-tick" style="left: 50%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">3K</div>
+            </div>
+            <div class="tick x-tick" style="left: 60%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">4K</div>
+            </div>
+            <div class="tick x-tick" style="left: 70%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">6K</div>
+            </div>
+            <div class="tick x-tick" style="left: 80%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">8K</div>
+            </div>
+            <div class="tick x-tick" style="left: 100%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">Hz</div>
+            </div>
+    
+            <!-- Ticks no eixo Y -->
+            <!-- Criei 10 ticks igualmente espaçados -->
+            <div class="tick y-tick" style="top: 0%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">-10</div>
+            </div>
+            <div class="tick y-tick" style="top: 10%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">0</div>
+            </div>
+            <div class="tick y-tick" style="top: 20%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">10</div>
+            </div>
+            <div class="tick y-tick" style="top: 30%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">20</div>
+            </div>
+            <div class="tick y-tick" style="top: 40%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">30</div>
+            </div>
+            <div class="tick y-tick" style="top: 50%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">40</div>
+            </div>
+            <div class="tick y-tick" style="top: 60%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">50</div>
+            </div>
+            <div class="tick y-tick" style="top: 70%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">60</div>
+            </div>
+            <div class="tick y-tick" style="top: 80%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">70</div>
+            </div>
+            <div class="tick y-tick" style="top: 90%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">80</div>
+            </div>
+            <div class="tick y-tick" style="top: 100%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">90</div>
+            </div>
+            <div class="tick y-tick" style="top: 110%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">100</div>
+            </div>
+            <div class="tick y-tick" style="top: 120%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">110</div>
+            </div>            
         </div>
     </div>
 
     <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <b>Ouvido Direito</b><br>
-        <div class="row">
-            <div class="col-3">
-                <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
-                    <a class="btn btn-success" onclick="selecionarLinha2('linha1', 'green')">Linha 1</a>
-                    <br>
-                    <a class="btn btn-danger" onclick="selecionarLinha2('linha2', 'red')">Linha 2</a>
-                    <br>
-                    <a class="btn btn-primary" onclick="limparPlano2()">Limpar</a>
-                    <br>
-                    {{ form.auMVaOd.label }}{{ form.auMVaOd }}
-                    <br>
-                    {{ form.auMVaOd.label }}{{ form.auMVaOd }}
-                </div>
-            </div>                
-            <div class="col-3">
-                <div id="plano-cartesiano2" onclick="desenharReta2(event)" style="margin-left: 50px;">
-                    <!-- Linhas de grade do eixo x -->
-                    <div class="linha-x" style="top: 0%;"></div>
-                    <div class="linha-x" style="top: 7.69%;"></div>
-                    <div class="linha-x" style="top: 15.38%;"></div>
-                    <div class="linha-x" style="top: 23.07%;"></div>
-                    <div class="linha-x" style="top: 30.76%;"></div>
-                    <div class="linha-x" style="top: 38.46%;"></div>
-                    <div class="linha-x" style="top: 46.15%;"></div>
-                    <div class="linha-x" style="top: 53.84%;"></div>
-                    <div class="linha-x" style="top: 61.53%;"></div>
-                    <div class="linha-x" style="top: 70%;"></div>
-                    <div class="linha-x" style="top: 80%;"></div>
-                    <div class="linha-x" style="top: 90%;"></div>
-
-                    <!-- Marcas no eixo x -->
-                    <div class="marca-x" style="left: 0%;">0</div>
-                    <div class="marca-x" style="left: 10%;">250</div>
-                    <div class="marca-x" style="left: 20%;">500</div>
-                    <div class="marca-x" style="left: 30%;">1K</div>
-                    <div class="marca-x" style="left: 40%;">2K</div>
-                    <div class="marca-x" style="left: 50%;">3K</div>
-                    <div class="marca-x" style="left: 60%;">4K</div>
-                    <div class="marca-x" style="left: 70%;">6K</div>
-                    <div class="marca-x" style="left: 80%;">8K</div>
-                    <div class="marca-x" style="left: 100%;">Hz</div>
-
-                    <div class="linha-y" style="left: 10%;"></div>
-                    <div class="linha-y" style="left: 20%;"></div>
-                    <div class="linha-y" style="left: 30%;"></div>
-                    <div class="linha-y" style="left: 40%;"></div>
-                    <div class="linha-y" style="left: 50%;"></div>
-                    <div class="linha-y" style="left: 60%;"></div>
-                    <div class="linha-y" style="left: 70%;"></div>
-                    <div class="linha-y" style="left: 80%;"></div>
-
-                    <!-- Marcas no eixo y -->
-                    <div class="marca-y" style="top: 0%;">-10</div>
-                    <div class="marca-y" style="top: 7.69%;">0</div>
-                    <div class="marca-y" style="top: 15.38%;">10</div>
-                    <div class="marca-y" style="top: 23.07%;">20</div>
-                    <div class="marca-y" style="top: 30.76%;">30</div>
-                    <div class="marca-y" style="top: 38.46%;">40</div>
-                    <div class="marca-y" style="top: 46.15%;">50</div>
-                    <div class="marca-y" style="top: 53.84%;">60</div>
-                    <div class="marca-y" style="top: 61.53%;">70</div>
-                    <div class="marca-y" style="top: 70%;">80</div>
-                    <div class="marca-y" style="top: 80%;">90</div>
-                    <div class="marca-y" style="top: 90%;">100</div>
-                    <div class="marca-y" style="top: 100%;">110</div>
-
-                    <!-- Elemento canvas -->
-                    <canvas id="canvas2" width="300" height="350" style="position: relative; z-index: 1;"></canvas>
-                </div>
-                <br>
+        <div class="cartesian-plane" id="cartesian-plane2">
+            <!-- Eixo X -->
+            <div class="axis x-axis"></div>
+    
+            <!-- Eixo Y -->
+            <div class="axis y-axis"></div>
+    
+            <!-- Ticks no eixo X -->
+            <!-- Criei 10 ticks igualmente espaçados -->
+            <div class="tick x-tick" style="left: 0%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;"></div>
             </div>
+            <div class="tick x-tick" style="left: 10%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">250</div>
+            </div>
+            <div class="tick x-tick" style="left: 20%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">500</div>
+            </div>
+            <div class="tick x-tick" style="left: 30%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">1K</div>
+            </div>
+            <div class="tick x-tick" style="left: 40%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">2K</div>
+            </div>
+            <div class="tick x-tick" style="left: 50%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">3K</div>
+            </div>
+            <div class="tick x-tick" style="left: 60%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">4K</div>
+            </div>
+            <div class="tick x-tick" style="left: 70%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">6K</div>
+            </div>
+            <div class="tick x-tick" style="left: 80%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">8K</div>
+            </div>
+            <div class="tick x-tick" style="left: 100%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">Hz</div>
+            </div>
+    
+            <!-- Ticks no eixo Y -->
+            <!-- Criei 10 ticks igualmente espaçados -->
+            <div class="tick y-tick" style="top: 0%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">-10</div>
+            </div>
+            <div class="tick y-tick" style="top: 10%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">0</div>
+            </div>
+            <div class="tick y-tick" style="top: 20%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">10</div>
+            </div>
+            <div class="tick y-tick" style="top: 30%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">20</div>
+            </div>
+            <div class="tick y-tick" style="top: 40%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">30</div>
+            </div>
+            <div class="tick y-tick" style="top: 50%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">40</div>
+            </div>
+            <div class="tick y-tick" style="top: 60%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">50</div>
+            </div>
+            <div class="tick y-tick" style="top: 70%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">60</div>
+            </div>
+            <div class="tick y-tick" style="top: 80%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">70</div>
+            </div>
+            <div class="tick y-tick" style="top: 90%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">80</div>
+            </div>
+            <div class="tick y-tick" style="top: 100%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">90</div>
+            </div>
+            <div class="tick y-tick" style="top: 110%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">100</div>
+            </div>
+            <div class="tick y-tick" style="top: 120%;">
+                <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">110</div>
+            </div>            
         </div>
     </div>    
 </div>
 <script>
-    $(document).ready(function($){
-        var client_select = $('#id_aClient');
-    
-        // condições para liberações de input e limpeza do campo select clientes
-        var url_string = window.location.href; 
-        var url = new URL(url_string);
-        var afterLocalitionClient = url.searchParams.get("searchClient");
-        if (!afterLocalitionClient){
-            client_select.empty();
-            var elements = document.querySelectorAll("input, select, checkbox, button, textarea");
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].setAttribute("disabled", true);
-            }
-            $('#searchButtonCliente').prop("disabled", false);
-            $('#input_aClient').prop("disabled", false);
-        }else{
-            $('#input_aClient').prop("disabled", true);
-        }
-        
-        $('#searchButtonCliente').on('click', function(){
-            var clientes;
-            var cliente = $("#input_aClient").val();
-            if(cliente!=''){
-                clientes = $.ajax({
-                    url: "{% url 'atendimento:getJSONclient' %}?searchClient=" + cliente,   
-                    type: "get",     
-                    async: false,  
-                    data: $("#search").serialize(),    
-                    success: function (data){
-                        data_clients = data.results 
-                    },                 
-                });
-            };
-            if(clientes){
-                $('#id_aClient').prop("disabled", false);
-            }
-            client_select.empty();
-            var defaultOption = $('<option></option>').val('null').html('Selecione um cliente ...').prop('selected', true);
-            client_select.append(defaultOption);
-            for (const key in clientes.responseJSON.results){
-                client_select.append(
-                    $('<option></option>').val(clientes.responseJSON.results[key].id).html(clientes.responseJSON.results[key].first_name + " " + clientes.responseJSON.results[key].last_name)
-                );
-            }
-        })
-    
-        $('#newSearchButtonCliente').on('click', function(){
-            window.location.replace("{% url 'atendimento:audiometria' %}");
-        })
+document.addEventListener("DOMContentLoaded", function () {
+    const plane = document.getElementById("cartesian-plane");
+    let greenPoints = [];
+    let bluePoints = [];
+    let selectedLineType = 1;
 
-        $('#id_aClient').on('change', function(){
-            var elements = document.querySelectorAll("input, select, checkbox, button, textarea");
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].removeAttribute("disabled");
+    for (let i = 0; i <= 100; i += 10) {
+        for (let j = 0; j <= 120; j += 10) {
+            if (i != 90){
+                const point = document.createElement("div");
+                point.className = "intersection-point";
+                point.style.left = i + "%";
+                point.style.top = j + "%";
+                plane.appendChild(point);
             }
-            $('#input_aClient').prop('disabled', true)
-            $('#searchButtonCliente').prop('disabled', true)
-        })
-    })
+        }
+    }
+
+    plane.addEventListener("click", function (event) {
+        const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
+
+        if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
+            // Adiciona um ponto verde ou azul, dependendo do botão selecionado
+            const point = document.createElement("div");
+            point.className = selectedLineType === 1 ? "green-point" : "blue-point";
+            point.style.left = clickedPoint.style.left;
+            point.style.top = clickedPoint.style.top;
+            plane.appendChild(point);
+
+            // Adiciona o ponto à lista correspondente
+            if (selectedLineType === 1) {
+                greenPoints.push(point);
+            } else if (selectedLineType === 2) {
+                bluePoints.push(point);
+            }
+
+            // Conecta pontos com uma linha
+            if (greenPoints.length > 1 && selectedLineType === 1) {
+                const line = createLineElement("line-green");
+                connectPointsWithLine(greenPoints[greenPoints.length - 2], point, line, plane);
+            }
+            if (bluePoints.length > 1 && selectedLineType === 2) {
+                const line = createLineElement("line-blue");
+                connectPointsWithLine(bluePoints[bluePoints.length - 2], point, line, plane);
+            }
+        }
+    });
+
+    window.selectLineType = function(type) {
+        // Atualiza o tipo de linha selecionado
+        selectedLineType = type;
+    }
+
+    window.clearAll = function() {
+        // Limpa todos os pontos e linhas
+        greenPoints.forEach(point => plane.removeChild(point));
+        bluePoints.forEach(point => plane.removeChild(point));
+        greenPoints = [];
+        bluePoints = [];
+        const lines = document.querySelectorAll(".line");
+        lines.forEach(line => plane.removeChild(line));
+    }
+});
+
+function connectPointsWithLine(point1, point2, line, plane) {
+    const startX = parseFloat(point1.style.left);
+    const startY = parseFloat(point1.style.top);
+    const endX = parseFloat(point2.style.left);
+    const endY = parseFloat(point2.style.top);
+
+    // Calcula o comprimento e ângulo em porcentagens
+    const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+    const angle = Math.atan2(endY - startY, endX - startX);
+
+    // Define as coordenadas do ponto inicial e o comprimento da linha
+    line.style.left = startX + "%";
+    line.style.top = startY + "%";
+    line.style.width = length + "%";
+
+    // Define a transformação para a rotação da linha
+    line.style.transform = `rotate(${angle}rad)`;
+
+    // Adiciona a linha à tela
+    plane.appendChild(line);
+}
+
+function createLineElement(className) {
+    const line = document.createElement("div");
+    line.className = "line " + className;
+    return line;
+}
 </script>

@@ -410,6 +410,7 @@ class AudiometriaForm(forms.ModelForm):
         })
         self.fields['auObser'].widget.attrs.update({
             'class':'form-control',
+            'style':'height:20vh;width:29vw;resize: none;'
         })
 
     class Meta:

@@ -1,0 +1,376 @@
+<div>
+    <div class="row align-items-center">
+        <div class="col">
+            {{form.auAudio.label}}
+            {{form.auAudio}}
+        </div>
+        <div class="col">
+            {{form.auCalib.label}}
+            {{form.auCalib}}
+        </div>
+        <div class="col">
+            {{form.auMedSo.label}}
+            {{form.auMedSo}}
+        </div>
+    </div>
+    <br>
+    <div class="row align-items-center">
+        <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding:30px;">
+            <b>Ouvido Esquerdo</b><br>
+            <div class="cartesian-plane" id="cartesian-plane">
+                <!-- Eixo X -->
+                <div class="axis x-axis"></div>
+        
+                <!-- Eixo Y -->
+                <div class="axis y-axis"></div>
+        
+                <!-- Ticks no eixo X -->
+                <!-- Criei 10 ticks igualmente espaçados -->
+                <div class="tick x-tick" style="left: 0%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;"></div>
+                </div>
+                <div class="tick x-tick" style="left: 10%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">250</div>
+                </div>
+                <div class="tick x-tick" style="left: 20%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">500</div>
+                </div>
+                <div class="tick x-tick" style="left: 30%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">1K</div>
+                </div>
+                <div class="tick x-tick" style="left: 40%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">2K</div>
+                </div>
+                <div class="tick x-tick" style="left: 50%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">3K</div>
+                </div>
+                <div class="tick x-tick" style="left: 60%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">4K</div>
+                </div>
+                <div class="tick x-tick" style="left: 70%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">6K</div>
+                </div>
+                <div class="tick x-tick" style="left: 80%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">8K</div>
+                </div>
+                <div class="tick x-tick" style="left: 100%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">Hz</div>
+                </div>
+        
+                <!-- Ticks no eixo Y -->
+                <!-- Criei 10 ticks igualmente espaçados -->
+                <div class="tick y-tick" style="top: 0%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">-10</div>
+                </div>
+                <div class="tick y-tick" style="top: 10%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">0</div>
+                </div>
+                <div class="tick y-tick" style="top: 20%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">10</div>
+                </div>
+                <div class="tick y-tick" style="top: 30%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">20</div>
+                </div>
+                <div class="tick y-tick" style="top: 40%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">30</div>
+                </div>
+                <div class="tick y-tick" style="top: 50%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">40</div>
+                </div>
+                <div class="tick y-tick" style="top: 60%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">50</div>
+                </div>
+                <div class="tick y-tick" style="top: 70%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">60</div>
+                </div>
+                <div class="tick y-tick" style="top: 80%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">70</div>
+                </div>
+                <div class="tick y-tick" style="top: 90%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">80</div>
+                </div>
+                <div class="tick y-tick" style="top: 100%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">90</div>
+                </div>
+                <div class="tick y-tick" style="top: 110%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">100</div>
+                </div>
+                <div class="tick y-tick" style="top: 120%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">110</div>
+                </div>            
+            </div>
+            <br><br><br>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType(1)">Linha 1</button>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType(2)">Linha 2</button>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="clearAll()">Limpar Tudo</button>
+        </div>
+    
+        <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding:30px;">
+            <b>Ouvido Direito</b><br>
+            <div class="cartesian-plane" id="cartesian-plane2">
+                <!-- Eixo X -->
+                <div class="axis x-axis"></div>
+        
+                <!-- Eixo Y -->
+                <div class="axis y-axis"></div>
+        
+                <!-- Ticks no eixo X -->
+                <!-- Criei 10 ticks igualmente espaçados -->
+                <div class="tick x-tick" style="left: 0%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;"></div>
+                </div>
+                <div class="tick x-tick" style="left: 10%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">250</div>
+                </div>
+                <div class="tick x-tick" style="left: 20%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">500</div>
+                </div>
+                <div class="tick x-tick" style="left: 30%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">1K</div>
+                </div>
+                <div class="tick x-tick" style="left: 40%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">2K</div>
+                </div>
+                <div class="tick x-tick" style="left: 50%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">3K</div>
+                </div>
+                <div class="tick x-tick" style="left: 60%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">4K</div>
+                </div>
+                <div class="tick x-tick" style="left: 70%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">6K</div>
+                </div>
+                <div class="tick x-tick" style="left: 80%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">8K</div>
+                </div>
+                <div class="tick x-tick" style="left: 100%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateX(-50%); top: -20px;">Hz</div>
+                </div>
+        
+                <!-- Ticks no eixo Y -->
+                <!-- Criei 10 ticks igualmente espaçados -->
+                <div class="tick y-tick" style="top: 0%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">-10</div>
+                </div>
+                <div class="tick y-tick" style="top: 10%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">0</div>
+                </div>
+                <div class="tick y-tick" style="top: 20%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">10</div>
+                </div>
+                <div class="tick y-tick" style="top: 30%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">20</div>
+                </div>
+                <div class="tick y-tick" style="top: 40%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">30</div>
+                </div>
+                <div class="tick y-tick" style="top: 50%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">40</div>
+                </div>
+                <div class="tick y-tick" style="top: 60%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">50</div>
+                </div>
+                <div class="tick y-tick" style="top: 70%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">60</div>
+                </div>
+                <div class="tick y-tick" style="top: 80%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">70</div>
+                </div>
+                <div class="tick y-tick" style="top: 90%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">80</div>
+                </div>
+                <div class="tick y-tick" style="top: 100%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">90</div>
+                </div>
+                <div class="tick y-tick" style="top: 110%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">100</div>
+                </div>
+                <div class="tick y-tick" style="top: 120%;">
+                    <div class="x-label" style="position: absolute; font-size: 12px; transform: translateY(-50%); left: -23px;">110</div>
+                </div>            
+            </div>
+            <br><br><br>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType2(3)">Linha 1</button>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType2(4)">Linha 2</button>
+            <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="clearAll2()">Limpar Tudo</button>
+        </div>    
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // plano cartesiano 1
+    const plane = document.getElementById("cartesian-plane");
+    let greenPoints = [];
+    let bluePoints = [];
+    let selectedLineType = 1;
+
+    for (let i = 0; i <= 100; i += 10) {
+        for (let j = 0; j <= 120; j += 10) {
+            if (i != 90){
+                const point = document.createElement("div");
+                point.className = "intersection-point";
+                point.style.left = i + "%";
+                point.style.top = j + "%";
+                plane.appendChild(point);
+            }
+        }
+    }
+
+    plane.addEventListener("click", function (event) {
+        const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
+
+        if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
+            // Adiciona um ponto verde ou azul, dependendo do botão selecionado
+            const point = document.createElement("div");
+            point.className = selectedLineType === 1 ? "green-point" : "blue-point";
+            point.style.left = clickedPoint.style.left;
+            point.style.top = clickedPoint.style.top;
+            plane.appendChild(point);
+
+            // Adiciona o ponto à lista correspondente
+            if (selectedLineType === 1) {
+                greenPoints.push(point);
+            } else if (selectedLineType === 2) {
+                bluePoints.push(point);
+            }
+
+            // Conecta pontos com uma linha
+            if (greenPoints.length > 1 && selectedLineType === 1) {
+                const line = createLineElement("line-green");
+                connectPointsWithLine(greenPoints[greenPoints.length - 2], point, line, plane);
+            }
+            if (bluePoints.length > 1 && selectedLineType === 2) {
+                const line = createLineElement("line-blue");
+                connectPointsWithLine(bluePoints[bluePoints.length - 2], point, line, plane);
+            }
+        }
+    });
+
+    window.selectLineType = function(type) {
+        // Atualiza o tipo de linha selecionado
+        selectedLineType = type;
+    }
+
+    window.clearAll = function() {
+        // Limpa todos os pontos e linhas
+        greenPoints.forEach(point => plane.removeChild(point));
+        bluePoints.forEach(point => plane.removeChild(point));
+        greenPoints = [];
+        bluePoints = [];
+    
+        // Remove as linhas
+        const lines = Array.from(plane.childNodes);
+        lines.forEach(node => {
+            if (node.classList && node.classList.contains('line')) {
+                plane.removeChild(node);
+            }
+        });
+    }
+
+    // plano cartesiano 2
+    const plane2 = document.getElementById("cartesian-plane2");
+    let greenPoints2 = [];
+    let bluePoints2 = [];
+    let selectedLineType2 = 3;
+
+    for (let i = 0; i <= 100; i += 10) {
+        for (let j = 0; j <= 120; j += 10) {
+            if (i != 90){
+                const point = document.createElement("div");
+                point.className = "intersection-point";
+                point.style.left = i + "%";
+                point.style.top = j + "%";
+                plane2.appendChild(point);
+            }
+        }
+    }
+
+    plane2.addEventListener("click", function (event) {
+        const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
+    
+        if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
+            // Adiciona um ponto verde ou azul, dependendo do botão selecionado
+            const point = document.createElement("div");
+            point.className = selectedLineType2 === 3 ? "green-point" : "blue-point";
+            point.style.left = clickedPoint.style.left;
+            point.style.top = clickedPoint.style.top;
+            plane2.appendChild(point);
+    
+            // Adiciona o ponto à lista correspondente
+            if (selectedLineType2 === 3) {
+                greenPoints2.push(point);
+            } else if (selectedLineType2 === 4) {
+                bluePoints2.push(point);
+            }
+    
+            // Conecta pontos com uma linha
+            if (greenPoints2.length > 1 && selectedLineType2 === 3) {
+                const line = createLineElement2("line-green");
+                connectPointsWithLine(greenPoints2[greenPoints2.length - 2], point, line, plane2);
+            }
+            if (bluePoints2.length > 1 && selectedLineType2 === 4) {
+                const line = createLineElement2("line-blue");
+                connectPointsWithLine(bluePoints2[bluePoints2.length - 2], point, line, plane2);
+            }
+        }
+    });
+
+    window.selectLineType2 = function(type) {
+        // Atualiza o tipo de linha selecionado
+        selectedLineType2 = type;
+        console.log(selectedLineType2)
+    }
+
+    window.clearAll2 = function() {
+        // Limpa todos os pontos e linhas
+        greenPoints2.forEach(point => plane2.removeChild(point));
+        bluePoints2.forEach(point => plane2.removeChild(point));
+        greenPoints2 = [];
+        bluePoints2 = [];
+    
+        // Remove as linhas
+        const lines = Array.from(plane2.childNodes);
+        lines.forEach(node => {
+            if (node.classList && node.classList.contains('line')) {
+                plane2.removeChild(node);
+            }
+        });
+    }
+});
+
+
+function connectPointsWithLine(point1, point2, line, plane) {
+    const startX = parseFloat(point1.style.left);
+    const startY = parseFloat(point1.style.top);
+    const endX = parseFloat(point2.style.left);
+    const endY = parseFloat(point2.style.top);
+
+    // Calcula o comprimento e ângulo em porcentagens
+    const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+    const angle = Math.atan2(endY - startY, endX - startX);
+    
+    // Define as coordenadas do ponto inicial e o comprimento da linha
+    line.style.left = startX + "%";
+    line.style.top = startY + "%";
+    line.style.width = length + "%";
+
+    // Define a transformação para a rotação da linha
+    line.style.transform = `rotate(${angle}rad)`;
+
+    // Adiciona a linha à tela
+    plane.appendChild(line);
+}
+
+function createLineElement(className) {
+    const line = document.createElement("div");
+    line.className = "line " + className;
+    return line;
+}
+
+function createLineElement2(className) {
+    const line = document.createElement("div");
+    line.className = "line " + className;
+    return line;
+}
+</script>
+    
