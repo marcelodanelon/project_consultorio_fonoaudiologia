@@ -132,6 +132,21 @@
 {% endblock head_base %}
 
 {% block content %}
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+}
+th {
+    background-color: #A50027;
+    color: white;
+}
+</style>
 <form id="form-movimentacao" action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
@@ -158,10 +173,10 @@
           {{form.auLocal}}    
         </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-          <button title='Entrada' class="btn-audiometria" type="button" id="btn-audiometria">
+          <button title='Audiometria' class="btn-audiometria" type="button" id="btn-audiometria">
             <img src="/media/atendimento/btn-icon-audiometria.png">
           </button>
-          <button title='Saída' class="btn-audiometria" type="button" id="btn-desfecho">
+          <button title='Desfecho' class="btn-audiometria" type="button" id="btn-desfecho">
             <img src="/media/atendimento/btn-icon-desfecho.png">
           </button>
         </div>
@@ -170,17 +185,17 @@
           {{form.auObser}}    
         </div>
       </div>
-      <div style="padding:1%; margin-left:1%; background: white; width: 50vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;overflow-x:auto;">
-        <div hidden id="img-place-cards">
+      <div style="padding:1%; margin-left:1%; background: white; width: 50vw; height: 89vh; box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto; overflow-x:auto;">
+        <div id="img-place-cards">
           <span style="margin-bottom: 10px;"><b>Vamos começar a Movimentar!</b></span>
           <img src="/media/estoque/estoque.png" alt="estoque">
         </div>
-        <div id="card-dados_iniciais" style="margin-top:1vh;white-space: nowrap;">
+        <div hidden id="card-audiometria" style="margin-top:1vh;">
           <h5>AUDIOMETRIA</h5>
           {% include 'audiometria_new/pages_audiometrias/page1_au.html' %}
         </div>
-        <div hidden id="card-desfecho" style="margin-top:1vh;white-space: nowrap;">
-          <h5>DESFECHO</h5>
+        <div hidden id="card-desfecho" style="margin-top:1vh;">
+          <h5>DESFECHO</h5><br>
           {% include 'audiometria_new/pages_audiometrias/page2_au.html' %}
         </div>
       </div>
@@ -190,4 +205,34 @@
     </button>
   </div>  
 </form>
+<script>
+$(document).ready(function(){
+  $('#btn-audiometria').on('click', function(){
+    var divAudiometria = document.getElementById('card-audiometria'); 
+
+    if (divAudiometria && divAudiometria.hidden) {
+      $('#card-audiometria').prop('hidden', false);
+      $('#card-desfecho').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', true);
+    } else {
+      $('#card-audiometria').prop('hidden', true);
+      $('#card-desfecho').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', false);
+    }
+  });
+  $('#btn-desfecho').on('click', function(){
+    var divDesfecho = document.getElementById('card-desfecho'); 
+
+    if (divDesfecho && divDesfecho.hidden) {
+      $('#card-desfecho').prop('hidden', false);
+      $('#card-audiometria').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', true);
+    } else {
+      $('#card-desfecho').prop('hidden', true);
+      $('#card-audiometria').prop('hidden', true);
+      $('#img-place-cards').prop('hidden', false);
+    }
+  });
+});
+</script>  
 {% endblock content %}

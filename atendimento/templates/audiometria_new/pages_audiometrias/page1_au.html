@@ -14,8 +14,8 @@
         </div>
     </div>
     <br>
-    <div class="row align-items-center">
-        <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding:30px;">
+    <div class="row align-items-center" style="width: 48vw; overflow-x: auto; display: flex; flex-wrap: nowrap;">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap;">
             <b>Ouvido Esquerdo</b><br>
             <div class="cartesian-plane" id="cartesian-plane">
                 <!-- Eixo X -->
@@ -105,7 +105,7 @@
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="clearAll()">Limpar Tudo</button>
         </div>
     
-        <div class="col-6" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding:30px;">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap;">
             <b>Ouvido Direito</b><br>
             <div class="cartesian-plane" id="cartesian-plane2">
                 <!-- Eixo X -->
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
     plane.addEventListener("click", function (event) {
         const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
 
-        if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
+        if (clickedPoint && (clickedPoint.classList.contains("intersection-point") || clickedPoint.classList.contains("blue-point") || clickedPoint.classList.contains("green-point"))) {
             // Adiciona um ponto verde ou azul, dependendo do botão selecionado
             const point = document.createElement("div");
             point.className = selectedLineType === 1 ? "green-point" : "blue-point";
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     plane2.addEventListener("click", function (event) {
         const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
     
-        if (clickedPoint && clickedPoint.classList.contains("intersection-point")) {
+        if (clickedPoint && (clickedPoint.classList.contains("intersection-point") || clickedPoint.classList.contains("blue-point") || clickedPoint.classList.contains("green-point"))) {
             // Adiciona um ponto verde ou azul, dependendo do botão selecionado
             const point = document.createElement("div");
             point.className = selectedLineType2 === 3 ? "green-point" : "blue-point";
