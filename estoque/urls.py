@@ -23,10 +23,8 @@ urlpatterns = [
 
     path('listMovimentacaoInsumo/', movimentacao.listMovimentacaoInsumo, name='listMovimentacaoInsumo'),
     path('createMovimentacaoInsumo/', movimentacao.createMovimentacaoInsumo, name='createMovimentacaoInsumo'),
-    path('movimentacaoInsumoEntrada/', movimentacao.movimentacaoInsumoEntrada, name='movimentacaoInsumoEntrada'),
-    path('movimentacaoInsumoSaida/', movimentacao.movimentacaoInsumoSaida, name='movimentacaoInsumoSaida'),
     path('searchMovimentacaoInsumo/', movimentacao.searchMovimentacaoInsumo, name='searchMovimentacaoInsumo'),
-    path('<int:movimentacao_id>/movimentacaoInsumoUpdate/', movimentacao.movimentacaoInsumoUpdate, name='movimentacaoInsumoUpdate'),
+    path('<int:movimentacao_id>/movimentacaoInsumoUpdate/', movimentacao.updateMovimentacaoInsumo, name='updateMovimentacaoInsumo'),
 
     path('estoque/getJSONitem/', movimentacao.getJSONitem, name='getJSONitem'),
     path('estoque/getJSONinsumo/', movimentacao.getJSONinsumo, name='getJSONinsumo'),

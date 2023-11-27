@@ -23,7 +23,7 @@ def listAudiometria(request):
 
     return render(
         request,
-        'audiometria/search.html',
+        'atendimento/audiometria/search.html',
         context
     )
 
@@ -49,6 +49,6 @@ def searchAudiometria(request):
 
     return render(
         request,
-        'audiometria/search.html',
+        'atendimento/audiometria/search.html',
         context
     )

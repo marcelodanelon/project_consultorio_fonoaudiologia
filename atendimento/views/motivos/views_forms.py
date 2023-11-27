@@ -41,7 +41,7 @@ def createMotivo(request):
 
     return render(
         request,
-        'motivos/motivo.html',
+        'atendimento/motivos/motivo.html',
         context
     )
 
@@ -69,7 +69,7 @@ def updateMotivo(request, motivo_id):
 
         return render(
             request,
-            'motivos/motivo.html',
+            'atendimento/motivos/motivo.html',
             context
         )
 
@@ -85,7 +85,7 @@ def updateMotivo(request, motivo_id):
 
     return render(
         request,
-        'motivos/motivo.html',
+        'atendimento/motivos/motivo.html',
         context
     )
 
@@ -114,6 +114,6 @@ def deleteMotivo(request, motivo_id):
 
     return render(
         request,
-        'motivos/motivo.html',
+        'atendimento/motivos/motivo.html',
         context
     )

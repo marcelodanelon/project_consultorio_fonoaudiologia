@@ -30,7 +30,7 @@ def audiometria(request):
 
     return render(
         request, 
-        'audiometria_new/audiometria.html', 
+        'atendimento/audiometria/audiometria.html', 
         context
     )
 
@@ -59,7 +59,7 @@ def updateAudiometria(request, audiometria_id):
 
         return render(
             request,
-            'audiometria/audiometria.html',
+            'atendimento/audiometria/audiometria.html',
             context
         )
 
@@ -75,7 +75,7 @@ def updateAudiometria(request, audiometria_id):
 
     return render(
         request,
-        'audiometria/audiometria.html',
+        'atendimento/audiometria/audiometria.html',
         context
     )
 
@@ -104,6 +104,6 @@ def deleteAudiometria(request, audiometria_id):
 
     return render(
         request,
-        'audiometria/audiometria.html', 
+        'atendimento/audiometria/audiometria.html', 
         context
     )

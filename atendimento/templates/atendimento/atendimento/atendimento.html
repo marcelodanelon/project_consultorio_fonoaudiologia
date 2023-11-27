@@ -176,23 +176,23 @@
         </div>
         <div id="card-dados_iniciais" style="margin-top:1vh; display: none;">
           <h5>PRIMEIRO CONTATO</h5>
-          {% include 'atendimento_new/pages_atendimentos/dados_iniciais.html' %}
+          {% include 'atendimento/atendimento/pages_atendimentos/dados_iniciais.html' %}
         </div>
         <div id="card-telefonemas" style="margin-top:1vh; display: none;">
           <h5>LIGAÇÕES</h5>
-          {% include 'atendimento_new/pages_atendimentos/telefonemas.html' %}
+          {% include 'atendimento/atendimento/pages_atendimentos/telefonemas.html' %}
         </div>
         <div id="card-anamneses" style="margin-top:1vh; display: none;">
           <h5>ANAMNESE</h5>
-          {% include 'atendimento_new/pages_atendimentos/anamneses.html' %}
+          {% include 'atendimento/atendimento/pages_atendimentos/anamneses.html' %}
         </div>
         <div id="card-aparelhos" style="margin-top:1vh; display: none;">
           <h5>APARELHOS</h5>
-          {% include 'atendimento_new/pages_atendimentos/aparelhos.html' %}
+          {% include 'atendimento/atendimento/pages_atendimentos/aparelhos.html' %}
         </div>
         <div id="card-regulagens" style="margin-top:1vh; display: none;">
           <h5>REGULAGENS</h5>
-          {% include 'atendimento_new/pages_atendimentos/regulagens.html' %}
+          {% include 'atendimento/atendimento/pages_atendimentos/regulagens.html' %}
         </div>
       </div>
     </div>
@@ -311,7 +311,7 @@ $(document).ready(function(){
   $("#id_aClient").change(function(){
     var client = $(this).children("option:selected").val();
     if(client!=''){
-      window.location.replace("{% url 'atendimento:atendimento_new' %}?searchClient=" + client);
+      window.location.replace("{% url 'atendimento:atendimento' %}?searchClient=" + client);
     }
   });
   //obter valor parametro searchClient (control select)

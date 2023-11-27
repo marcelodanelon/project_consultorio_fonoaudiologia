@@ -23,7 +23,7 @@ def listMotivo(request):
 
     return render(
         request,
-        'motivos/search.html',
+        'atendimento/motivos/search.html',
         context
     )
 
@@ -51,6 +51,6 @@ def searchMotivo(request):
 
     return render(
         request,
-        'motivos/search.html',
+        'atendimento/motivos/search.html',
         context
     )
