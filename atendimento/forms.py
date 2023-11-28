@@ -420,4 +420,6 @@ class AudiometriaForm(forms.ModelForm):
                   'auMVaOd','auMVoOd','auMosPoOe','auMosdBOe','auDisPoOe',
                   'auDisdBOe','auSTROe','auLDVOe','auMascOe','auSpaceOe',
                   'auMosPoOd','auMosdBOd','auDisPoOd','auDisdBOd','auSTROd',
-                  'auLDVOd','auMascOd','auSpaceOd','auObser')
+                  'auLDVOd','auMascOd','auSpaceOd','auObser', 
+                  'auCoordenadas_planoI_Linha1', 'auCoordenadas_planoI_Linha2',
+                  'auCoordenadas_planoII_Linha1', 'auCoordenadas_planoII_Linha2',)

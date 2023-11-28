@@ -100,6 +100,8 @@
                 </div>            
             </div>
             <br><br><br>
+            <input hidden name="auCoordenadas_planoI_Linha1" value="{{ form.auCoordenadas_planoI_Linha1.value }}" type="text" id="id_auCoordenadas_planoI_Linha1">
+            <input hidden name="auCoordenadas_planoI_Linha2" value="{{ form.auCoordenadas_planoI_Linha2.value }}" type="text" id="id_auCoordenadas_planoI_Linha2">
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType(1)">Linha 1</button>
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType(2)">Linha 2</button>
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="clearAll()">Limpar Tudo</button>
@@ -190,6 +192,8 @@
                 </div>            
             </div>
             <br><br><br>
+            <input hidden name="auCoordenadas_planoII_Linha1" value="{{ form.auCoordenadas_planoII_Linha1.value }}" type="text" id="id_auCoordenadas_planoII_Linha1">
+            <input hidden name="auCoordenadas_planoII_Linha2" value="{{ form.auCoordenadas_planoII_Linha2.value }}" type="text" id="id_auCoordenadas_planoII_Linha2">
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType2(3)">Linha 1</button>
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="selectLineType2(4)">Linha 2</button>
             <button class="custom-button-base mb-1" style="width: 20vh;" type="button" onclick="clearAll2()">Limpar Tudo</button>
@@ -202,6 +206,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const plane = document.getElementById("cartesian-plane");
     let greenPoints = [];
     let bluePoints = [];
+    let greenPointsCoordinates = [];
+    let bluePointsCoordinates = [];
     let selectedLineType = 1;
 
     for (let i = 0; i <= 100; i += 10) {
@@ -230,10 +236,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Adiciona o ponto à lista correspondente
             if (selectedLineType === 1) {
                 greenPoints.push(point);
+                greenPointsCoordinates.push(formatCoordinates(parseFloat(point.style.left), parseFloat(point.style.top)));
             } else if (selectedLineType === 2) {
                 bluePoints.push(point);
+                bluePointsCoordinates.push(formatCoordinates(parseFloat(point.style.left), parseFloat(point.style.top)));
             }
-
             // Conecta pontos com uma linha
             if (greenPoints.length > 1 && selectedLineType === 1) {
                 const line = createLineElement("line-green");
@@ -243,6 +250,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const line = createLineElement("line-blue");
                 connectPointsWithLine(bluePoints[bluePoints.length - 2], point, line, plane);
             }
+            $('#id_auCoordenadas_planoI_Linha1').val(greenPointsCoordinates)
+            $('#id_auCoordenadas_planoI_Linha2').val(bluePointsCoordinates)
         }
     });
 
@@ -257,6 +266,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bluePoints.forEach(point => plane.removeChild(point));
         greenPoints = [];
         bluePoints = [];
+        greenPointsCoordinates = [];
+        bluePointsCoordinates = [];
     
         // Remove as linhas
         const lines = Array.from(plane.childNodes);
@@ -271,6 +282,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const plane2 = document.getElementById("cartesian-plane2");
     let greenPoints2 = [];
     let bluePoints2 = [];
+    let greenPointsCoordinates2 = [];
+    let bluePointsCoordinates2 = [];
     let selectedLineType2 = 3;
 
     for (let i = 0; i <= 100; i += 10) {
@@ -299,8 +312,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Adiciona o ponto à lista correspondente
             if (selectedLineType2 === 3) {
                 greenPoints2.push(point);
+                greenPointsCoordinates2.push(formatCoordinates(parseFloat(point.style.left), parseFloat(point.style.top)));
             } else if (selectedLineType2 === 4) {
                 bluePoints2.push(point);
+                bluePointsCoordinates2.push(formatCoordinates(parseFloat(point.style.left), parseFloat(point.style.top)));
             }
     
             // Conecta pontos com uma linha
@@ -312,6 +327,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const line = createLineElement2("line-blue");
                 connectPointsWithLine(bluePoints2[bluePoints2.length - 2], point, line, plane2);
             }
+            $('#id_auCoordenadas_planoII_Linha1').val(greenPointsCoordinates2)
+            $('#id_auCoordenadas_planoII_Linha2').val(bluePointsCoordinates2)
         }
     });
 
@@ -327,6 +344,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bluePoints2.forEach(point => plane2.removeChild(point));
         greenPoints2 = [];
         bluePoints2 = [];
+        greenPointsCoordinates2 = [];
+        bluePointsCoordinates2 = [];
     
         // Remove as linhas
         const lines = Array.from(plane2.childNodes);
@@ -338,6 +357,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+function formatCoordinates(x, y) {
+    return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
+}
 
 function connectPointsWithLine(point1, point2, line, plane) {
     const startX = parseFloat(point1.style.left);

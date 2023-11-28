@@ -28,7 +28,7 @@
                 {% for movimentacao in page_obj %}
                     <tr class="table-row">
                         <td class="table-cel">
-                            <a href="{% url 'estoque:movimentacaoInsumoUpdate' movimentacao.id %}" class="table-link">
+                            <a href="{% url 'estoque:updateMovimentacaoInsumo' movimentacao.id %}" class="table-link">
                                 {{ movimentacao.id }}
                             </a>
                         </td>

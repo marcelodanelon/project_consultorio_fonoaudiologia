@@ -127,6 +127,10 @@ class AudiometriaModel(models.Model):
     auMascOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
     auSpaceOd = models.CharField(max_length=3, blank=True, null=True, verbose_name='dB')
     auObser = models.TextField(blank=True, null=True, verbose_name='Observações')
+    auCoordenadas_planoI_Linha1 = models.CharField(max_length=50, blank=True, null=True)
+    auCoordenadas_planoI_Linha2 = models.CharField(max_length=50, blank=True, null=True)
+    auCoordenadas_planoII_Linha1 = models.CharField(max_length=50, blank=True, null=True)
+    auCoordenadas_planoII_Linha2 = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.id} Data: {self.auData} Cliente: {self.aClient}'

@@ -11,17 +11,16 @@ from atendimento.models import AudiometriaModel
 def audiometria(request):
     form_action = reverse('atendimento:audiometria')
     form = AudiometriaForm()
-    pontos_em_memoria = []
 
     if request.method == 'POST':
         form = AudiometriaForm(request.POST)
         if form.is_valid():
+            print(form.auCoordenadas_planoI_Linha1)
             form.save()
             messages.success(request,'Audiometria gravada com sucesso!')
             return redirect('atendimento:listAudiometria')
 
     context = {
-        'pontos': pontos_em_memoria,
         'form' : form,
         'name_screen': 'Audiometria',
         'name_module': 'Atendimento',
@@ -43,6 +42,7 @@ def updateAudiometria(request, audiometria_id):
         formAudiometria = AudiometriaForm(request.POST, instance=audiometria)
 
         if formAudiometria.is_valid():
+            print(formAudiometria['auCoordenadas_planoI_Linha1'])
             formAudiometria.save()
             messages.success(request, 'Audiometria atualizada com sucesso!')
             return redirect('atendimento:listAudiometria')
