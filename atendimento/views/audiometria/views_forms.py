@@ -15,7 +15,6 @@ def audiometria(request):
     if request.method == 'POST':
         form = AudiometriaForm(request.POST)
         if form.is_valid():
-            print(form.auCoordenadas_planoI_Linha1)
             form.save()
             messages.success(request,'Audiometria gravada com sucesso!')
             return redirect('atendimento:listAudiometria')

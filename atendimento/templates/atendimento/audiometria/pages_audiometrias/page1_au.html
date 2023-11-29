@@ -202,7 +202,7 @@
 </div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // plano cartesiano 1
+    // [plano cartesiano 1]
     const plane = document.getElementById("cartesian-plane");
     let greenPoints = [];
     let bluePoints = [];
@@ -210,6 +210,29 @@ document.addEventListener("DOMContentLoaded", function () {
     let bluePointsCoordinates = [];
     let selectedLineType = 1;
 
+    // busca os pontos já preenchidos e inclusão na váriavel de Pontos Coordenadas
+    var coordenadas = $('#id_auCoordenadas_planoI_Linha1').val();
+    if(coordenadas!= 'None'){
+        const coordenadasArray = coordenadas.slice(1, -1).split('),(');
+        for (let i = 0; i < coordenadasArray.length; i++) {
+            const coordenada = coordenadasArray[i];
+            const [x, y] = coordenada.split(',').map(Number);
+            const coordenadaFormatada = formatCoordinates(x, y);
+            greenPointsCoordinates.push(coordenadaFormatada);
+        }    
+    }
+    coordenadas = $('#id_auCoordenadas_planoI_Linha2').val();
+    if(coordenadas!= 'None'){
+        const coordenadasArray = coordenadas.slice(1, -1).split('),(');
+        for (let i = 0; i < coordenadasArray.length; i++) {
+            const coordenada = coordenadasArray[i];
+            const [x, y] = coordenada.split(',').map(Number);
+            const coordenadaFormatada = formatCoordinates(x, y);
+            bluePointsCoordinates.push(coordenadaFormatada);
+        }    
+    }
+
+    // incluindo os pontos permitidos para clique
     for (let i = 0; i <= 100; i += 10) {
         for (let j = 0; j <= 120; j += 10) {
             if (i != 90){
@@ -223,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     plane.addEventListener("click", function (event) {
+        console.log("Evento de clique recebido:", event);
         const clickedPoint = document.elementFromPoint(event.clientX, event.clientY);
 
         if (clickedPoint && (clickedPoint.classList.contains("intersection-point") || clickedPoint.classList.contains("blue-point") || clickedPoint.classList.contains("green-point"))) {
@@ -253,6 +277,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#id_auCoordenadas_planoI_Linha1').val(greenPointsCoordinates)
             $('#id_auCoordenadas_planoI_Linha2').val(bluePointsCoordinates)
         }
+        console.log(greenPointsCoordinates)
     });
 
     window.selectLineType = function(type) {
@@ -268,6 +293,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bluePoints = [];
         greenPointsCoordinates = [];
         bluePointsCoordinates = [];
+        $('#id_auCoordenadas_planoI_Linha1').val('')
+        $('#id_auCoordenadas_planoI_Linha2').val('')
     
         // Remove as linhas
         const lines = Array.from(plane.childNodes);
@@ -278,13 +305,35 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // plano cartesiano 2
+    // [plano cartesiano 2]
     const plane2 = document.getElementById("cartesian-plane2");
     let greenPoints2 = [];
     let bluePoints2 = [];
     let greenPointsCoordinates2 = [];
     let bluePointsCoordinates2 = [];
     let selectedLineType2 = 3;
+
+    // busca os pontos já preenchidos e inclusão na váriavel de Pontos Coordenadas
+    var coordenadas = $('#id_auCoordenadas_planoII_Linha1').val();
+    if(coordenadas!= 'None'){
+        const coordenadasArray = coordenadas.slice(1, -1).split('),(');
+        for (let i = 0; i < coordenadasArray.length; i++) {
+            const coordenada = coordenadasArray[i];
+            const [x, y] = coordenada.split(',').map(Number);
+            const coordenadaFormatada = formatCoordinates(x, y);
+            greenPointsCoordinates2.push(coordenadaFormatada);
+        }    
+    }
+    coordenadas = $('#id_auCoordenadas_planoII_Linha2').val();
+    if(coordenadas!= 'None'){
+        const coordenadasArray = coordenadas.slice(1, -1).split('),(');
+        for (let i = 0; i < coordenadasArray.length; i++) {
+            const coordenada = coordenadasArray[i];
+            const [x, y] = coordenada.split(',').map(Number);
+            const coordenadaFormatada = formatCoordinates(x, y);
+            bluePointsCoordinates2.push(coordenadaFormatada);
+        }    
+    }
 
     for (let i = 0; i <= 100; i += 10) {
         for (let j = 0; j <= 120; j += 10) {
@@ -335,7 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.selectLineType2 = function(type) {
         // Atualiza o tipo de linha selecionado
         selectedLineType2 = type;
-        console.log(selectedLineType2)
     }
 
     window.clearAll2 = function() {
@@ -346,6 +394,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bluePoints2 = [];
         greenPointsCoordinates2 = [];
         bluePointsCoordinates2 = [];
+        $('#id_auCoordenadas_planoII_Linha1').val('')
+        $('#id_auCoordenadas_planoII_Linha2').val('')
     
         // Remove as linhas
         const lines = Array.from(plane2.childNodes);
@@ -355,9 +405,98 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    
+    incluirPontosIniciais();
+    
+    function incluirPontosIniciais() {
+        // Obtenha os valores atuais dos campos de entrada ocultos
+        const coordenadasLinha1 = $('#id_auCoordenadas_planoI_Linha1').val();
+        const coordenadasLinha2 = $('#id_auCoordenadas_planoI_Linha2').val();
+        const coordenadasLinha3 = $('#id_auCoordenadas_planoII_Linha1').val();
+        const coordenadasLinha4 = $('#id_auCoordenadas_planoII_Linha2').val();
+
+        // Exemplo de pontos iniciais (você pode ajustar conforme necessário)
+        const pontosIniciaisLinha1 = converterStringParaPontos(coordenadasLinha1);
+        const pontosIniciaisLinha2 = converterStringParaPontos(coordenadasLinha2);
+        const pontosIniciaisLinha3 = converterStringParaPontos(coordenadasLinha3);
+        const pontosIniciaisLinha4 = converterStringParaPontos(coordenadasLinha4);
+
+        if (
+            Array.isArray(pontosIniciaisLinha1) &&
+            pontosIniciaisLinha1.length > 0 &&
+            pontosIniciaisLinha1.every(ponto => typeof ponto.x === 'number' && typeof ponto.y === 'number' && !isNaN(ponto.x) && !isNaN(ponto.y))
+        ) {
+            adicionarPontosAoPlano(pontosIniciaisLinha1, "green-point", greenPoints, greenPointsCoordinates, "line-green", plane);
+        }
+
+        if (
+            Array.isArray(pontosIniciaisLinha2) &&
+            pontosIniciaisLinha2.length > 0 &&
+            pontosIniciaisLinha2.every(ponto => typeof ponto.x === 'number' && typeof ponto.y === 'number' && !isNaN(ponto.x) && !isNaN(ponto.y))
+        ) {
+            adicionarPontosAoPlano(pontosIniciaisLinha2, "blue-point", bluePoints, bluePointsCoordinates, "line-blue", plane);
+        }
+
+        if (
+            Array.isArray(pontosIniciaisLinha3) &&
+            pontosIniciaisLinha3.length > 0 &&
+            pontosIniciaisLinha3.every(ponto => typeof ponto.x === 'number' && typeof ponto.y === 'number' && !isNaN(ponto.x) && !isNaN(ponto.y))
+        ) {
+            adicionarPontosAoPlano(pontosIniciaisLinha3, "green-point", greenPoints2, greenPointsCoordinates2, "line-green", plane2);
+        }
+
+        if (
+            Array.isArray(pontosIniciaisLinha4) &&
+            pontosIniciaisLinha4.length > 0 &&
+            pontosIniciaisLinha4.every(ponto => typeof ponto.x === 'number' && typeof ponto.y === 'number' && !isNaN(ponto.x) && !isNaN(ponto.y))
+        ) {
+            adicionarPontosAoPlano(pontosIniciaisLinha4, "blue-point", bluePoints2, bluePointsCoordinates2, "line-blue", plane2);
+        }
+        $('#id_auCoordenadas_planoI_Linha1').val(greenPointsCoordinates);
+        $('#id_auCoordenadas_planoI_Linha2').val(bluePointsCoordinates);
+        $('#id_auCoordenadas_planoII_Linha1').val(greenPointsCoordinates2);
+        $('#id_auCoordenadas_planoII_Linha2').val(bluePointsCoordinates2);
+    }
+
+    // Função para adicionar pontos ao plano
+    function adicionarPontosAoPlano(pontos, pontoClassName, listaPontos, listaCoordenadas, linhaClassName, plano) {
+        pontos.forEach((ponto) => {
+            const point = document.createElement("div");
+            point.className = pontoClassName;
+            point.style.left = ponto.x + "%";
+            point.style.top = ponto.y + "%";
+            plano.appendChild(point);
+            
+            // Adiciona o ponto à lista correspondente
+            listaPontos.push(point);
+
+            // Conecta pontos com uma linha
+            if (listaPontos.length > 1) {
+                const line = createLineElement(linhaClassName);
+                connectPointsWithLine(listaPontos[listaPontos.length - 2], point, line, plano);
+            }
+        });
+    }
 });
 
+function converterStringParaPontos(coordenadasString) {
+    // Remove os parênteses externos e divide a string em pares de coordenadas
+    const coordenadasArray = coordenadasString.slice(1, -1).split("),(");
+
+    // Converte cada par de coordenadas em um objeto { x, y }
+    const pontos = coordenadasArray.map(coordenada => {
+        const [x, y] = coordenada.split(",").map(Number);
+        return { x, y };
+    });
+
+    return pontos;
+}
+
 function formatCoordinates(x, y) {
+    //console.log("Valores recebidos: x:" + x + ' y:' + y);  
+    if (typeof x !== 'number' || typeof y !== 'number' || isNaN(x) || isNaN(y)) {
+        throw new Error('As coordenadas devem ser números válidos.');
+    }
     return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
 }
 
