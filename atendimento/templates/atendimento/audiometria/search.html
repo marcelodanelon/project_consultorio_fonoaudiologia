@@ -17,6 +17,7 @@
             <tr class="table-row table-row-header">
                 <th class="table-header">ID</th>
                 <th class="table-header">Data</th>
+                <th class="table-header">Cliente</th>
                 <th class="table-header">Profissional</th>
                 <th class="table-header">Local</th>
             </tr>
@@ -30,8 +31,11 @@
                         </a>
                     </td>
                     <td class="table-cel">
-                            {{ audiometria.auData }}
+                        {{ audiometria.auData }}
                     </td>   
+                    <td class="table-cel">
+                        {{ audiometria.aClient }}
+                    </td>  
                     <td class="table-cel">
                         {{ audiometria.auProfessional }}
                     </td> 
