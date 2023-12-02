@@ -78,7 +78,10 @@ def rel_movimentacao_insumos(request):
             coluna_retirar = campo_agrupamento
             campos_selecionados.insert(0, campo_agrupamento)
         for campo in campos_selecionados:
-            dados[campo] = [getattr(item, campo) for item in resultados]
+            if campo == 'operacao':
+                dados[campo] = [getattr(item.movimentacao, 'operacao') for item in resultados]
+            else:
+                dados[campo] = [getattr(item, campo) for item in resultados]
 
         df = pd.DataFrame(dados)
 
@@ -94,7 +97,7 @@ def rel_movimentacao_insumos(request):
             colunas = grupo_dados.columns.tolist()
             dados = grupo_dados.values.tolist()
 
-            # Imprimir tipos de dados durante o loop
+            # inclusão de totais das colunas
             totais = ['Total'] + [
                 (
                     sum(
@@ -121,6 +124,7 @@ def rel_movimentacao_insumos(request):
 
             dados.append(totais)            
 
+            # Total de registros por grupo
             total_registros = len(grupo_dados)  
 
             relatorios.append({
@@ -140,6 +144,7 @@ def rel_movimentacao_insumos(request):
     
     context = {
         'form': form, 
+        'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'name_module': 'Relatórios',
     }
 

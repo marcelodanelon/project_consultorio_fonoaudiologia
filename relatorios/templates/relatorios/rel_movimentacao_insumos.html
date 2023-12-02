@@ -53,6 +53,7 @@
         </div>
     </form>    
     <div hidden id="resultados">{{resultados}}</div>
+    <input hidden id="groups_user" value="{{groups_user}}">
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -83,19 +84,28 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         `;
+        var grupos_usuario = $('#groups_user').val()
+        if (!grupos_usuario.includes('Administrador')) {
+            var $newFilterField = $(newFilterField);
+            var optionToHide = $newFilterField.find('option[value="valorCompra"]');
+            if (optionToHide.length > 0) {
+                optionToHide.hide();
+            }
+        }
         filtroContainer.appendChild(newFilterField);
     });
 });
 
 $(document).ready(function() {
-    if($('#resultados').text().trim() !== ""){
-        $('#myModal').modal('show');
-
-        $('#myModal .close').on('click', function() {
-            $('#myModal').modal('hide');
-        });
-    }else{
-        $('#myModal').modal('hide');
+    var grupos_usuario = $('#groups_user').val()
+    var checkOperacao = $('#id_campos_4');    
+    var selectAgrupamentoOperacao = $('#id_campos_agrupamento')
+    if (!grupos_usuario.includes('Administrador')) {
+        checkOperacao.prop('disabled',true);
+        var optionToHide = selectAgrupamentoOperacao.find('option[value="valorCompra"]');        
+        if (optionToHide.length > 0) {
+            optionToHide.hide();
+        }
     }
 });
 
@@ -111,14 +121,6 @@ document.getElementById('gerarPDF').addEventListener('click', function () {
     };
 
     html2pdf().set(opt).from(element).save()
-});
-
-document.getElementById('gerarPDF').addEventListener('click', function () {
-    $('#myModal').modal('show');
-
-    $('#myModal .close').on('click', function() {
-        $('#myModal').modal('hide');
-    });
 });
 </script>
 {% endblock content %}
