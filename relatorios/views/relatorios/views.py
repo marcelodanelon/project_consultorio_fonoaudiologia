@@ -5,6 +5,7 @@ from django.db.models import Q
 from datetime import datetime
 from relatorios.forms import RelatorioForm
 from django.http import HttpResponse
+from babel.numbers import format_currency
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import pandas as pd
@@ -16,39 +17,6 @@ from django.conf import settings
 def rel_movimentacao_insumos(request):
     form = RelatorioForm()
 
-    context = {
-        'form': form, 
-        'name_module': 'Relatórios',
-    }
-
-    return render(
-        request, 
-        'relatorios/rel_movimentacao.html', 
-        context,
-    )
-
-def render_to_pdf(template_path, context_dict):
-    template = get_template(template_path)
-    html_string = template.render(context_dict)
-
-    response = BytesIO()
-    pdf = pisa.pisaDocument(
-        BytesIO(html_string.encode("UTF-8")), response,
-        encoding="UTF-8", link_callback=link_callback
-    )
-
-    if not pdf.err:
-        response.seek(0)
-        return response
-
-    return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
-
-def link_callback(uri, rel):
-    # Função para resolver URLs relativas
-    # Certifique-se de configurar corretamente a base URL aqui
-    return os.path.normpath(os.path.join(settings.MEDIA_ROOT, uri))
-
-def teste(request):
     if request.method == 'POST':
         form = RelatorioForm(request.POST)
         resultados = ItensMovimentacaoInsumoModel.objects.all()
@@ -77,7 +45,7 @@ def teste(request):
                         messages.error(request, f'A data "{valor}" não é válida no formato "dd/mm/yyyy"')
                         return render(
                             request, 
-                            'relatorios/rel_movimentacao.html', 
+                            'relatorios/rel_movimentacao_insumos.html', 
                             {'form': form,'name_module': 'Relatórios',},
                         )
                     query &= Q(**{campo: valor})
@@ -99,7 +67,7 @@ def teste(request):
                     messages.error(request, translated_error_message)
                     return render(
                         request, 
-                        'relatorios/rel_movimentacao.html', 
+                        'relatorios/rel_movimentacao_insumos.html', 
                         {'form': form, 'name_module': 'Relatórios',},
                     )
                 
@@ -126,7 +94,34 @@ def teste(request):
             colunas = grupo_dados.columns.tolist()
             dados = grupo_dados.values.tolist()
 
-            total_registros = len(grupo_dados)
+            # Imprimir tipos de dados durante o loop
+            totais = ['Total'] + [
+                (
+                    sum(
+                        valor
+                        for valor in grupo_dados[coluna] if isinstance(valor, int)
+                    ) if grupo_dados[coluna].dtype.kind in 'iu' else
+                    sum(
+                        valor
+                        for valor in grupo_dados[coluna] if isinstance(valor, float)
+                    ) if grupo_dados[coluna].dtype.kind == 'f' else
+                    format_currency(
+                        sum(
+                            (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
+                            if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
+                            else 0
+                            for valor in grupo_dados[coluna]  # Adiciona este loop
+                        ),
+                        'BRL',
+                        locale='pt_BR'
+                    )
+                )if coluna not in ('local', 'serie', 'id', 'movimentacao', 'dataValidade', 'dataEntrada', 'operacao') else '---'
+                for coluna in grupo_dados.columns[1:]
+            ]
+
+            dados.append(totais)            
+
+            total_registros = len(grupo_dados)  
 
             relatorios.append({
                 'agrupamento': nome_grupo,
@@ -136,12 +131,41 @@ def teste(request):
             })
         
         # Renderizar o template em um PDF
-        pdf = render_to_pdf('relatorios/teste.html', {'relatorios': relatorios})
+        pdf = render_to_pdf('relatorios/pdf_movimentacao_insumos.html', {'relatorios': relatorios})
 
         # Responda com o PDF e force o download ou abra em uma nova guia
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
         return response
+    
+    context = {
+        'form': form, 
+        'name_module': 'Relatórios',
+    }
 
-    return render(request, 'relatorios/rel_movimentacao.html', {'form': RelatorioForm(), 'name_module': 'Relatórios'})
+    return render(
+        request, 
+        'relatorios/rel_movimentacao_insumos.html', 
+        context,
+    )
+
+def render_to_pdf(template_path, context_dict):
+    template = get_template(template_path)
+    html_string = template.render(context_dict)
+
+    response = BytesIO()
+    pdf = pisa.pisaDocument(
+        BytesIO(html_string.encode("UTF-8")), response,
+        encoding="UTF-8", link_callback=link_callback
+    )
+
+    if not pdf.err:
+        response.seek(0)
+        return response
+
+    return HttpResponse('Erro ao gerar o PDF', content_type='text/plain')
+
+def link_callback(uri, rel):
+    return os.path.normpath(os.path.join(settings.MEDIA_ROOT, uri))
+
 

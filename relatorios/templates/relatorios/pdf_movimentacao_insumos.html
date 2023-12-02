@@ -25,6 +25,11 @@
         th {
             background-color: #f2f2f2;
         }
+
+        .total-row {
+            background-color: #f0f0f0; /* Change this to the color you want */
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +46,7 @@
             {% endfor %}
         </tr>
         {% for linha in relatorio.dados %}
-            <tr>
+            <tr {% if forloop.last %}class="total-row"{% endif %}>
                 {% for valor in linha %}
                     <td>{{ valor }}</td>
                 {% endfor %}
