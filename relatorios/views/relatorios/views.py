@@ -138,7 +138,7 @@ def rel_movimentacao_insumos(request):
             })
         
         # Renderizar o template em um PDF
-        pdf = render_to_pdf('relatorios/pdf_movimentacao_insumos.html', {'relatorios': relatorios})
+        pdf = render_to_pdf('relatorios/pdf_visualizacao.html', {'relatorios': relatorios})
 
         # Responda com o PDF e force o download ou abra em uma nova guia
         response = HttpResponse(pdf.read(), content_type='application/pdf')
@@ -149,6 +149,7 @@ def rel_movimentacao_insumos(request):
         'form': form, 
         'form_action': form_action,
         'title_rel': 'Relatório de Movimentação de Insumos',
+        'title': 'Relatório de Movimentação de Insumos',
         'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'name_module': 'Relatórios',
     }
@@ -225,12 +226,12 @@ def rel_atendimentos(request):
             campos_selecionados.insert(0, campo_agrupamento)
         for campo in campos_selecionados:
             if campo == 'operacao':
-                dados[campo] = [getattr(item.movimentacao, 'operacao') for item in resultados]
+                dados['aObsAten'] = [str(item.aObsAten) if item.aObsAten is not None else '' for item in resultados]
             else:
-                dados[campo] = [getattr(item, campo) for item in resultados]
-
+                dados[campo] = [getattr(item, campo) if getattr(item, campo) != '' else None for item in resultados]
+                
         df = pd.DataFrame(dados)
-
+        
         # Pré-processar os dados para tornar acessíveis no template
         relatorios = []
         for nome_grupo in df[campo_agrupamento].unique():
@@ -281,7 +282,7 @@ def rel_atendimentos(request):
             })
         
         # Renderizar o template em um PDF
-        pdf = render_to_pdf('relatorios/pdf_movimentacao_insumos.html', {'relatorios': relatorios})
+        pdf = render_to_pdf('relatorios/pdf_visualizacao.html', {'relatorios': relatorios})
 
         # Responda com o PDF e force o download ou abra em uma nova guia
         response = HttpResponse(pdf.read(), content_type='application/pdf')
@@ -292,6 +293,7 @@ def rel_atendimentos(request):
         'form': form, 
         'form_action': form_action,
         'title_rel': 'Relatório de Atendimentos',
+        'title': 'Relatório de Atendimentos',
         'groups_user': list(request.user.groups.values_list('name', flat=True)),
         'name_module': 'Relatórios',
     }
