@@ -97,7 +97,7 @@ def rel_movimentacao_insumos(request):
             if coluna_retirar in grupo_dados.columns:
                 grupo_dados = grupo_dados.drop(columns=[coluna_retirar])
 
-            colunas = grupo_dados.columns.tolist()
+            colunas = [ItensMovimentacaoInsumoModel._meta.get_field(campo).verbose_name for campo in grupo_dados.columns]
             dados = grupo_dados.values.tolist()
 
             # inclusão de totais das colunas
@@ -111,19 +111,32 @@ def rel_movimentacao_insumos(request):
                         valor
                         for valor in grupo_dados[coluna] if isinstance(valor, float)
                     ) if grupo_dados[coluna].dtype.kind == 'f' else
-                    format_currency(
-                        sum(
-                            (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
-                            if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
-                            else 0
-                            for valor in grupo_dados[coluna]  # Adiciona este loop
-                        ),
-                        'BRL',
-                        locale='pt_BR'
+                    (
+                        '---' if format_currency(
+                            sum(
+                                (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
+                                if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
+                                else 0
+                                for valor in grupo_dados[coluna]  # Adiciona este loop
+                            ),
+                            'BRL',
+                            locale='pt_BR'
+                        ) == 'R$\xa00,00' else
+                        format_currency(
+                            sum(
+                                (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
+                                if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
+                                else 0
+                                for valor in grupo_dados[coluna]  # Adiciona este loop
+                            ),
+                            'BRL',
+                            locale='pt_BR'
+                        )
                     )
-                )if coluna not in ('local', 'serie', 'id', 'movimentacao', 'dataValidade', 'dataEntrada', 'operacao') else '---'
+                ) if coluna not in ('local', 'serie', 'id', 'movimentacao', 'dataValidade', 'dataEntrada', 'operacao') else '---'
                 for coluna in grupo_dados.columns[1:]
             ]
+
 
             dados.append(totais)            
 
@@ -241,7 +254,7 @@ def rel_atendimentos(request):
             if coluna_retirar in grupo_dados.columns:
                 grupo_dados = grupo_dados.drop(columns=[coluna_retirar])
 
-            colunas = grupo_dados.columns.tolist()
+            colunas = [AtendimentoModel._meta.get_field(campo).verbose_name for campo in grupo_dados.columns]
             dados = grupo_dados.values.tolist()
 
             # inclusão de totais das colunas
@@ -255,17 +268,29 @@ def rel_atendimentos(request):
                         valor
                         for valor in grupo_dados[coluna] if isinstance(valor, float)
                     ) if grupo_dados[coluna].dtype.kind == 'f' else
-                    format_currency(
-                        sum(
-                            (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
-                            if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
-                            else 0
-                            for valor in grupo_dados[coluna]  # Adiciona este loop
-                        ),
-                        'BRL',
-                        locale='pt_BR'
+                    (
+                        '---' if format_currency(
+                            sum(
+                                (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
+                                if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
+                                else 0
+                                for valor in grupo_dados[coluna]  # Adiciona este loop
+                            ),
+                            'BRL',
+                            locale='pt_BR'
+                        ) == 'R$\xa00,00' else
+                        format_currency(
+                            sum(
+                                (float(str(valor).replace('R$', '').replace(',', '').strip().replace('\xa0', '')) / 100)
+                                if isinstance(valor, str) and valor.replace('R$', '').replace(',', '').strip().replace('\xa0', '').replace('.', '', 1).isdigit()
+                                else 0
+                                for valor in grupo_dados[coluna]  # Adiciona este loop
+                            ),
+                            'BRL',
+                            locale='pt_BR'
+                        )
                     )
-                )if coluna not in ('local', 'serie', 'id', 'movimentacao', 'dataValidade', 'dataEntrada', 'operacao') else '---'
+                ) if coluna not in ('local', 'serie', 'id', 'movimentacao', 'dataValidade', 'dataEntrada', 'operacao') else '---'
                 for coluna in grupo_dados.columns[1:]
             ]
 

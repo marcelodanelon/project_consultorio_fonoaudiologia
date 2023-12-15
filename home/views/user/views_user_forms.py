@@ -52,6 +52,7 @@ def login_view(request):
 
     context = {
         'form': form,
+        'title': 'Login',
     }
 
     return render(
