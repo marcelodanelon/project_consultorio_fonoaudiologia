@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 from datetime import date
-from django.db.models import F, Case, When, Value, CharField
+from django.db.models import Q, Case, When, Value, CharField
 from atendimento.forms import AtendimentoForm, RegulagemForm, ContatosTelefonicosForm
 from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefonicosModel, AudiometriaModel
 from home.models import ClientModel, ProfessionalModel, LocalModel
@@ -17,7 +17,7 @@ from agendamento.models import AgendamentoModel
 def getJSONclient(request):
     if request.GET.get('searchClient'):
         q = request.GET.get('searchClient')
-        model = list(ClientModel.objects.filter(first_name__contains=q).values('id', 'first_name','last_name', 'born', 'document1'))
+        model = list(ClientModel.objects.filter(Q(first_name__contains=q) | Q(last_name__contains=q)).values('id', 'first_name','last_name', 'born', 'document1'))
         return JsonResponse(data={'results': model})
 
 @login_required(login_url='home:loginUser')
