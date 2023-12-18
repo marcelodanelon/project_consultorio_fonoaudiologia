@@ -1,116 +1,74 @@
 {% extends 'global/base.html' %}
 
-{% block nav_lateral %}
-  {% include 'partials/_nav_agendamento.html' %}
-{% endblock nav_lateral %}
-
-{% block head_base %}
-<style>
-  .btn-movimentacao {
-    border: none;
-    background: none;
-    width: 70px; 
-    height: 70px; 
-    margin: 0 10px;
-    transition: all 0.3s ease; 
-  }
-  .btn-movimentacao:hover {
-    transform: scale(1.2); 
-  }
-  .btn-movimentacao.hover-effect:hover {
-    transform: none; 
-  }
-  .btn-historico {
-    border: none;
-    background: none;
-    width: 50px; 
-    height: 50px; 
-    margin: 0 10px;
-    transition: transform 0.3s ease; 
-  }
-  .btn-historico:hover {
-    transform: translateX(-10px); 
-  }
-  #img-place-cards{
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    height: 80vh;
-    font-family: 'Nunito', sans-serif;
-  }
-  #img-place-cards.active {
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    height: 80vh;
-  }
-</style>
-{% endblock head_base %}
+{% block nav_lateral %}{% include 'partials/_nav_agendamento.html' %}{% endblock nav_lateral %}
 
 {% block content %}
-<form id="form-movimentacao" action="{{form_action}}" method="post">
-  {% csrf_token %}
-  <div style="height: 90vh; width: 82vw; position: relative;">
-    <div class="row">
-      <div style="margin-left:1%; background: white; width: 35vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);">
-        <div style="margin-top:1vh;">
-          <div class="row">
-            <div class="col">
-              {{form.aClient.label}}
-              {{form.aClient}}   
-            </div>
-            <div class="col">
-              {{form.aProfessional.label}}
-              {{form.aProfessional}}    
-            </div>
-          </div>
-        </div> 
-        <div style="margin-top:1vh;">
-            <div class="row">
-                <div class="col">
-                {{form.aLocal.label}}
-                {{form.aLocal}}   
-                </div>
-                <div class="col">
-                {{form.aMotAten.label}}
-                {{form.aMotAten}}    
-                </div>
-            </div>
-        </div> 
-        <div hidden style="margin-top:1vh;">
-            {{form.agAgenda}}    
-        </div>
-        <div id="div-updateAgendamento" hidden style="margin-top:1vh;">
-            {{updateAgendamento}}    
-        </div>
-        <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-          <button title='Agendamento' class="btn-movimentacao" type="button" id="btn-agendamento">
-            <img src="/media/agendamento/btn-agendamento.png">
-          </button>
-        </div>
-        <div style="position: absolute; bottom: 2vh; width: 34vw;">
-          {{form.agObserv.label}}
-          {{form.agObserv}}    
-        </div>
+<div class="container" style="padding:1px 16px;">
+  <div class="col-10">
+    <h3>{{name_screen}}</h3>
+  </div>
+  <form action="{{form_action}}" method="post" class="form-control" id="form_grupo">
+    {% csrf_token %}   
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.aClient.id_for_label }}" class="form-label">{{ form.aClient.label }}</label>
+        {{form.aClient}}
       </div>
-      <div style="padding:1%; margin-left:1%; background: white; width: 45vw; height: 89vh;box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);overflow-y:auto;">
-        <div id="img-place-cards">
-          <span style="margin-bottom: 10px;"><b>Agende seu tempo e simplifique sua vida!</b></span>
-          <img src="/media/agendamento/agendamento.png" alt="agendamento">
-        </div>
-        <div hidden id="card-agendamento" style="margin-top:1vh;">
-          <h5>Data e Horário</h5>
-          {% include 'agendamento/agendamento/pages_agendamento/dataHora.html' %}
-        </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.aProfessional.id_for_label }}" class="form-label">{{ form.aProfessional.label }}</label>
+        {{form.aProfessional}}
       </div>
-    </div>
-    <button class="btn-movimentacao"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
-      <img src="/media/btn-gravar.png">
-    </button>
-  </div>  
-</form>
+      <div class="col">
+        <label for="{{ form.aLocal.id_for_label }}" class="form-label">{{ form.aLocal.label }}</label>
+        {{form.aLocal}}
+      </div>
+      <div class="col">
+        <label for="{{ form.aMotAten.id_for_label }}" class="form-label">{{ form.aMotAten.label }}</label>
+        {{form.aMotAten}}
+      </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.agDataAg.id_for_label }}" class="form-label">{{ form.agDataAg.label }}</label>
+        {{form.agDataAg}}
+      </div>
+      <div class="col">
+        <label for="{{ form.agHoraAg.id_for_label }}" class="form-label">{{ form.agHoraAg.label }}</label>
+        <select name="agHoraAg" class="form-control" required id="id_agHoraAg">        
+        </select>
+      </div>
+    </div><br>
+    <div class="row align-items-center">
+      <div class="col">
+        <label for="{{ form.agObserv.id_for_label }}" class="form-label">{{ form.agObserv.label }}</label>
+        {{form.agObserv}}
+      </div>
+    </div><br>
+    <div id="div-agAgenda" class="row align-items-center">
+      <div class="col">
+        <input hidden type="text" id="id_agAgenda" name="agAgenda">
+      </div>
+    </div><br>
+    <div class="form-content d-flex flex-row bd-highlight">        
+      <button id="btn-form" class="btn btn-success me-1" type="submit">Gravar</button>
+  </form>
+        {% if option_delete == 'yes'%}
+        <form action="{% url 'agendamento:deleteAgendamento' agendamento.id %}" method="POST">
+            {% csrf_token %}
+            {% if confirmation_delete == 'no' %}
+              <input name="confirmation_delete" type="hidden" value="yes">
+              <button class="btn btn-danger">Confirma?</button>  
+            {% else %}
+              <button class="btn btn-danger">Delete</button> 
+            {% endif %}      
+            <a href="{% url 'agendamento:listAgendamento' %}" class="btn btn-primary">Voltar</a>
+    </div>  
+        </form> 
+        {% endif %} 
+  <div hidden id="div-updateAgendamento">{{updateAgendamento}}</div>
+</div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -166,19 +124,6 @@ function calcularVagasComQuantidade(quantidade, horaInicial, intervaloEmMinutos)
   return vagas;
 }
 $(document).ready(function() {
-      // controle exibição de cards no place
-  $('#btn-agendamento').on('click', function(){
-    var divAgendamento = document.getElementById('card-agendamento'); 
-
-    if (divAgendamento && divAgendamento.hidden) {
-      $('#card-agendamento').prop('hidden', false);
-      $('#img-place-cards').prop('hidden', true);
-    } else {
-      $('#card-agendamento').prop('hidden', true);
-      $('#img-place-cards').prop('hidden', false);
-    }
-  })
-
   $('#id_agAgenda').val('')
 
   $('#id_agTipAge').on('change', function(){
