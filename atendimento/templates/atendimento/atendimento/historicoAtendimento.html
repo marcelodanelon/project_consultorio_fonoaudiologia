@@ -80,7 +80,7 @@
             .grid-container {
               display: grid;
               gap: 15px 30px;
-              grid-template-columns: auto auto auto;
+              grid-template-columns: repeat(4, 1fr);
               padding: 9px;
             }
             select option.destaqueOption {
@@ -100,23 +100,22 @@
 
             .item1 {
                 grid-column-start: 1;
-                grid-column-end: 4;
+                grid-column-end: 5;
             }
 
             .item2 {
-                grid-column-start: 2;
-                grid-column-end: 4;
+                grid-column-start: 1;
+                grid-column-end: 5;
             }
         </style>
     {% endblock head_base %}
     <div class="container">
-        <div>
-            <h5>Cliente</h5>
-            <input type="text" placeholder="Digite um nome ..." id="searchButtonCliente" class="form-control">  
-            {{form_atendimento.aClient}}
-        </div>
-
         <div class="grid-container">
+            <div class="item1">
+                <h5>Cliente</h5>
+                <input type="text" placeholder="Digite um nome ..." id="searchButtonCliente" class="form-control">  
+                {{form_atendimento.aClient}}
+            </div>
             <div class="grid-item d-flex flex-column bd-highlight item1">
                 <b>Primeiros Contatos</b>
                 {% if atendimentos %}
