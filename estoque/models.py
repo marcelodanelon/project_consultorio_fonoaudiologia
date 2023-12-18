@@ -39,7 +39,7 @@ class MovimentacaoInsumoModel(models.Model):
     local = models.ForeignKey(LocalModel, on_delete=models.SET_NULL, null=True, verbose_name='Unidade')
     data = models.DateField(default=date.today, verbose_name='Data')
     tipoMovimentacao = models.CharField(max_length=20, choices=[('usoProprio','Uso próprio'),('compra','Compra'),('venda','Venda'),('doacao','Doação')], verbose_name='Tipo de Movimentação', default=2)
-    eClient = models.ForeignKey(ClientModel, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Usuário')
+    eClient = models.ForeignKey(ClientModel, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Cliente')
     observacao = models.TextField(blank=True, null=True, verbose_name='Observações')
 
     def __str__(self) -> str:

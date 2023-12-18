@@ -23,6 +23,7 @@ def createAgendamento(request):
         'form': form,
         'name_screen': 'Agendamento',
         'name_module': 'Agendamento',
+        'title': 'Agendamento',
         'updateAgendamento': 0,
         'form_action': form_action,
     }
@@ -48,7 +49,7 @@ def updateAgendamento(request, agendamento_id):
         context = {
             'form' : AgendamentoForm(instance=agendamento),
             'form_action': form_action,
-            'title':'Cadastro',
+            'title': 'Agendamento',
             'name_screen': 'Consulta',
             'name_module': 'Agendamento',
             'updateAgendamento': 1,
@@ -92,7 +93,7 @@ def deleteAgendamento(request, agendamento_id):
 
     context = {
         'form': AgendamentoForm(instance=agendamento),
-        'title':'Cadastro',
+        'title': 'Agendamento',
         'name_screen': 'Atualizar',
         'name_module': 'Home',
         'option_delete': 'yes',

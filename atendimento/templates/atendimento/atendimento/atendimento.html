@@ -18,6 +18,11 @@
   .btn-atendimento:hover {
     transform: scale(1.2); 
   }
+  select option.destaqueOption {
+    background-color: rgba(165, 0, 39);
+    color: white;
+    text-align: center;
+  }
   .btn-historico {
     border: none;
     background: none;
@@ -117,7 +122,8 @@
         {% endfor %}
         <div style="margin-top:1vh;">
           {{atendimentoForm.aClient.label}}
-          {{atendimentoForm.aClient}}    
+          <input type="text" placeholder="Digite um nome ..." id="searchButtonCliente" class="form-control">  
+          {{atendimentoForm.aClient}}
         </div> 
         <div style="margin-top:1vh;">
           <div class="row">
@@ -206,6 +212,50 @@
 </button>
 <script>
 $(document).ready(function(){
+  $('#id_aClient').prop('hidden', true);
+  // localizando o paciente | Controle
+  $('#searchButtonCliente').on('change', function(){
+    var clientes;
+    var client_select = $('#id_aClient');
+    var cliente = $(this).val();
+    if(cliente!=''){
+        clientes = $.ajax({
+            url: "{% url 'atendimento:getJSONclient' %}?searchClient=" + cliente,   
+            type: "get",     
+            async: false,  
+            data: $("#search").serialize(),    
+            success: function (data){
+                data_clients = data.results 
+            },                 
+        });
+    };
+    /// Identificando se a busca retornou algo
+    if(clientes.responseJSON.results[0]!=null){
+      $(this).prop('hidden', true);
+      $(client_select).prop('hidden', false);
+    } else {
+      $(this).val('');
+    }
+    /// iniciando a inclusão dos clientes localizados no select
+    client_select.empty();
+    var defaultOption = $('<option></option>').val('').html('Selecione um cliente').prop('selected', true);
+    client_select.append(defaultOption);
+    for (const key in clientes.responseJSON.results){
+        client_select.append(
+            $('<option></option>').val(clientes.responseJSON.results[key].id).html(clientes.responseJSON.results[key].first_name + " " + clientes.responseJSON.results[key].last_name)
+        );
+    }
+    client_select.append($('<option></option>').val('pesquisa').html('+ Nova pesquisa').addClass('destaqueOption'));
+  })
+  /// verificar se campo de seleção do cliente, é uma nova busca
+  $('#id_aClient').on('change', function(){
+    if($(this).val()=='pesquisa'){
+      $(this).prop('hidden', true);
+      $('#searchButtonCliente').val('');
+      $('#searchButtonCliente').prop('hidden', false);
+    }
+  })
+
   // controle exibição de cards no place
   $('#btn-dados_iniciais').on('click', function(){
     if ($('#card-dados_iniciais').css('display') === 'block') {
@@ -331,6 +381,14 @@ $(document).ready(function(){
       $(this).attr('selected', true);
     }
   });
+
+  /// verificação após a seleção do cliente, para apresentar o campo de select preenchido no pós-carregamento da página
+  if(paramValue!=null && paramValue!='pesquisa'){
+    $('#id_aClient').prop('hidden', false);
+    $('#searchButtonCliente').prop('hidden', true);
+    $('#id_aClient').append($('<option></option>').val('pesquisa').html('+ Nova pesquisa').addClass('destaqueOption'));
+  }
+
   // Funcionamento botão de historico
   $('.btn-historico').on('click', function(){
     var client = $('#id_aClient').val();
