@@ -86,12 +86,24 @@
           </select>  
         </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-          <button title='Entrada' class="btn-movimentacao" type="button" id="btn-entrada">
-            <img src="/media/estoque/btn-icon-entrada-inativo.png">
-          </button>
-          <button title='Saída' class="btn-movimentacao" type="button" id="btn-saida">
-            <img src="/media/estoque/btn-icon-saida-inativo.png">
-          </button>
+          {% if isUpdate != 1 %}
+            <button title='Entrada' class="btn-movimentacao" type="button" id="btn-entrada">
+              <img src="/media/estoque/btn-icon-entrada-inativo.png">
+            </button>
+            <button title='Saída' class="btn-movimentacao" type="button" id="btn-saida">
+              <img src="/media/estoque/btn-icon-saida-inativo.png">
+            </button>
+          {% else %}
+            {% if formMovimentacao.operacao.value == 'Entrada' %}
+              <button title='Entrada' class="btn-movimentacao" type="button" id="btn-entrada">
+                <img src="/media/estoque/btn-icon-entrada-inativo.png">
+              </button>
+            {% else %}
+              <button title='Saída' class="btn-movimentacao" type="button" id="btn-saida">
+                <img src="/media/estoque/btn-icon-saida-inativo.png">
+              </button>
+            {% endif %} 
+          {% endif %}
         </div>
         <div style="position: absolute; bottom: 2vh; width: 34vw;">
           {{formMovimentacao.observacao.label}}
@@ -116,9 +128,11 @@
         </div>
       </div>
     </div>
-    <button class="btn-movimentacao"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
-      <img src="/media/btn-gravar.png">
-    </button>
+    {% if isUpdate != 1 %}
+      <button class="btn-movimentacao"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+        <img src="/media/btn-gravar.png">
+      </button>
+    {% endif %}
   </div>  
 </form>
 <script>
@@ -186,6 +200,7 @@ $(document).ready(function(){
       $('.btn-movimentacao').css('transition', 'all 0.3s ease');
       $('.btn-movimentacao').removeClass('hover-effect');
     }
+    $('#id_tipoMovimentacao').trigger('change');
   });
   $('#id_local').trigger('change');
 
@@ -294,7 +309,8 @@ $(document).ready(function(){
   //ação ao selecionar tipo de movimentacao
   $('#id_tipoMovimentacao').on('change', function(){
     if ($('#id_tipoMovimentacao').children("option:selected").val() == 'venda' || $('#id_tipoMovimentacao').children("option:selected").val() == 'doacao') {
-        $('#id_eClient').parent().prop('hidden', false);
+        $('#id_eClient').prop('required', true);
+        $('#id_eClient').prop('hidden', false);
         $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada-inativo.png');
         $('#btn-entrada').prop('disabled', true);
         $('#card-entrada').prop('hidden', true);
@@ -303,7 +319,8 @@ $(document).ready(function(){
         $('#btn-entrada.btn-movimentacao').css('transition', 'none');
         $('#btn-entrada.btn-movimentacao').addClass('hover-effect');
     }else{
-        $('#id_eClient').parent().prop('hidden', true);
+        $('#id_eClient').prop('required', false);
+        $('#id_eClient').prop('hidden', true);        
         $('#btn-entrada img').attr('src', '/media/estoque/btn-icon-entrada.png');
         $('#btn-entrada').prop('disabled', false);
         $('#btn-entrada.btn-movimentacao').css('transition', 'all 0.3s ease');

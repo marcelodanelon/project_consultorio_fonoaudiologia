@@ -348,4 +348,14 @@ def render_to_pdf(template_path, context_dict):
 def link_callback(uri, rel):
     return os.path.normpath(os.path.join(settings.MEDIA_ROOT, uri))
 
+def index(request):
+    context = {
+        'title': 'Relatórios',
+        'name_module': 'Relatórios',
+    }
 
+    return render(
+        request,
+        'relatorios/index.html',
+        context,
+    )

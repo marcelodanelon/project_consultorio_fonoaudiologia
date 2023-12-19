@@ -1,0 +1,145 @@
+{% extends 'global/base.html' %}
+
+{% block nav_lateral %}{% include 'partials/_nav_relatorios.html' %}{% endblock nav_lateral %}
+
+{% block head_base %}
+{% load static %}
+<script src="{% static 'global/partials/canvasjs.min.js' %}"></script>
+<script>
+    window.onload = function () {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            theme: "light2", // "light2", "dark1", "dark2"
+            animationEnabled: true, // change to true		
+            title:{
+                text: "Vendas de Aparelhos por Unidade"
+            },
+            axisX:{
+              interval: 1
+            },
+            data: [
+            {
+                // Change type to "bar", "area", "spline", "pie",etc.
+                type: "column",
+                dataPoints: {{ data_points | safe }},
+            }
+            ]
+        });
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Vendas de Baterias por Unidade"
+          },
+          axisX:{
+            interval: 1
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "bar",
+              dataPoints: {{ data_points2 | safe }},
+          }
+          ]
+        });
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+          theme: "light2", // "light2", "dark1", "dark2"
+          animationEnabled: true, // change to true		
+          title:{
+              text: "Consumo médio de Insumos (mensal)"
+          },
+          data: [
+          {
+              // Change type to "bar", "area", "spline", "pie",etc.
+              type: "column",
+              name: "Entradas",
+              showInLegend: true,
+              dataPoints: {{ data_points3 | safe }},
+          },
+          {
+            // Change type to "bar", "area", "spline", "pie",etc.
+            type: "column",
+            name: "Saídas",
+            showInLegend: true,
+            dataPoints: {{ data_points4 | safe }},
+          },
+          ]
+        });
+        //var chart4 = new CanvasJS.Chart("chartContainer4", {
+        //  theme: "light2", // "light2", "dark1", "dark2"
+        //  animationEnabled: true, // change to true		
+        //  title:{
+        //      text: "Atendimentos(1º Atend.) por Mês"
+        //  },
+        //  data: [
+        //  {
+        //      // Change type to "bar", "area", "spline", "pie",etc.
+        //      type: "area",
+        //      dataPoints: {{ data_points4 | safe }},
+        //  }
+        //  ]
+        //});
+        //chart1.render();
+        //chart2.render();
+        //chart3.render();
+        //chart4.render();
+    }
+</script>
+<script type="text/javascript" src="/static/global/partials/jquery.mask.min.js"></script>
+<script>
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+        field.mask(SPMaskBehavior.apply({}, arguments), options);
+      }
+  };
+</script>
+{% endblock head_base %}
+
+{% block content %}
+{% comment %} <div class="container" style="padding:1px 16px;">
+  <div class="row" style="z-index: -1;">
+      <div id="chartContainer1" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+      <div id="chartContainer2" style="width: 45%; height: 360px;"></div>
+  </div>
+  <br><br>
+  <div class="row">
+      <div id="chartContainer3" style="width: 45%; height: 360px; margin-right: 3%; margin-left: 1%;"></div><br>
+      <div style="width: 45%; height: 360px;">
+        <table style="width: 100%;">
+          <div style="text-align: center; background: white; font-size: 30px"><b>Insumos abaixo do Estoque Mínimo</b></div>
+          <thead>
+              <tr class="table-row table-row-header">
+                  <th class="table-header">Descricao</th>
+                  <th class="table-header" style="text-align: center;">Quantidade</th>
+                  <th class="table-header" style="text-align: center;">Quantidade Mínima</th>
+                  <th class="table-header">Unidade</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for field in text_estoqueMin %}
+                  <tr class="table-row">
+                      <td class="table-cel">
+                        {{ field.descricao }}
+                      </td>
+                      <td class="table-cel" style="text-align: center;">
+                        {{ field.quantidade }}
+                      </td>
+                      <td class="table-cel" style="text-align: center;">
+                        {{ field.quantidadeMin }}
+                      </td>
+                      <td class="table-cel">
+                        {{ field.local }} 
+                      </td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+        {% if not text_estoqueMin %}
+          <div style="background-color:white;height:76%;display: flex;align-items: center;justify-content: center;"><b>Sem Registros</b></div>
+        {% endif %}
+      </div>
+  </div>
+</div> {% endcomment %}
+{% endblock content %}

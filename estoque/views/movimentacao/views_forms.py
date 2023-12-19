@@ -254,6 +254,21 @@ def createMovimentacaoInsumo(request):
                         return redirect('estoque:index')
                     else:
                         messages.error(request, f'Saldo insuficiente para insumo {insumo}!')
+                        context = {
+                            'title': 'Estoque',
+                            'name_module': 'Estoque',
+                            'form_action': form_action,
+                            'name_screen': 'Movimentação de Insumos',
+                            'formMovimentacao': MovimentacaoInsumoForm(),
+                            'groups_user': list(request.user.groups.values_list('name', flat=True)),
+                            'formSetMovimentacao': formSetMovimentacao,
+                        }
+
+                        return render(
+                            request,
+                            'estoque/movimentacao/movimentacao.html',
+                            context
+                        )
         else:
             print(formMovimentacao.errors)
             print(formSetItensMovimentacao_P.errors)

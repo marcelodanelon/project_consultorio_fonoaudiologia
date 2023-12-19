@@ -16,14 +16,24 @@
                         {{form.insumo}} 
                     </div> 
                     <div class="col-4 ms-1" id="div_selectInsumos"> 
-                        <label class="form-label d-flex align-items-start">Insumo</label>
-                        <select id='selectInsumos' class="form-control required">                                    
-                        </select> 
+                        {% if isUpdate != 1 %}
+                            <label class="form-label d-flex align-items-start">Insumo</label>
+                            <select id='selectInsumos' class="form-control required">                                    
+                            </select> 
+                        {% else %}
+                            <label class="form-label d-flex align-items-start">Insumo</label>
+                            {{form.insumo}}
+                        {% endif %}
                     </div>
                     <div class="col-8 ms-2" id="div_myItems"> 
-                        <label class="form-label d-flex align-items-start">Serie/Lote</label>
-                        <select id='myItems' class="form-control required">                                    
-                        </select> 
+                        {% if isUpdate != 1 %}
+                            <label class="form-label d-flex align-items-start">Serie/Lote</label>
+                            <select id='myItems' class="form-control required">                                    
+                            </select> 
+                        {% else %}
+                            <label class="form-label d-flex align-items-start">Serie/Lote</label>
+                            {{form.serie}}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="d-flex align-items-start">
