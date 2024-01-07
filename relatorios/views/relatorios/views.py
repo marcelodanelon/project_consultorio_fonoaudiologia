@@ -12,7 +12,6 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import pandas as pd
 from io import BytesIO
-import pandas as pd
 import os
 from django.conf import settings
 

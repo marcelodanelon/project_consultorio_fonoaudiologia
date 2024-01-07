@@ -53,7 +53,11 @@
 {% endblock head_base %}
 
 {% block content %}
-<form action="{{form_action}}" method="post">
+<div id="div_documentos_modal" style="background-color: white; width: 60vw; height: 60vh; position: absolute; z-index: 0;top: 0; bottom: 0; left: 0; right: 0; margin: auto; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius:5px ;">
+  {{documentos}}
+  <a id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</a>
+</div>
+<form id="form_atendimento" action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
     <div class="row">
@@ -202,7 +206,7 @@
         </div>
       </div>
     </div>
-    <button class="btn-atendimento"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+    <button id="btn_gravar" class="btn-atendimento"style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
       <img src="/media/btn-gravar.png">
     </button>
   </div>  
@@ -396,6 +400,20 @@ $(document).ready(function(){
       window.open("{% url 'atendimento:historicoAtendimento' %}?searchClient=" + client, '_blank');
     }
   });
+
+  // Controle modal de documentos para impressao
+  $('#div_documentos_modal').prop('hidden', true);
+  $('#btn_fechar_documentos_modal').on('click', function(){
+      window.location.href = "{% url 'atendimento:index' %}";
+      return false;
+  });
+
+  // Ação ao gravar atendimento
+  $('#form_atendimento').on('submit', function(){
+    // abrir modal de documentos para download
+    $('#div_documentos_modal').prop('hidden', false);
+    $('#div_documentos_modal').css('z-index', 1);
+  })
 })
 </script>
 {% endblock content %}

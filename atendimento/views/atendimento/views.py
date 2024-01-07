@@ -12,6 +12,21 @@ from atendimento.models import AtendimentoModel, RegulagemModel, ContatosTelefon
 from home.models import ClientModel, ProfessionalModel, LocalModel
 from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
 from agendamento.models import AgendamentoModel
+from docx import Document
+from io import BytesIO
+from django.http import HttpResponse, HttpResponseRedirect
+
+def generate_word_document(data):
+    doc = Document('utils\\docs\\teste.docx')
+
+    for paragraph in doc.paragraphs:
+        for run in paragraph.runs:
+            run.text = run.text.replace('[teste]', str(data['campo1']))
+
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    return output
 
 @login_required(login_url='home:loginUser')
 def getJSONclient(request):
@@ -185,7 +200,20 @@ def atendimento(request):
                 item.aIDAtend = formAten_instance
                 item.save()
             messages.success(request, 'Atendimento gravado com sucesso!')
-            return redirect('atendimento:index')
+
+            # data = {
+            #     'campo1': formAten_instance.aClient,
+            #     'campo2': formAten_instance.aDataAte,
+            # }
+
+            # word_document = generate_word_document(data)
+
+            # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            # response['Content-Disposition'] = 'attachment; filename=atendimento.docx'
+            # word_document.seek(0)
+            # response.write(word_document.getvalue())  
+
+            return HttpResponse(status=204)
 
     context={
         'atendimentoForm': atendimentoForm,
