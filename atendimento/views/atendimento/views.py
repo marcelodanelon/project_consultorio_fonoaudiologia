@@ -14,10 +14,10 @@ from estoque.models import MovimentacaoInsumoModel, ItensMovimentacaoInsumoModel
 from agendamento.models import AgendamentoModel
 from docx import Document
 from io import BytesIO
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 
-def generate_word_document(data):
-    doc = Document('utils\\docs\\teste.docx')
+def generate_word_document(data, url):
+    doc = Document(url)
 
     for paragraph in doc.paragraphs:
         for run in paragraph.runs:
@@ -201,19 +201,9 @@ def atendimento(request):
                 item.save()
             messages.success(request, 'Atendimento gravado com sucesso!')
 
-            # data = {
-            #     'campo1': formAten_instance.aClient,
-            #     'campo2': formAten_instance.aDataAte,
-            # }
-
-            # word_document = generate_word_document(data)
-
-            # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            # response['Content-Disposition'] = 'attachment; filename=atendimento.docx'
-            # word_document.seek(0)
-            # response.write(word_document.getvalue())  
-
-            return HttpResponse(status=204)
+            response = HttpResponse(status=204)
+            response['id_registro'] = str(formAten_instance.id)
+            return response
 
     context={
         'atendimentoForm': atendimentoForm,
@@ -230,3 +220,28 @@ def atendimento(request):
         'atendimento/atendimento/atendimento.html',
         context
     )
+
+def download_documento(request):
+    id_registro = request.GET['registro']
+    documento = request.GET['documento']
+    atendimento_obj = get_object_or_404(AtendimentoModel, id=id_registro)
+    
+    url = ''
+    data = {
+        'campo1': atendimento_obj.aClient,
+    }
+
+    match documento:
+        case 'fichaAtendimento':
+            url = 'utils\\docs\\teste.docx'
+        case 'declaracaoComparecimento':
+            url = 'utils\\docs\\teste2.docx'
+
+    word_document = generate_word_document(data, url)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = 'attachment; filename=atendimento.docx'
+    word_document.seek(0)
+    response.write(word_document.getvalue())  
+
+    return response

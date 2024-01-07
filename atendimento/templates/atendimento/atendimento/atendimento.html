@@ -49,14 +49,47 @@
     align-items: center; 
     height: 80vh;
   }
+  #div_documentos_modal {
+    background-color: white; 
+    width: 40vw; 
+    height: 60vh; 
+    position: absolute; 
+    z-index: 0;
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    margin: auto; 
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 5px 15px; 
+    border-radius:5px ;
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+  }
+  .card_documento_no_modal{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin: 10px; 
+    padding: 8px; 
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+    border-radius: 5px;
+  }
 </style>
 {% endblock head_base %}
 
 {% block content %}
-<div id="div_documentos_modal" style="background-color: white; width: 60vw; height: 60vh; position: absolute; z-index: 0;top: 0; bottom: 0; left: 0; right: 0; margin: auto; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius:5px ;">
-  {{documentos}}
+<div id="div_documentos_modal">
+  <h4 class="card_documento_no_modal" style="border: None; margin: 2px;">Impressão de Documentos</h4>
+  <div class="card_documento_no_modal">
+    <span style="">Ficha de Atendimento</span> 
+    <a href="{% url "atendimento:download_documento" %}?registro=0&documento=fichaAtendimento" class="btn btn-success download-link">Download</a>
+  </div>
+  <div class="card_documento_no_modal">
+    <span style="">Declaração de Comparecimento</span> 
+    <a href="{% url "atendimento:download_documento" %}?registro=0&documento=declaracaoComparecimento" class="btn btn-success download-link" style="">Download</a>
+  </div>
   <a id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</a>
 </div>
+
 <form id="form_atendimento" action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
@@ -403,6 +436,7 @@ $(document).ready(function(){
 
   // Controle modal de documentos para impressao
   $('#div_documentos_modal').prop('hidden', true);
+  //$('#div_documentos_modal').css('z-index', 1);
   $('#btn_fechar_documentos_modal').on('click', function(){
       window.location.href = "{% url 'atendimento:index' %}";
       return false;
@@ -413,6 +447,28 @@ $(document).ready(function(){
     // abrir modal de documentos para download
     $('#div_documentos_modal').prop('hidden', false);
     $('#div_documentos_modal').css('z-index', 1);
+
+    // pegando o id do atendimento após salvá-lo
+    event.preventDefault();  
+    var form = $(this);
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      data: form.serialize(),
+      success: function(data, textStatus, xhr) {
+        var formId = xhr.getResponseHeader('id_registro');
+        //console.log('ID do formulário:', formId);
+
+        $('.download-link').each(function() {
+          var currentHref = $(this).attr('href');
+          var newHref = currentHref.replace(/registro=\d+/, 'registro=' + formId);
+          $(this).attr('href', newHref);
+        });
+      },
+      error: function(xhr, textStatus, errorThrown) {
+          console.error('Erro na requisição AJAX:', errorThrown);
+      }
+    });
   })
 })
 </script>
