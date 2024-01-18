@@ -21,7 +21,16 @@ def generate_word_document(data, url):
 
     for paragraph in doc.paragraphs:
         for run in paragraph.runs:
-            run.text = run.text.replace('[teste]', str(data['campo1']))
+            for key, valor in data.items():
+                if valor == None:
+                    run.text = run.text.replace(f'[{key}]', ' ')
+                else:
+                    if valor == True:
+                        run.text = run.text.replace(f'[{key}]', 'X')
+                    elif valor == False:
+                        run.text = run.text.replace(f'[{key}]', ' ')
+                    else:
+                        run.text = run.text.replace(f'[{key}]', str(data[f'{key}']))
 
     output = BytesIO()
     doc.save(output)
@@ -228,19 +237,56 @@ def download_documento(request):
     
     url = ''
     data = {
-        'campo1': atendimento_obj.aClient,
+        'aClient': atendimento_obj.aClient,
+        'aClient.age': atendimento_obj.aClient.age,
+        'aClient.street': atendimento_obj.aClient.street,
+        'aClient.district': atendimento_obj.aClient.district,
+        'aClient.born': atendimento_obj.aClient.born,
+        'aClient.city': atendimento_obj.aClient.city,
+        'aClient.zipcode': atendimento_obj.aClient.zipcode,
+        'aClient.phone1': atendimento_obj.aClient.phone1,
+        'aClient.phone2': atendimento_obj.aClient.phone2,
+        'aClient.profession': atendimento_obj.aClient.profession,
+        'aClient.document1': atendimento_obj.aClient.document1,
+        'aClient.document2': atendimento_obj.aClient.document2,
+        'aConhece': atendimento_obj.aConhece,
+        'aDifiEsc': atendimento_obj.aDifiEsc,
+        'aDifiPio': atendimento_obj.aDifiPio,
+        'aOuviMel': atendimento_obj.aOuviMel,
+        'aPessFam': atendimento_obj.aPessFam,
+        'aTrabRui': atendimento_obj.aTrabRui,
+        'aTelevis': atendimento_obj.aTelevis,
+        'aTeleFix': atendimento_obj.aTeleFix,
+        'aTeleCel': atendimento_obj.aTeleCel,
+        'aConvGru': atendimento_obj.aConvGru,
+        'aConvRui': atendimento_obj.aConvRui,
+        'aFalaBai': atendimento_obj.aFalaBai,
+        'aFaladis': atendimento_obj.aFaladis,
+        'aCineTea': atendimento_obj.aCineTea,
+        'aPaleSal': atendimento_obj.aPaleSal,
+        'aOutrDif': atendimento_obj.aOutrDif,
+        'aZumbido': atendimento_obj.aZumbido,
+        'aCoceira': atendimento_obj.aCoceira,
+        'aOtiteOO': atendimento_obj.aOtiteOO,
+        'aDorOOOO': atendimento_obj.aDorOOOO,
+        'aCiruOuv': atendimento_obj.aCiruOuv,
+        'aTimpPer': atendimento_obj.aTimpPer,
+        'aSensTam': atendimento_obj.aSensTam,
+        'aOutrOuv': atendimento_obj.aOutrOuv,
     }
 
     match documento:
         case 'fichaAtendimento':
-            url = 'utils\\docs\\teste.docx'
+            doc = 'FICHA DE ATENDIMENTO.docx'
+            url = 'utils\\docs\\FICHA DE ATENDIMENTO.docx'
         case 'declaracaoComparecimento':
-            url = 'utils\\docs\\teste2.docx'
+            doc = 'DECLARACAO DE COMPARECIMENTO.docx'
+            url = 'utils\\docs\\DECLARACAO DE COMPARECIMENTO.docx'
 
     word_document = generate_word_document(data, url)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = 'attachment; filename=atendimento.docx'
+    response['Content-Disposition'] = f'attachment; filename={doc}'
     word_document.seek(0)
     response.write(word_document.getvalue())  
 
