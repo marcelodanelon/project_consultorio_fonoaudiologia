@@ -15,6 +15,9 @@ from agendamento.models import AgendamentoModel
 from docx import Document
 from io import BytesIO
 from django.http import HttpResponse
+from docx2pdf import convert
+import os
+from tempfile import NamedTemporaryFile
 
 def generate_word_document(data, url):
     doc = Document(url)
@@ -31,6 +34,26 @@ def generate_word_document(data, url):
                         run.text = run.text.replace(f'[{key}]', ' ')
                     else:
                         run.text = run.text.replace(f'[{key}]', str(data[f'{key}']))
+
+    for reg in data['anamneses_objs']:
+        doc.add_paragraph('REGULAGENS')
+        doc.add_paragraph('-' * 100)
+        
+        data_paragraph = doc.add_paragraph()
+        data_paragraph.add_run('Data: ').bold = True
+        data_paragraph.add_run(f'{str(data["aDataAte"])}')
+
+        od_paragraph = doc.add_paragraph()
+        od_paragraph.add_run('OD:').bold = True
+        od_paragraph.add_run(f' {reg.aAjustOD}')
+
+        oe_paragraph = doc.add_paragraph()
+        oe_paragraph.add_run('OE:').bold = True
+        oe_paragraph.add_run(f' {reg.aAjustOE}')
+
+        obs_paragraph = doc.add_paragraph()
+        obs_paragraph.add_run('Obs:').bold = True
+        obs_paragraph.add_run(f' {reg.aAObserv}')
 
     output = BytesIO()
     doc.save(output)
@@ -234,6 +257,7 @@ def download_documento(request):
     id_registro = request.GET['registro']
     documento = request.GET['documento']
     atendimento_obj = get_object_or_404(AtendimentoModel, id=id_registro)
+    anamneses_objs = RegulagemModel.objects.filter(aIDAtend=id_registro)
     
     url = ''
     data = {
@@ -273,6 +297,27 @@ def download_documento(request):
         'aTimpPer': atendimento_obj.aTimpPer,
         'aSensTam': atendimento_obj.aSensTam,
         'aOutrOuv': atendimento_obj.aOutrOuv,
+        'aJaTesAp': atendimento_obj.aJaTesAp,
+        'aQualApa': atendimento_obj.aQualApa,
+        'aApaIndi': atendimento_obj.aApaIndi,
+        'aValApar': atendimento_obj.aValApar,
+        'aLadoInd': atendimento_obj.aLadoInd,
+        'aFormPag': atendimento_obj.aFormPag,
+        'aSaiTest': atendimento_obj.aSaiTest,
+        'aRetTest': atendimento_obj.aRetTest,
+        'aComClik': atendimento_obj.aComClik,
+        'aSemClik': atendimento_obj.aSemClik,
+        'aClikOOD': atendimento_obj.aClikOOD,
+        'aClikOOE': atendimento_obj.aClikOOE,
+        'aTuboOOD': atendimento_obj.aTuboOOD,
+        'aTuboOOE': atendimento_obj.aTuboOOE,
+        'aReceOOD': atendimento_obj.aReceOOD,
+        'aReceOOE': atendimento_obj.aReceOOE,
+        'aJaUsoAp': atendimento_obj.aJaUsoAp,
+        'aMarcaOO': atendimento_obj.aMarcaOO,
+        'aTempoOO': atendimento_obj.aTempoOO,
+        'aDataAte': atendimento_obj.aDataAte,
+        'anamneses_objs': anamneses_objs,
     }
 
     match documento:
@@ -285,9 +330,20 @@ def download_documento(request):
 
     word_document = generate_word_document(data, url)
 
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename={doc}'
-    word_document.seek(0)
-    response.write(word_document.getvalue())  
+    temp_file = NamedTemporaryFile(delete=False, suffix='.docx')
+    temp_file.write(word_document.getvalue())
+    temp_file.close()
+
+    convert(temp_file.name, "output.pdf")
+
+    os.remove(temp_file.name)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename={doc.replace(".docx", ".pdf")}'
+    
+    with open("output.pdf", "rb") as pdf_file:
+        response.write(pdf_file.read())
+
+    os.remove("output.pdf")
 
     return response
