@@ -64,6 +64,21 @@
     border-radius:5px ;
     border: 1px solid rgba(0, 0, 0, 0.2); 
   }
+  #div_carregamento {
+    background-color:rgba(0,0,0,0.4);
+    width: 95vw; 
+    height: 95vh; 
+    position: absolute; 
+    z-index: 2;
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    border-radius:0px ;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
   .card_documento_no_modal{
     display: flex; 
     justify-content: space-between; 
@@ -72,6 +87,13 @@
     padding: 8px; 
     border: 1px solid rgba(0, 0, 0, 0.2); 
     border-radius: 5px;
+  }
+  #gif_carregamento {
+    width: auto; 
+    height: 15vh; 
+    margin-left: -12vw;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 </style>
 {% endblock head_base %}
@@ -87,8 +109,10 @@
     <span style="">Declaração de Comparecimento</span> 
     <a href="{% url "atendimento:download_documento" %}?registro=0&documento=declaracaoComparecimento" class="btn btn-success download-link" style="">Download</a>
   </div>
-  <a id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</a>
+  <button id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</button>
 </div>
+
+<div hidden id="div_carregamento"><img id="gif_carregamento" src="/media/carregando.gif"></div>
 
 <form id="form_atendimento" action="{{form_action}}" method="post">
   {% csrf_token %}
@@ -470,6 +494,17 @@ $(document).ready(function(){
       }
     });
   })
+  // controle modal de carregamento
+  $("#div_documentos_modal a").each(function() {
+    $(this).on('click', function(){
+      $("#div_carregamento").prop("hidden", false);
+
+      // esconder modal após passado o tempo de 5 segundos
+      setTimeout(function() {
+          $("#div_carregamento").prop("hidden", true);
+      }, 5000);
+    });
+  });
 })
 </script>
 {% endblock content %}

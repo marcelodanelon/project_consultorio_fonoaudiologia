@@ -17,6 +17,8 @@ from io import BytesIO
 from django.http import HttpResponse
 from docx2pdf import convert
 import os
+import pythoncom
+import win32com.client
 from tempfile import NamedTemporaryFile
 
 def generate_word_document(data, url):
@@ -59,6 +61,21 @@ def generate_word_document(data, url):
     doc.save(output)
     output.seek(0)
     return output
+
+def save_as_pdf(docx_file):
+    pythoncom.CoInitialize()
+    try:
+        word = win32com.client.Dispatch("Word.Application")
+        doc = word.Documents.Open(docx_file)
+        pdf_file = docx_file.replace(".docx", ".pdf")
+        doc.SaveAs(pdf_file, FileFormat=17)
+        doc.Close()
+        word.Quit()
+        return pdf_file
+    except Exception as e:
+        print(f"Error converting to PDF: {e}")
+    finally:
+        pythoncom.CoUninitialize()
 
 @login_required(login_url='home:loginUser')
 def getJSONclient(request):
@@ -254,8 +271,8 @@ def atendimento(request):
     )
 
 def download_documento(request):
-    id_registro = request.GET['registro']
-    documento = request.GET['documento']
+    id_registro = request.GET.get('registro')
+    documento = request.GET.get('documento')
     atendimento_obj = get_object_or_404(AtendimentoModel, id=id_registro)
     anamneses_objs = RegulagemModel.objects.filter(aIDAtend=id_registro)
     
@@ -334,16 +351,13 @@ def download_documento(request):
     temp_file.write(word_document.getvalue())
     temp_file.close()
 
-    convert(temp_file.name, "output.pdf")
+    pdf_file_path = save_as_pdf(temp_file.name)
 
+    with open(pdf_file_path, "rb") as pdf_file:
+        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename={doc.replace(".docx", ".pdf")}'
+
+    # Remove o arquivo temporário
     os.remove(temp_file.name)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename={doc.replace(".docx", ".pdf")}'
-    
-    with open("output.pdf", "rb") as pdf_file:
-        response.write(pdf_file.read())
-
-    os.remove("output.pdf")
 
     return response
