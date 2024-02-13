@@ -222,8 +222,12 @@ th {
             </div>
             <div class="col">
               {{form.aClient.label}}
-              <input type="text" placeholder="Digite um nome ..." id="searchButtonCliente" class="form-control">  
-              <select hidden name="aClient" class="form-control" required id="id_aClient">        
+              {% if update == 'yes' %}
+                {{form.aClient}}
+              {% else %}
+                <input type="text" placeholder="Digite um nome ..." id="searchButtonCliente" class="form-control">  
+                <select hidden name="aClient" class="form-control" required id="id_aClient">   
+              {% endif %}     
               </select> 
             </div>
           </div>
@@ -294,8 +298,9 @@ $(document).ready(function(){
     } else {
       $(this).val('');
     }
-    /// iniciando a inclusão dos clientes localizados no select
+    /// iniciando a inclusão dos clientes localizados no select    
     client_select.empty();
+
     var defaultOption = $('<option></option>').val('').html('Selecione um cliente').prop('selected', true);
     client_select.append(defaultOption);
     for (const key in clientes.responseJSON.results){
@@ -387,6 +392,12 @@ $(document).ready(function(){
       }, 5000);
     });
   });
+
+  // desabilitando o campo de cliente, para que não possa alterar caso seja update do atendimento
+  var update = "{{ update }}";
+  if (update == 'yes'){
+    $('#id_aClient').prop('disabled', true);
+  }    
 });
 </script>  
 {% endblock content %}
