@@ -6,6 +6,7 @@ from django.contrib import messages
 from datetime import date
 from atendimento.forms import AudiometriaForm
 from atendimento.models import AudiometriaModel
+from django.http import HttpResponse
 
 @login_required(login_url='home:loginUser')
 def audiometria(request):
@@ -15,9 +16,12 @@ def audiometria(request):
     if request.method == 'POST':
         form = AudiometriaForm(request.POST)
         if form.is_valid():
-            form.save()
+            formAud_instance = form.save()
             messages.success(request,'Audiometria gravada com sucesso!')
-            return redirect('atendimento:listAudiometria')
+
+            response = HttpResponse(status=204)
+            response['id_registro'] = str(formAud_instance.id)
+            return response
 
     context = {
         'form' : form,
@@ -41,10 +45,12 @@ def updateAudiometria(request, audiometria_id):
         formAudiometria = AudiometriaForm(request.POST, instance=audiometria)
 
         if formAudiometria.is_valid():
-            print(formAudiometria['auCoordenadas_planoI_Linha1'])
-            formAudiometria.save()
+            formAud_instance = formAudiometria.save()
             messages.success(request, 'Audiometria atualizada com sucesso!')
-            return redirect('atendimento:listAudiometria')
+            
+            response = HttpResponse(status=204)
+            response['id_registro'] = str(formAud_instance.id)
+            return response
         
         context = {
             'form': formAudiometria,

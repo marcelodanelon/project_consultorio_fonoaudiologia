@@ -23,5 +23,6 @@ urlpatterns = [
     path('<int:motivo_id>/deleteMotivo/', motivos.deleteMotivo, name='deleteMotivo'),
 
     path('atendimento/getJSONclient/', atendimento.getJSONclient, name='getJSONclient'),
-    path('atendimento/download_documento/', atendimento.download_documento, name='download_documento'),
+    path('atendimento/download_documento_atendimento/', atendimento.download_documento_atendimento, name='download_documento_atendimento'),
+    path('atendimento/download_documento_audiometria/', audiometria.download_documento_audiometria, name='download_documento_audiometria'),
 ]

@@ -103,11 +103,11 @@
   <h4 class="card_documento_no_modal" style="border: None; margin: 2px;">Impressão de Documentos</h4>
   <div class="card_documento_no_modal">
     <span style="">Ficha de Atendimento</span> 
-    <a href="{% url "atendimento:download_documento" %}?registro=0&documento=fichaAtendimento" class="btn btn-success download-link">Download</a>
+    <a href="{% url "atendimento:download_documento_atendimento" %}?registro=0&documento=fichaAtendimento" class="btn btn-success download-link">Download</a>
   </div>
   <div class="card_documento_no_modal">
     <span style="">Declaração de Comparecimento</span> 
-    <a href="{% url "atendimento:download_documento" %}?registro=0&documento=declaracaoComparecimento" class="btn btn-success download-link" style="">Download</a>
+    <a href="{% url "atendimento:download_documento_atendimento" %}?registro=0&documento=declaracaoComparecimento" class="btn btn-success download-link" style="">Download</a>
   </div>
   <button id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</button>
 </div>

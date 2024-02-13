@@ -133,6 +133,52 @@
     align-items: center; 
     height: 80vh;
   }
+  #div_documentos_modal {
+    background-color: white; 
+    width: 40vw; 
+    height: 60vh; 
+    position: absolute; 
+    z-index: 0;
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    margin: auto; 
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 5px 15px; 
+    border-radius:5px ;
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+  }
+  #div_carregamento {
+    background-color:rgba(0,0,0,0.4);
+    width: 95vw; 
+    height: 95vh; 
+    position: absolute; 
+    z-index: 2;
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    border-radius:0px ;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+  .card_documento_no_modal{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin: 10px; 
+    padding: 8px; 
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+    border-radius: 5px;
+  }
+  #gif_carregamento {
+    width: auto; 
+    height: 15vh; 
+    margin-left: -12vw;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
 </style>
 {% endblock head_base %}
 
@@ -152,6 +198,17 @@ th {
     color: white;
 }
 </style>
+<div id="div_documentos_modal">
+  <h4 class="card_documento_no_modal" style="border: None; margin: 2px;">Impressão de Documentos</h4>
+  <div class="card_documento_no_modal">
+    <span style="">Ficha de Audiometria</span> 
+    <a href="{% url "atendimento:download_documento_audiometria" %}?registro=0&documento=fichaAudiometria" class="btn btn-success download-link">Download</a>
+  </div>
+  <button id="btn_fechar_documentos_modal" class="btn btn-danger" style="position: absolute; bottom: 0; right: 0; margin: 10px;">Fechar</button>
+</div>
+
+<div hidden id="div_carregamento"><img id="gif_carregamento" src="/media/carregando.gif"></div>
+
 <form id="form-movimentacao" action="{{form_action}}" method="post">
   {% csrf_token %}
   <div style="height: 90vh; width: 82vw; position: relative;">
@@ -282,6 +339,53 @@ $(document).ready(function(){
       $('#card-audiometria').prop('hidden', true);
       $('#img-place-cards').prop('hidden', false);
     }
+  });
+
+  // Controle modal de documentos para impressao
+  $('#div_documentos_modal').prop('hidden', true);
+  //$('#div_documentos_modal').css('z-index', 1);
+  $('#btn_fechar_documentos_modal').on('click', function(){
+      window.location.href = "{% url 'atendimento:index' %}";
+      return false;
+  });
+
+  // Ação ao gravar atendimento
+  $('#form-movimentacao').on('submit', function(){
+    // abrir modal de documentos para download
+    $('#div_documentos_modal').prop('hidden', false);
+    $('#div_documentos_modal').css('z-index', 1);
+    console.log('entrou')
+    // pegando o id da audiometria após salvá-lo
+    event.preventDefault();  
+    var form = $(this);
+    $.ajax({
+      type: form.attr('method'),
+      url: form.attr('action'),
+      data: form.serialize(),
+      success: function(data, textStatus, xhr) {
+        var formId = xhr.getResponseHeader('id_registro');
+        
+        $('.download-link').each(function() {
+          var currentHref = $(this).attr('href');
+          var newHref = currentHref.replace(/registro=\d+/, 'registro=' + formId);
+          $(this).attr('href', newHref);
+        });
+      },
+      error: function(xhr, textStatus, errorThrown) {
+          console.error('Erro na requisição AJAX:', errorThrown);
+      }
+    });
+  })
+  // controle modal de carregamento
+  $("#div_documentos_modal a").each(function() {
+    $(this).on('click', function(){
+      $("#div_carregamento").prop("hidden", false);
+
+      // esconder modal após passado o tempo de 5 segundos
+      setTimeout(function() {
+          $("#div_carregamento").prop("hidden", true);
+      }, 5000);
+    });
   });
 });
 </script>  

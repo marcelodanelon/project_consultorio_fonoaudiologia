@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
@@ -15,7 +15,6 @@ from agendamento.models import AgendamentoModel
 from docx import Document
 from io import BytesIO
 from django.http import HttpResponse
-from docx2pdf import convert
 import os
 import pythoncom
 import win32com.client
@@ -24,38 +23,49 @@ from tempfile import NamedTemporaryFile
 def generate_word_document(data, url):
     doc = Document(url)
 
-    for paragraph in doc.paragraphs:
+    # Função para substituir campos de texto em um parágrafo
+    def replace_text_in_paragraph(paragraph, data):
         for run in paragraph.runs:
             for key, valor in data.items():
-                if valor == None:
+                if valor is None:
                     run.text = run.text.replace(f'[{key}]', ' ')
                 else:
-                    if valor == True:
+                    if valor is True:
                         run.text = run.text.replace(f'[{key}]', 'X')
-                    elif valor == False:
+                    elif valor is False:
                         run.text = run.text.replace(f'[{key}]', ' ')
                     else:
-                        run.text = run.text.replace(f'[{key}]', str(data[f'{key}']))
+                        run.text = run.text.replace(f'[{key}]', str(data[key]))
 
-    for reg in data['anamneses_objs']:
-        doc.add_paragraph('REGULAGENS')
-        doc.add_paragraph('-' * 100)
-        
-        data_paragraph = doc.add_paragraph()
-        data_paragraph.add_run('Data: ').bold = True
-        data_paragraph.add_run(f'{str(data["aDataAte"])}')
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    replace_text_in_paragraph(paragraph, data)
 
-        od_paragraph = doc.add_paragraph()
-        od_paragraph.add_run('OD:').bold = True
-        od_paragraph.add_run(f' {reg.aAjustOD}')
+    for paragraph in doc.paragraphs:
+        replace_text_in_paragraph(paragraph, data)
 
-        oe_paragraph = doc.add_paragraph()
-        oe_paragraph.add_run('OE:').bold = True
-        oe_paragraph.add_run(f' {reg.aAjustOE}')
+    if 'ATENDIMENTO' in url:
+        for reg in data['anamneses_objs']:
+            doc.add_paragraph('REGULAGENS')
+            doc.add_paragraph('-' * 100)
+            
+            data_paragraph = doc.add_paragraph()
+            data_paragraph.add_run('Data: ').bold = True
+            data_paragraph.add_run(f'{str(data["aDataAte"])}')
 
-        obs_paragraph = doc.add_paragraph()
-        obs_paragraph.add_run('Obs:').bold = True
-        obs_paragraph.add_run(f' {reg.aAObserv}')
+            od_paragraph = doc.add_paragraph()
+            od_paragraph.add_run('OD:').bold = True
+            od_paragraph.add_run(f' {reg.aAjustOD}')
+
+            oe_paragraph = doc.add_paragraph()
+            oe_paragraph.add_run('OE:').bold = True
+            oe_paragraph.add_run(f' {reg.aAjustOE}')
+
+            obs_paragraph = doc.add_paragraph()
+            obs_paragraph.add_run('Obs:').bold = True
+            obs_paragraph.add_run(f' {reg.aAObserv}')
 
     output = BytesIO()
     doc.save(output)
@@ -270,7 +280,7 @@ def atendimento(request):
         context
     )
 
-def download_documento(request):
+def download_documento_atendimento(request):
     id_registro = request.GET.get('registro')
     documento = request.GET.get('documento')
     atendimento_obj = get_object_or_404(AtendimentoModel, id=id_registro)
@@ -278,6 +288,9 @@ def download_documento(request):
     
     url = ''
     data = {
+        'aProfessional': atendimento_obj.aProfessional,
+        'aDataAte': atendimento_obj.aDataAte,
+        'aLocal': atendimento_obj.aLocal,
         'aClient': atendimento_obj.aClient,
         'aClient.age': atendimento_obj.aClient.age,
         'aClient.street': atendimento_obj.aClient.street,
@@ -361,3 +374,4 @@ def download_documento(request):
     os.remove(temp_file.name)
 
     return response
+
