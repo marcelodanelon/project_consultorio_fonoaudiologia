@@ -99,7 +99,7 @@ def download_documento_audiometria(request):
             doc = 'FICHA DE AUDIOMETRIA.docx'
             url = 'utils\\docs\\FICHA DE AUDIOMETRIA.docx'
 
-    word_document = generate_word_document(data, url)
+    word_document = generate_word_document(data, url, id_registro)
 
     temp_file = NamedTemporaryFile(delete=False, suffix='.docx')
     temp_file.write(word_document.getvalue())

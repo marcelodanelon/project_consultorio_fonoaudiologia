@@ -21,7 +21,7 @@ import win32com.client
 from tempfile import NamedTemporaryFile
 from docx.shared import Inches
 
-def generate_word_document(data, url):
+def generate_word_document(data, url, idRegistro=None):
     doc = Document(url)
 
     # Função para substituir campos de texto em um parágrafo
@@ -39,8 +39,11 @@ def generate_word_document(data, url):
                         run.text = run.text.replace(f'[{key}]', str(data[key]))
 
     def replace_image_in_paragraph(paragraph, image_path):
-        run = paragraph.add_run()
-        run.add_picture(image_path, width=Inches(2.0))
+        if os.path.exists(image_path):
+            run = paragraph.add_run()
+            run.add_picture(image_path, width=Inches(2.0))
+        else:
+            print(f"Arquivo de imagem '{image_path}' não encontrado.")
 
     for table in doc.tables:
         for row in table.rows:
@@ -49,12 +52,13 @@ def generate_word_document(data, url):
                     replace_text_in_paragraph(paragraph, data)
         
     for paragraph in doc.paragraphs:
-        if 'OE' in paragraph.text: 
-            replace_image_in_paragraph(paragraph, 'utils/data_files/temp_images_audiometria/72_plano_cartesiano_OE.png') 
-        elif 'OD' in paragraph.text: 
-            replace_image_in_paragraph(paragraph, 'utils/data_files/temp_images_audiometria/72_plano_cartesiano_OD.png')  
-        else:
-            replace_text_in_paragraph(paragraph, data)
+        if idRegistro:
+            if 'OE' in paragraph.text: 
+                replace_image_in_paragraph(paragraph, f'utils/data_files/temp_images_audiometria/{idRegistro}_plano_cartesiano_OE.png') 
+            elif 'OD' in paragraph.text: 
+                replace_image_in_paragraph(paragraph, f'utils/data_files/temp_images_audiometria/{idRegistro}_plano_cartesiano_OD.png')  
+            else:
+                replace_text_in_paragraph(paragraph, data)
 
     if 'ATENDIMENTO' in url:
         for reg in data['anamneses_objs']:

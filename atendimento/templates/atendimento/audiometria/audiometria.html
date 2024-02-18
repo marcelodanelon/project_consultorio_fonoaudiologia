@@ -405,7 +405,9 @@ $(document).ready(function(){
 
 // controle para salvar imagens da audiometria e futura impressao no documento de ficha
 function salvamentoImagensPlanosCartesianos(formId) {
-  document.getElementById('btn-audiometria').click();
+  $('#card-audiometria').prop('hidden', false);
+  $('#card-desfecho').prop('hidden', true);
+  $('#img-place-cards').prop('hidden', true);
   var componentes = document.querySelectorAll('.planos_cartesianos');
   componentes.forEach(function(componente) {
     componente.style.paddingLeft = '20px';

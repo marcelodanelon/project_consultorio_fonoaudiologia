@@ -119,7 +119,7 @@ def save_images_planos_audiometria(request):
         image_data = request.POST.get('image')
         formid = request.POST.get('formId')
         componentId = request.POST.get('componentId')
-        print(componentId)
+        
         if image_data:
             image_data_bytes = base64.b64decode(image_data.split(',')[1])
 
