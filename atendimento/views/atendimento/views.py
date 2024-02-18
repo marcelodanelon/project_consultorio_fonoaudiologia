@@ -19,6 +19,7 @@ import os
 import pythoncom
 import win32com.client
 from tempfile import NamedTemporaryFile
+from docx.shared import Inches
 
 def generate_word_document(data, url):
     doc = Document(url)
@@ -37,14 +38,23 @@ def generate_word_document(data, url):
                     else:
                         run.text = run.text.replace(f'[{key}]', str(data[key]))
 
+    def replace_image_in_paragraph(paragraph, image_path):
+        run = paragraph.add_run()
+        run.add_picture(image_path, width=Inches(2.0))
+
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     replace_text_in_paragraph(paragraph, data)
-
+        
     for paragraph in doc.paragraphs:
-        replace_text_in_paragraph(paragraph, data)
+        if 'OE' in paragraph.text: 
+            replace_image_in_paragraph(paragraph, 'utils/data_files/temp_images_audiometria/72_plano_cartesiano_OE.png') 
+        elif 'OD' in paragraph.text: 
+            replace_image_in_paragraph(paragraph, 'utils/data_files/temp_images_audiometria/72_plano_cartesiano_OD.png')  
+        else:
+            replace_text_in_paragraph(paragraph, data)
 
     if 'ATENDIMENTO' in url:
         for reg in data['anamneses_objs']:
@@ -370,7 +380,6 @@ def download_documento_atendimento(request):
         response = HttpResponse(pdf_file.read(), content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename={doc.replace(".docx", ".pdf")}'
 
-    # Remove o arquivo temporário
     os.remove(temp_file.name)
 
     return response

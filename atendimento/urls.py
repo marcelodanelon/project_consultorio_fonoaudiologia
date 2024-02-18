@@ -25,4 +25,6 @@ urlpatterns = [
     path('atendimento/getJSONclient/', atendimento.getJSONclient, name='getJSONclient'),
     path('atendimento/download_documento_atendimento/', atendimento.download_documento_atendimento, name='download_documento_atendimento'),
     path('atendimento/download_documento_audiometria/', audiometria.download_documento_audiometria, name='download_documento_audiometria'),
+
+    path('save_images_planos_audiometria/', audiometria.save_images_planos_audiometria, name='save_images_planos_audiometria'),
 ]

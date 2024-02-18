@@ -268,11 +268,12 @@ th {
         </div>
       </div>
     </div>
-    <button class="btn-audiometria" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
+    <button id="btn-gravar-audiometria" class="btn-audiometria" style="display: inline-block; position: absolute; bottom: 1vh; right: 1vw; height:80px; width:80px;">
       <img src="/media/btn-gravar.png">
     </button>
   </div>  
 </form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <script>
 $(document).ready(function(){
   // localizando o paciente | Controle
@@ -375,6 +376,8 @@ $(document).ready(function(){
           var newHref = currentHref.replace(/registro=\d+/, 'registro=' + formId);
           $(this).attr('href', newHref);
         });
+
+        salvamentoImagensPlanosCartesianos(formId);
       },
       error: function(xhr, textStatus, errorThrown) {
           console.error('Erro na requisição AJAX:', errorThrown);
@@ -399,5 +402,49 @@ $(document).ready(function(){
     $('#id_aClient').prop('disabled', true);
   }    
 });
+
+// controle para salvar imagens da audiometria e futura impressao no documento de ficha
+function salvamentoImagensPlanosCartesianos(formId) {
+  document.getElementById('btn-audiometria').click();
+  var componentes = document.querySelectorAll('.planos_cartesianos');
+  componentes.forEach(function(componente) {
+    componente.style.paddingLeft = '20px';
+    componente.style.paddingBottom = '60px';
+    var componentId = componente.id;
+    html2canvas(componente).then(function(canvas) {
+      var imageData = canvas.toDataURL('image/png');
+      saveToDjango(imageData, formId, componentId);
+    });
+  });
+}
+
+function saveToDjango(imageData, formId, componentId) {
+  var csrftoken = getCookie('csrftoken'); 
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/save_images_planos_audiometria/', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.setRequestHeader('X-CSRFToken', csrftoken); 
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log('Imagem salva com sucesso!');
+    }
+  };
+  xhr.send('image=' + encodeURIComponent(imageData) + '&formId=' + formId + '&componentId=' + componentId);
+}
+
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 </script>  
 {% endblock content %}

@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from datetime import date
 from atendimento.forms import AudiometriaForm
 from atendimento.models import AudiometriaModel
 from django.http import HttpResponse
+from django.http import JsonResponse
+import base64
+import os
 
 @login_required(login_url='home:loginUser')
 def audiometria(request):
@@ -111,3 +113,23 @@ def deleteAudiometria(request, audiometria_id):
         'atendimento/audiometria/audiometria.html', 
         context
     )
+
+def save_images_planos_audiometria(request):
+    if request.method == 'POST':
+        image_data = request.POST.get('image')
+        formid = request.POST.get('formId')
+        componentId = request.POST.get('componentId')
+        print(componentId)
+        if image_data:
+            image_data_bytes = base64.b64decode(image_data.split(',')[1])
+
+            directory = 'utils/data_files/temp_images_audiometria/'
+
+            os.makedirs(directory, exist_ok=True)
+
+            file_path = os.path.join(directory, f"{formid}_{componentId}.png")
+
+            with open(file_path, 'wb') as f:
+                f.write(image_data_bytes)
+            return JsonResponse({'message': 'Imagem salva com sucesso!', 'file_path': file_path})
+    return JsonResponse({'error': 'Erro ao salvar a imagem.'}, status=400)
