@@ -133,3 +133,22 @@ def save_images_planos_audiometria(request):
                 f.write(image_data_bytes)
             return JsonResponse({'message': 'Imagem salva com sucesso!', 'file_path': file_path})
     return JsonResponse({'error': 'Erro ao salvar a imagem.'}, status=400)
+
+def delete_images_planos_audiometria(request):
+    if request.method == 'POST':
+        form_id = request.POST.get('formId')
+        arquivo_OE = f'utils/data_files/temp_images_audiometria/{form_id}_plano_cartesiano_OE.png'
+        arquivo_OD = f'utils/data_files/temp_images_audiometria/{form_id}_plano_cartesiano_OD.png'
+
+        if os.path.exists(arquivo_OE):
+            os.remove(arquivo_OE)
+            print(f"Arquivo {arquivo_OE} deletado com sucesso.")
+        else:
+            print(f"O arquivo {arquivo_OE} não existe.")
+
+        if os.path.exists(arquivo_OD):
+            os.remove(arquivo_OD)
+            print(f"Arquivo {arquivo_OD} deletado com sucesso.")
+        else:
+            print(f"O arquivo {arquivo_OD} não existe.")
+        return HttpResponse("Imagens deletadas com sucesso")

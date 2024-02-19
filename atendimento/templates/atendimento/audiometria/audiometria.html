@@ -349,9 +349,25 @@ $(document).ready(function(){
 
   // Controle modal de documentos para impressao
   $('#div_documentos_modal').prop('hidden', true);
-  //$('#div_documentos_modal').css('z-index', 1);
+  
+  var formId
   $('#btn_fechar_documentos_modal').on('click', function(){
-      window.location.href = "{% url 'atendimento:index' %}";
+      //window.location.href = "{% url 'atendimento:index' %}";
+      var csrftoken = getCookie('csrftoken');
+      $.ajax({
+          type: "POST",
+          url: "/delete_images_planos_audiometria/",
+          data: {
+              'csrfmiddlewaretoken': csrftoken,
+              'formId': formId,
+          },
+          success: function(response) {
+              window.location.href = "{% url 'atendimento:index' %}";
+          },
+          error: function(xhr, errmsg, err) {
+          }
+      });
+
       return false;
   });
 
@@ -369,7 +385,7 @@ $(document).ready(function(){
       url: form.attr('action'),
       data: form.serialize(),
       success: function(data, textStatus, xhr) {
-        var formId = xhr.getResponseHeader('id_registro');
+        formId = xhr.getResponseHeader('id_registro');
         
         $('.download-link').each(function() {
           var currentHref = $(this).attr('href');
