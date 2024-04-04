@@ -4355,7 +4355,7 @@ CHOICES_CITIES = [
 ("Santa Bárbara do Pará","Santa Bárbara do Pará"),
 ("Santa Bárbara do Sul","Santa Bárbara do Sul"),
 ("Santa Bárbara do Tugúrio","Santa Bárbara do Tugúrio"),
-("Santa Bárbara D'oeste","Santa Bárbara D'oeste"),
+("Santa Bárbara D'Oeste","Santa Bárbara D'Oeste"),
 ("Santa Branca","Santa Branca"),
 ("Santa Brígida","Santa Brígida"),
 ("Santa Carmem","Santa Carmem"),

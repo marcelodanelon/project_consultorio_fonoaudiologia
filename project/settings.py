@@ -148,3 +148,8 @@ SESSION_SAVE_EVERY_REQUEST = True
 # USE_L10N = False
 from django.conf.locale.pt_BR import formats as br_formats
 br_formats.DATE_FORMAT = 'd/m/Y'
+
+try:
+    from project.local_settings import *
+except ImportError:
+    ...

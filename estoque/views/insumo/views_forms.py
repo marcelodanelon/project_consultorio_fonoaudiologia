@@ -10,7 +10,7 @@ from estoque.models import InsumoModel, ItensInsumoModel
 def createInsumo(request):
     form_action = reverse('estoque:createInsumo')
     insumo = get_object_or_404(InsumoModel, pk=1)
-
+    
     if request.method == 'POST':
         formInsumo = InsumoForm(request.POST)
 

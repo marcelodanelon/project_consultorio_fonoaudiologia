@@ -14,6 +14,7 @@ def createClient(request):
     
     if request.method == 'POST':
         formClient = ClientForm(request.POST)
+
         if formClient.is_valid():
             form = formClient.save(commit=False)
 
@@ -35,6 +36,8 @@ def createClient(request):
                 messages.error(request, 'Data de Nascimento Inválida!')
             if "responsiblePhone" or "phone1" or "phone2" in formClient.errors:
                 messages.error(request, 'Número de telefone inválido!')
+            else:
+                messages.error(request, formClient.errors)
         
         context = {
             'form': formClient,

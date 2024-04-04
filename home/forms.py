@@ -84,7 +84,7 @@ class ProfessionalForm(forms.ModelForm):
             'class':'form-control upperCase',
         })
         self.fields['born'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control mask-date',
             'placeholder': 'dd/mm/yyyy',
         })
         self.fields['responsibleName'].widget.attrs.update({
