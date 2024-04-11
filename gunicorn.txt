@@ -1,0 +1,75 @@
+###############################################################################
+# Replace
+# mdnil the name of the gunicorn file you want
+# marcelo your user name
+# mdnilapp the folder name of your project
+# project the folder name where you find a file called wsgi.py
+#
+###############################################################################
+# Criando o arquivo mdnil.socket
+sudo nano /etc/systemd/system/mdnil.socket
+
+###############################################################################
+# Conteúdo do arquivo
+[Unit]
+Description=gunicorn mdnil socket
+
+[Socket]
+ListenStream=/run/mdnil.socket
+
+[Install]
+WantedBy=sockets.target
+
+###############################################################################
+# Criando o arquivo mdnil.service
+sudo nano /etc/systemd/system/mdnil.service
+
+###############################################################################
+# Conteúdo do arquivo
+[Unit]
+Description=Gunicorn daemon (You can change if you want)
+Requires=mdnil.socket
+After=network.target
+
+[Service]
+User=marcelo
+Group=www-data
+Restart=on-failure
+# EnvironmentFile=/home/marcelo/mdnilapp/.env
+WorkingDirectory=/home/marcelo/mdnilapp
+# --error-logfile --enable-stdio-inheritance --log-level and --capture-output
+# are all for debugging purposes.
+ExecStart=/home/marcelo/mdnilapp/venv/bin/gunicorn \
+          --error-logfile /home/marcelo/mdnilapp/gunicorn-error-log \
+          --enable-stdio-inheritance \
+          --log-level "debug" \
+          --capture-output \
+          --access-logfile - \
+          --workers 6 \
+          --bind unix:/run/mdnil.socket \
+          project.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+###############################################################################
+# Ativando
+sudo systemctl start mdnil.socket
+sudo systemctl enable mdnil.socket
+
+# Checando
+sudo systemctl status mdnil.socket
+curl --unix-socket /run/mdnil.socket localhost
+sudo systemctl status mdnil
+
+# Restarting
+sudo systemctl restart mdnil.service
+sudo systemctl restart mdnil.socket
+sudo systemctl restart mdnil
+
+# After changing something
+sudo systemctl daemon-reload
+
+# Debugging
+sudo journalctl -u mdnil.service
+sudo journalctl -u mdnil.socket
